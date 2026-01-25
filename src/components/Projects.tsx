@@ -4,7 +4,7 @@ import ProjectCard from "./ProjectCard";
 // Import project images
 import wipMeetupImg from "@/assets/wip-logo.gif";
 import marsPodcastImg from "@/assets/mars-podcast.jpg";
-import avastarsImg from "@/assets/avastars.jpg";
+import avastarsImg from "@/assets/avastars.svg";
 import onchainchainImg from "@/assets/onchainchain.jpg";
 import flyfrog3dImg from "@/assets/flyfrog3d.jpg";
 import nftsmartImg from "@/assets/nftsmart.jpg";
