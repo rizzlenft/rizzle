@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import ProjectCard from "./ProjectCard";
 
 // Import project images
-import wipMeetupImg from "@/assets/wip-meetup.jpg";
+import wipMeetupImg from "@/assets/wip-logo.gif";
 import marsPodcastImg from "@/assets/mars-podcast.jpg";
 import avastarsImg from "@/assets/avastars.jpg";
 import onchainchainImg from "@/assets/onchainchain.jpg";
