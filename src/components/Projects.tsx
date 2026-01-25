@@ -1,6 +1,16 @@
 import { motion } from "framer-motion";
 import ProjectCard from "./ProjectCard";
 
+// Import project images
+import wipMeetupImg from "@/assets/wip-meetup.jpg";
+import marsPodcastImg from "@/assets/mars-podcast.jpg";
+import avastarsImg from "@/assets/avastars.jpg";
+import onchainchainImg from "@/assets/onchainchain.jpg";
+import flyfrog3dImg from "@/assets/flyfrog3d.jpg";
+import nftsmartImg from "@/assets/nftsmart.jpg";
+import metalympicsImg from "@/assets/metalympics.jpg";
+import babacciImg from "@/assets/babacci.jpg";
+
 const projects = [
   {
     name: "The WIP Meetup",
@@ -8,48 +18,56 @@ const projects = [
     emoji: "🎙️",
     link: "https://twitter.com/theWIPmeetup",
     featured: true,
+    image: wipMeetupImg,
   },
   {
     name: "Matt & Rizz Show",
     description: "Web3 podcast cutting through the noise. Real talk, no fluff, calling out grifters.",
     emoji: "🎧",
     link: "https://twitter.com/mattandrizzshow",
+    image: marsPodcastImg,
   },
   {
     name: "Avastars",
     description: "Pioneering generative avatar NFT project. On-chain art that actually meant something.",
     emoji: "👾",
     link: "https://twitter.com/avastarsnft",
+    image: avastarsImg,
   },
   {
     name: "OnChainChain",
     description: "Building for the blockchain, staying true to decentralization principles.",
     emoji: "⛓️",
     link: "https://twitter.com/onchainchain",
+    image: onchainchainImg,
   },
   {
     name: "FlyFrog3D",
     description: "3D metaverse experiences and assets. Making virtual worlds more interesting.",
     emoji: "🐸",
     link: "https://twitter.com/flyfrog3d",
+    image: flyfrog3dImg,
   },
   {
     name: "NFT Smart",
     description: "Education and insights for the NFT space. Helping people navigate web3.",
     emoji: "🧠",
     link: "https://twitter.com/nftsmart",
+    image: nftsmartImg,
   },
   {
     name: "Metalympics",
     description: "Competitive gaming meets the metaverse. Sports for the digital age.",
     emoji: "🏆",
     link: "https://twitter.com/metalympics",
+    image: metalympicsImg,
   },
   {
     name: "Babacci",
     description: "Art collective pushing boundaries. Weird, wonderful, and unapologetically creative.",
     emoji: "🎨",
     link: "https://twitter.com/hashtag/babacci",
+    image: babacciImg,
   },
 ];
 

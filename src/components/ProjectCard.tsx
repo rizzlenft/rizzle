@@ -7,21 +7,34 @@ interface ProjectCardProps {
   emoji: string;
   link?: string;
   featured?: boolean;
+  image?: string;
 }
 
-const ProjectCard = ({ name, description, emoji, link, featured }: ProjectCardProps) => {
+const ProjectCard = ({ name, description, emoji, link, featured, image }: ProjectCardProps) => {
   const content = (
     <motion.div
       whileHover={{ scale: 1.02, y: -4 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className={`group relative h-full rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:box-glow-sm ${
+      className={`group relative h-full overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:box-glow-sm ${
         featured ? "md:col-span-2 box-glow border-primary/30" : ""
       }`}
     >
+      {/* Image */}
+      {image && (
+        <div className="relative h-40 overflow-hidden">
+          <img
+            src={image}
+            alt={name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+        </div>
+      )}
+      
       {/* Gradient overlay on hover */}
       <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       
-      <div className="relative z-10">
+      <div className="relative z-10 p-6">
         <div className="mb-4 flex items-start justify-between">
           <span className="text-3xl">{emoji}</span>
           {link && (
