@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { motion } from "framer-motion";
-import { Play, Copy, Check, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Play, Copy, Check, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
@@ -20,14 +20,21 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   const [copied, setCopied] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
   const chipRef = useRef<HTMLDivElement | null>(null);
   const [previewStyle, setPreviewStyle] = useState<React.CSSProperties | null>(null);
   const { toast } = useToast();
   const isMobile = useIsMobile();
-  const url = getGuestVideoUrl(guest);
   const episodeCount = getGuestEpisodeCount(guest);
   const videoIds = getAllGuestVideoIds(guest);
-  const thumbnailUrl = videoIds.length > 0 ? getYouTubeThumbnail(videoIds[0], 'maxres') : null;
+  
+  // Get current episode's video ID and URL
+  const currentVideoId = videoIds[currentEpisodeIndex] || videoIds[0];
+  const currentUrl = currentVideoId ? `https://youtube.com/watch?v=${currentVideoId}` : getGuestVideoUrl(guest);
+  const currentThumbnailUrl = currentVideoId ? getYouTubeThumbnail(currentVideoId, 'maxres') : null;
+  
+  // For chip click, use first episode URL
+  const url = getGuestVideoUrl(guest);
 
   const previewWidth = useMemo(() => {
     if (typeof window === "undefined") return 500;
@@ -37,15 +44,31 @@ const GuestChip = ({ guest }: GuestChipProps) => {
 
   const showPreview = isMobile ? showMobilePreview : isHovering;
 
-  const openVideo = () => {
-    // Some mobile browsers block window.open even on direct taps.
-    // Prefer new tab, but fall back to same-tab navigation.
-    const win = window.open(url, "_blank", "noopener,noreferrer");
-    if (!win) window.location.assign(url);
+  // Reset episode index when preview closes
+  useEffect(() => {
+    if (!showPreview) {
+      setCurrentEpisodeIndex(0);
+    }
+  }, [showPreview]);
+
+  const openVideo = (videoUrl?: string) => {
+    const targetUrl = videoUrl || currentUrl;
+    const win = window.open(targetUrl, "_blank", "noopener,noreferrer");
+    if (!win) window.location.assign(targetUrl);
+  };
+
+  const goToPreviousEpisode = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentEpisodeIndex((prev) => (prev > 0 ? prev - 1 : videoIds.length - 1));
+  };
+
+  const goToNextEpisode = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentEpisodeIndex((prev) => (prev < videoIds.length - 1 ? prev + 1 : 0));
   };
 
   useEffect(() => {
-    if (!showPreview || !thumbnailUrl) {
+    if (!showPreview || !currentThumbnailUrl) {
       setPreviewStyle(null);
       return;
     }
@@ -74,7 +97,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
         pointerEvents: "none",
       });
     }
-  }, [showPreview, thumbnailUrl, previewWidth, isMobile]);
+  }, [showPreview, currentThumbnailUrl, previewWidth, isMobile]);
 
   // Close mobile preview when clicking outside
   useEffect(() => {
@@ -96,7 +119,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   }, [showMobilePreview, isMobile]);
 
   const handleChipClick = () => {
-    if (isMobile && thumbnailUrl) {
+    if (isMobile && currentThumbnailUrl) {
       // On mobile, show preview first
       setShowMobilePreview(true);
     } else {
@@ -179,7 +202,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       </motion.div>
 
       {/* Thumbnail preview (hover on desktop, tap on mobile) */}
-      {thumbnailUrl && showPreview && previewStyle &&
+      {currentThumbnailUrl && showPreview && previewStyle &&
         createPortal(
           <>
             {/* Backdrop for mobile */}
@@ -210,18 +233,47 @@ const GuestChip = ({ guest }: GuestChipProps) => {
                     <X className="w-4 h-4" />
                   </button>
                 )}
-                <img
-                  src={thumbnailUrl}
-                  alt={`${guest} episode thumbnail`}
-                  className={isMobile ? "w-full h-auto cursor-pointer" : "w-full h-auto"}
-                  loading="lazy"
-                  onClick={isMobile ? handleWatchNow : undefined}
-                />
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={currentVideoId}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    src={currentThumbnailUrl}
+                    alt={`${guest} episode ${currentEpisodeIndex + 1} thumbnail`}
+                    className={isMobile ? "w-full h-auto cursor-pointer" : "w-full h-auto"}
+                    loading="lazy"
+                    onClick={isMobile ? handleWatchNow : undefined}
+                  />
+                </AnimatePresence>
+                
+                {/* Episode navigation arrows */}
+                {episodeCount > 1 && (
+                  <>
+                    <button
+                      onClick={goToPreviousEpisode}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
+                      aria-label="Previous episode"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={goToNextEpisode}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
+                      aria-label="Next episode"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </>
+                )}
                 <div className="absolute bottom-3 left-3 right-3 flex flex-col gap-2">
                   <div className="inline-flex w-fit max-w-full flex-col rounded-md bg-black/60 px-2 py-1">
                     <p className="text-white text-sm md:text-base font-semibold truncate">{guest}</p>
                     {episodeCount > 1 && (
-                      <p className="text-white/80 text-xs md:text-sm leading-tight">{episodeCount} episodes</p>
+                      <p className="text-white/80 text-xs md:text-sm leading-tight">
+                        Episode {currentEpisodeIndex + 1} of {episodeCount}
+                      </p>
                     )}
                   </div>
                   {/* Watch Now button for mobile */}
