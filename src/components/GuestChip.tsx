@@ -34,6 +34,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     hasMultipleEpisodes,
     goToPrevious,
     goToNext,
+    goToIndex,
   } = useEpisodeNavigation({
     videoIds,
     isOpen: showMobilePreview || isHovering,
@@ -169,6 +170,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
           onWatchNow={handleWatchNow}
           onPrevious={goToPrevious}
           onNext={goToNext}
+          onGoToIndex={goToIndex}
         />
       )}
     </>

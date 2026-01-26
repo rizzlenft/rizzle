@@ -23,6 +23,12 @@ export function useEpisodeNavigation({ videoIds, isOpen }: UseEpisodeNavigationO
     setCurrentIndex((prev) => (prev < videoIds.length - 1 ? prev + 1 : 0));
   }, [videoIds.length]);
 
+  const goToIndex = useCallback((index: number) => {
+    if (index >= 0 && index < videoIds.length) {
+      setCurrentIndex(index);
+    }
+  }, [videoIds.length]);
+
   const currentVideoId = videoIds[currentIndex] || videoIds[0];
   const episodeCount = videoIds.length;
   const hasMultipleEpisodes = episodeCount > 1;
@@ -34,5 +40,6 @@ export function useEpisodeNavigation({ videoIds, isOpen }: UseEpisodeNavigationO
     hasMultipleEpisodes,
     goToPrevious,
     goToNext,
+    goToIndex,
   };
 }

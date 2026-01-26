@@ -15,6 +15,7 @@ interface GuestPreviewModalProps {
   onWatchNow: () => void;
   onPrevious: () => void;
   onNext: () => void;
+  onGoToIndex: (index: number) => void;
 }
 
 const GuestPreviewModal = ({
@@ -29,6 +30,7 @@ const GuestPreviewModal = ({
   onWatchNow,
   onPrevious,
   onNext,
+  onGoToIndex,
 }: GuestPreviewModalProps) => {
   const { handleTouchStart, handleTouchEnd } = useSwipeGesture({
     onSwipeLeft: onNext,
@@ -166,12 +168,7 @@ const GuestPreviewModal = ({
                     key={index}
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Navigate to specific episode
-                      if (index < currentIndex) {
-                        for (let i = 0; i < currentIndex - index; i++) onPrevious();
-                      } else if (index > currentIndex) {
-                        for (let i = 0; i < index - currentIndex; i++) onNext();
-                      }
+                      onGoToIndex(index);
                     }}
                     className={`w-2 h-2 rounded-full transition-all duration-200 ${
                       index === currentIndex
