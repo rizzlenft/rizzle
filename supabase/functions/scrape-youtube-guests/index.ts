@@ -11,6 +11,39 @@ Deno.serve(async (req) => {
   try {
     const { url } = await req.json();
     
+    // Validate URL parameter exists and is a string
+    if (!url || typeof url !== 'string') {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Invalid URL parameter' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate it's a YouTube URL only
+    const youtubePattern = /^https:\/\/(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+    if (!youtubePattern.test(url)) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Only YouTube URLs are allowed' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate URL structure
+    try {
+      const urlObj = new URL(url);
+      if (urlObj.protocol !== 'https:') {
+        return new Response(
+          JSON.stringify({ success: false, error: 'Only HTTPS URLs allowed' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    } catch {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Malformed URL' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
     const apiKey = Deno.env.get('FIRECRAWL_API_KEY');
     if (!apiKey) {
       return new Response(
