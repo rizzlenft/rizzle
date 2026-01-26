@@ -56,9 +56,9 @@ const Hero = () => {
           transition={{ delay: 0.5, duration: 0.6 }}
           className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
         >
-          <span className="text-primary font-semibold">Web3 Founder & Strategist</span> — Building the metaverse, one project at a time. 
-          Expert in community growth, NFT launches, and virtual world development. 
-          Available for <span className="text-primary">consulting & advisory</span> roles.
+          <span className="text-primary font-semibold">Web3 Degen & Builder</span> — Been in the trenches since before it was cool. 
+          Community hype, NFT drops, metaverse chaos — seen it all, shipped most of it. 
+          Open to <span className="text-primary">consulting & advisory</span> if you're serious.
         </motion.p>
         
         {/* Stats */}
