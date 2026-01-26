@@ -6,11 +6,12 @@ interface ProjectCardProps {
   description: string;
   emoji: string;
   link?: string;
+  secondaryLink?: string;
   featured?: boolean;
   image?: string;
 }
 
-const ProjectCard = ({ name, description, emoji, link, featured, image }: ProjectCardProps) => {
+const ProjectCard = ({ name, description, emoji, link, secondaryLink, featured, image }: ProjectCardProps) => {
   const content = (
     <motion.div
       whileHover={{ scale: 1.02, y: -4 }}
@@ -37,9 +38,22 @@ const ProjectCard = ({ name, description, emoji, link, featured, image }: Projec
       <div className="relative z-10 p-6">
         <div className="mb-4 flex items-start justify-between">
           <span className="text-3xl">{emoji}</span>
-          {link && (
-            <ExternalLink className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
-          )}
+          <div className="flex items-center gap-2">
+            {secondaryLink && (
+              <a 
+                href={secondaryLink} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-xs text-muted-foreground hover:text-primary transition-colors"
+              >
+                OpenSea
+              </a>
+            )}
+            {link && (
+              <ExternalLink className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
+            )}
+          </div>
         </div>
         
         <h3 className="mb-2 font-display text-lg font-bold text-foreground transition-colors group-hover:text-primary">
