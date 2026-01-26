@@ -235,6 +235,7 @@ import { ExternalLink, Palette, Heart } from "lucide-react";
 import truthMagazineImg from "@/assets/truth-magazine.png";
 import manifoldArtImg from "@/assets/manifold-art.png";
 import zerooneArtImg from "@/assets/zeroone-art.png";
+import openseaRizzleImg from "@/assets/opensea-rizzle.avif";
 // Platform logo components
 const OpenSeaLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 90 90" className={className} fill="currentColor">
@@ -290,6 +291,7 @@ const collectedCollections = [
     description: "Primary collection of curated cryptoart pieces.",
     link: "https://opensea.io/Rizzle",
     logo: OpenSeaLogo,
+    image: openseaRizzleImg,
   },
   {
     name: "OpenSea (Vault)",
@@ -401,17 +403,29 @@ const CryptoArtContent = () => {
               href={collection.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 p-5 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-card/80"
+              className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-card/80"
             >
-              <div className="flex flex-col items-center text-center gap-3">
-                <collection.logo className="h-10 w-10 text-muted-foreground group-hover:text-primary transition-colors" />
-                <div>
-                  <h4 className="mb-1 font-display text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-                    {collection.name}
-                  </h4>
-                  <p className="text-xs text-muted-foreground">
-                    {collection.description}
-                  </p>
+              {collection.image && (
+                <div className="relative h-32 overflow-hidden">
+                  <img
+                    src={collection.image}
+                    alt={collection.name}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+                </div>
+              )}
+              <div className="p-4">
+                <div className="flex flex-col items-center text-center gap-2">
+                  <collection.logo className="h-8 w-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <div>
+                    <h4 className="mb-1 font-display text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                      {collection.name}
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      {collection.description}
+                    </p>
+                  </div>
                 </div>
               </div>
             </a>
