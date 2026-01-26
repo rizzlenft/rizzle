@@ -82,13 +82,13 @@ const GuestChip = ({ guest }: GuestChipProps) => {
           initial={{ opacity: 0, y: 10, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 10, scale: 0.9 }}
-          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-50 pointer-events-none"
+          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-[100] pointer-events-none"
         >
           <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
             <img
               src={thumbnailUrl}
               alt={`${guest} episode thumbnail`}
-              className="w-80 md:w-[420px] lg:w-[480px] h-auto"
+              className="w-[400px] md:w-[520px] lg:w-[600px] h-auto"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />

@@ -195,7 +195,7 @@ const GuestArchive = () => {
         >
           {sortedKeys.map((letter) => (
             <div key={letter}>
-              <div className="sticky top-0 z-10 mb-4 flex items-center gap-3 bg-background/80 backdrop-blur-sm py-2">
+              <div className="sticky top-0 z-20 mb-4 flex items-center gap-3 bg-background/80 backdrop-blur-sm py-2">
                 <span className="font-display text-2xl font-bold text-primary">
                   {letter}
                 </span>
