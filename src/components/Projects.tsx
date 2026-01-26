@@ -7,7 +7,7 @@ import marsPodcastImg from "@/assets/mattandrizz.jpeg";
 import avastarsImg from "@/assets/avastars.avif";
 import onchainchainImg from "@/assets/onchainchain.png";
 import flyfrog3dImg from "@/assets/flyfrog.jpg";
-import nftsmartImg from "@/assets/nftsmart.jpg";
+import tokensmartImg from "@/assets/tokensmart.png";
 import metalympicsImg from "@/assets/metalympics-new.jpeg";
 import babacciImg from "@/assets/babacci-new.jpeg";
 
@@ -57,11 +57,11 @@ const projects = [
     image: flyfrog3dImg,
   },
   {
-    name: "NFT Smart",
-    description: "Education and insights for the NFT space. Helping people navigate web3.",
+    name: "TokenSmart",
+    description: "One of the largest early web3 communities (2019-2021). Led a full program of daily/weekly events featuring builders and creators, growing to over 20,000 Discord members.",
     emoji: "🧠",
     link: "https://twitter.com/nftsmart",
-    image: nftsmartImg,
+    image: tokensmartImg,
   },
   {
     name: "Metalympics",
