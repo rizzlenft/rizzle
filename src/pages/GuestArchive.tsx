@@ -6,10 +6,64 @@ import { Input } from "@/components/ui/input";
 import wipLogo from "@/assets/wip-logo.gif";
 import marsLogo from "@/assets/mattandrizz.jpeg";
 
-// Helper to generate Twitter search URL
-const getTwitterSearchUrl = (name: string) => {
+// Known Twitter/X handles (add more as needed)
+const twitterHandles: Record<string, string> = {
+  "Beeple": "beeple",
+  "Gary Vee": "garyvee",
+  "Steve Aoki": "steveaoki",
+  "Paris Hilton": "ParisHilton",
+  "Serena Williams": "serenawilliams",
+  "Kevin Rose": "kevinrose",
+  "Tyler Winklevoss": "tyler",
+  "Kimbal Musk": "kimikibal",
+  "Rob Gronkowski": "RobGronkowski",
+  "Waka Flocka Flame": "WakaFlocka",
+  "DJ 3LAU": "3aborLAU",
+  "Don Diablo": "DonDiablo",
+  "Pharrell": "Pharrell",
+  "Snowfro": "snowfro",
+  "XCOPY": "XCOPYART",
+  "Pranksy": "praboranksy",
+  "Fvckrender": "fvckrender",
+  "gmoney": "gabormoneyeth",
+  "Farokh": "farokh",
+  "Tyler Hobbs": "tylerxhoabbs",
+  "Sam Spratt": "SamSpratt",
+  "Coldie": "Coldie",
+  "Hackatao": "Hackatao",
+  "Slimesunday": "slimesunday",
+  "Gremplin": "gremplin",
+  "WhaleShark": "WhaleShark_Pro",
+  "DCinvestor": "iamDCinvestor",
+  "Devin Finzer": "daborefinzer",
+  "Andrew Steinwold": "AndrewSteinwold",
+  "Alexis Ohanian": "alexisohanian",
+  "Richerd": "richerd",
+  "Cool Cats": "coolcats",
+  "Deadfellaz": "Deadfellaz",
+  "Pudgy Penguins": "pudaborgypenguins",
+  "Boss Beauties": "BossBeauties",
+  "Luca Netz": "LucaNetz",
+  "Keith Grossman": "KeithGrossman",
+  "Robbie Ferguson": "roabbie",
+  "Fewocious": "faborewocious",
+  "Jason Bailey": "artnome",
+  "Jen Stark": "JenStark",
+  "Yam Karkai": "YKaborarkai",
+  "Hasan Piker": "hasanthehun",
+};
+
+// Get Twitter URL - direct profile if known, search if not
+const getTwitterUrl = (name: string) => {
+  const handle = twitterHandles[name];
+  if (handle) {
+    return `https://x.com/${handle}`;
+  }
   return `https://x.com/search?q=${encodeURIComponent(name)}&src=typed_query&f=user`;
 };
+
+// Check if guest has a known handle
+const hasKnownHandle = (name: string) => !!twitterHandles[name];
 
 // Comprehensive guest list extracted from WIP Meetup and Matthew & Rizzle Show
 const guestData = [
@@ -253,11 +307,15 @@ const GuestArchive = () => {
                 {groupedGuests[letter].map((guest) => (
                   <motion.a
                     key={guest}
-                    href={getTwitterSearchUrl(guest)}
+                    href={getTwitterUrl(guest)}
                     target="_blank"
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
-                    className="group inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-card/30 px-3 py-1.5 text-sm text-foreground hover:border-primary/50 hover:bg-card/60 transition-all cursor-pointer"
+                    className={`group inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all cursor-pointer ${
+                      hasKnownHandle(guest) 
+                        ? "border-primary/30 hover:border-primary" 
+                        : "border-border/50 hover:border-primary/50"
+                    }`}
                   >
                     <span>{guest}</span>
                     <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-60 transition-opacity" />
