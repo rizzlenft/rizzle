@@ -9,7 +9,7 @@ import onchainchainImg from "@/assets/onchainchain.png";
 import flyfrog3dImg from "@/assets/flyfrog.jpg";
 import nftsmartImg from "@/assets/nftsmart.jpg";
 import metalympicsImg from "@/assets/metalympics-new.jpeg";
-import babacciImg from "@/assets/babacci.jpg";
+import babacciImg from "@/assets/babacci-new.jpeg";
 
 const projects = [
   {
@@ -19,6 +19,13 @@ const projects = [
     link: "https://twitter.com/theWIPmeetup",
     featured: true,
     image: wipMeetupImg,
+  },
+  {
+    name: "Babacci",
+    description: "BABACCIO is a generative unique 3D collectible NFT. Download the model as a .glb file by opening it in a new window and pressing S, use it across the metaverse. Fully onchain.",
+    emoji: "🎨",
+    link: "https://opensea.io/collection/babacci",
+    image: babacciImg,
   },
   {
     name: "OnChainChain",
@@ -62,13 +69,6 @@ const projects = [
     emoji: "🏆",
     link: "https://twitter.com/metalympics",
     image: metalympicsImg,
-  },
-  {
-    name: "Babacci",
-    description: "Art collective pushing boundaries. Weird, wonderful, and unapologetically creative.",
-    emoji: "🎨",
-    link: "https://twitter.com/hashtag/babacci",
-    image: babacciImg,
   },
 ];
 
