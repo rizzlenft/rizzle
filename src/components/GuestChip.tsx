@@ -79,10 +79,10 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       {/* Thumbnail preview on hover */}
       {thumbnailUrl && isHovering && (
         <motion.div
-          initial={{ opacity: 0, y: 10, scale: 0.9 }}
+          initial={{ opacity: 0, y: -10, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 10, scale: 0.9 }}
-          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-[100] pointer-events-none"
+          exit={{ opacity: 0, y: -10, scale: 0.98 }}
+          className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-[100] pointer-events-none"
         >
           <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
             <img
@@ -106,7 +106,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
             </div>
           </div>
           {/* Arrow */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-card" />
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-full w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-card" />
         </motion.div>
       )}
     </motion.div>
