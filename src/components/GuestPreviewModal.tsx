@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -37,6 +38,25 @@ const GuestPreviewModal = ({
     onSwipeRight: onPrevious,
     enabled: hasMultipleEpisodes,
   });
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft" && hasMultipleEpisodes) {
+        e.preventDefault();
+        onPrevious();
+      } else if (e.key === "ArrowRight" && hasMultipleEpisodes) {
+        e.preventDefault();
+        onNext();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [hasMultipleEpisodes, onPrevious, onNext, onClose]);
 
   const handleArrowClick = (e: React.MouseEvent, direction: "prev" | "next") => {
     e.stopPropagation();
