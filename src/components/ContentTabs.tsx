@@ -9,7 +9,7 @@ const ContentTabs = () => {
   const [activeTab, setActiveTab] = useState<"projects" | "art">("projects");
 
   return (
-    <div className="relative px-6 py-24">
+    <div className="relative px-6 py-8">
       <div className="mx-auto max-w-6xl">
         {/* Section header with inline toggle */}
         <motion.div
@@ -130,7 +130,7 @@ const projects = [
   },
   {
     name: "Babacci",
-    description: "BABACCIO is a generative unique 3D collectible NFT. Download the model as a .glb file by opening it in a new window and pressing S, use it across the metaverse. Fully onchain.",
+    description: "Babacci is a generative unique 3D collectible NFT. Download the model as a .glb file by opening it in a new window and pressing S, use it across the metaverse. Fully onchain.",
     emoji: "🎨",
     link: "https://opensea.io/collection/babacci",
     image: babacciImg,

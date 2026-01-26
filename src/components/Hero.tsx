@@ -3,7 +3,7 @@ import rizzleSig from "@/assets/rizzle-sig-v2.png";
 
 const Hero = () => {
   return (
-    <section className="relative flex min-h-[50vh] flex-col items-center justify-center px-6 py-12">
+    <section className="relative flex flex-col items-center justify-center px-6 py-8">
       {/* Background grid pattern */}
       <div className="pointer-events-none absolute inset-0 grid-pattern opacity-30" />
       
@@ -66,7 +66,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7, duration: 0.6 }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-8"
+          className="mt-6 flex flex-wrap items-center justify-center gap-8"
         >
           <div className="text-center">
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">8+</div>
