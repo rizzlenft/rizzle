@@ -39,7 +39,7 @@ const Hero = () => {
           <img 
             src={rizzleSig} 
             alt="Rizzle" 
-            className="mx-auto h-32 w-auto drop-shadow-[0_0_30px_rgba(0,255,136,0.5)] sm:h-40 md:h-52"
+            className="mx-auto h-32 w-auto sm:h-40 md:h-52"
           />
         </motion.div>
         
