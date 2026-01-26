@@ -61,7 +61,7 @@ const Socials = () => {
           <h2 className="mb-3 font-display text-6xl font-bold text-primary text-glow sm:text-7xl md:text-8xl italic tracking-tight">
             Connect
           </h2>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-primary/70 text-sm">
             find me across the decentralized web
           </p>
         </motion.div>
