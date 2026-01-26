@@ -120,13 +120,15 @@ const GuestChip = ({ guest }: GuestChipProps) => {
               className="w-full h-auto"
               loading="lazy"
             />
-            {/* Softer overlay (avoids banding artifacts on some GPUs/scroll layers) */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-            <div className="absolute bottom-3 left-3 right-3">
-              <p className="text-white text-sm md:text-base font-semibold truncate drop-shadow-lg">{guest}</p>
-              {episodeCount > 1 && (
-                <p className="text-white/80 text-xs md:text-sm">{episodeCount} episodes</p>
-              )}
+            {/* Remove full-image overlays to avoid banding/"black bar" artifacts.
+                Use a small caption pill instead for readability. */}
+            <div className="absolute bottom-3 left-3 right-3 flex flex-col gap-0.5">
+              <div className="inline-flex w-fit max-w-full flex-col rounded-md bg-black/60 px-2 py-1">
+                <p className="text-white text-sm md:text-base font-semibold truncate">{guest}</p>
+                {episodeCount > 1 && (
+                  <p className="text-white/80 text-xs md:text-sm leading-tight">{episodeCount} episodes</p>
+                )}
+              </div>
             </div>
             {/* Play button overlay */}
             <div className="absolute inset-0 flex items-center justify-center">
