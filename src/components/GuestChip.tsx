@@ -120,7 +120,8 @@ const GuestChip = ({ guest }: GuestChipProps) => {
               className="w-full h-auto"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+            {/* Softer overlay (avoids banding artifacts on some GPUs/scroll layers) */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
             <div className="absolute bottom-3 left-3 right-3">
               <p className="text-white text-sm md:text-base font-semibold truncate drop-shadow-lg">{guest}</p>
               {episodeCount > 1 && (
