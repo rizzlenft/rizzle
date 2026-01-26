@@ -40,6 +40,12 @@ const Hero = () => {
             src={rizzleSig} 
             alt="Rizzle" 
             className="mx-auto h-32 w-auto sm:h-40 md:h-52 invert"
+            style={{ 
+              imageRendering: 'auto',
+              WebkitFontSmoothing: 'antialiased'
+            }}
+            loading="eager"
+            decoding="sync"
           />
         </motion.div>
         
