@@ -53,13 +53,14 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     const margin = isMobile ? 16 : 24;
 
     if (isMobile) {
-      // Center on mobile
+      // Center on mobile with proper viewport handling
       setPreviewStyle({
         position: "fixed",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: previewWidth,
+        width: `min(${previewWidth}px, calc(100vw - 32px))`,
+        maxWidth: "90vw",
         zIndex: 1000,
       });
     } else {
@@ -193,9 +194,10 @@ const GuestChip = ({ guest }: GuestChipProps) => {
             )}
             <motion.div
               data-mobile-preview
-              initial={{ opacity: 0, y: 8, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.98 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
               style={previewStyle}
             >
               <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
