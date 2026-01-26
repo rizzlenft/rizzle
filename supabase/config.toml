@@ -1,1 +1,4 @@
 project_id = "okfgskiibidjfneysyzi"
+
+[functions.scrape-youtube-guests]
+verify_jwt = false
