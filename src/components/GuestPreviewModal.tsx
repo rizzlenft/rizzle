@@ -157,6 +157,32 @@ const GuestPreviewModal = ({
                 </p>
               )}
             </div>
+
+            {/* Episode dot indicators */}
+            {hasMultipleEpisodes && (
+              <div className="flex items-center justify-center gap-1.5">
+                {Array.from({ length: episodeCount }).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Navigate to specific episode
+                      if (index < currentIndex) {
+                        for (let i = 0; i < currentIndex - index; i++) onPrevious();
+                      } else if (index > currentIndex) {
+                        for (let i = 0; i < index - currentIndex; i++) onNext();
+                      }
+                    }}
+                    className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                      index === currentIndex
+                        ? "bg-primary scale-125"
+                        : "bg-white/50 hover:bg-white/80"
+                    }`}
+                    aria-label={`Go to episode ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
             
             {/* Watch Now button for mobile */}
             {isMobile && (
