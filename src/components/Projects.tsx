@@ -22,7 +22,7 @@ const projects = [
   },
   {
     name: "OnChainChain",
-    description: "Building for the blockchain, staying true to decentralization principles.",
+    description: "Building for the blockchain, staying true to onchain principles.",
     emoji: "⛓️",
     link: "https://opensea.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
     image: onchainchainImg,
@@ -31,7 +31,7 @@ const projects = [
     name: "Avastars",
     description: "Pioneering generative avatar NFT project. On-chain art that actually meant something.",
     emoji: "👾",
-    link: "https://twitter.com/avastarsnft",
+    link: "https://opensea.io/collection/avastar",
     image: avastarsImg,
   },
   {
