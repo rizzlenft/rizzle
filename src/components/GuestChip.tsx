@@ -26,53 +26,30 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   const thumbnailUrl = videoIds.length > 0 ? getYouTubeThumbnail(videoIds[0], 'maxres') : null;
 
   const previewWidth = useMemo(() => {
-    if (typeof window === "undefined") return 600;
-    // Keep it huge on desktop, but never exceed viewport.
-    return Math.min(720, Math.max(360, window.innerWidth - 32));
+    if (typeof window === "undefined") return 500;
+    // Large but consistent size
+    return Math.min(560, Math.max(320, window.innerWidth * 0.4));
   }, []);
 
-  const previewHeight = useMemo(() => {
-    // Approx 16:9 thumbnail.
-    return Math.round(previewWidth * 9 / 16);
-  }, [previewWidth]);
-
   useEffect(() => {
-    if (!isHovering || !thumbnailUrl || !chipRef.current) {
+    if (!isHovering || !thumbnailUrl) {
       setPreviewStyle(null);
       return;
     }
 
-    const gutter = 8;
-    const offset = 6;
-    const rect = chipRef.current.getBoundingClientRect();
-
-    // Position thumbnail with top-left corner aligned to the chip
-    // Left edge starts right after the chip
-    let left = rect.right + offset;
-    
-    // If no room on the right, place to the left
-    if (left + previewWidth > window.innerWidth - gutter) {
-      left = rect.left - previewWidth - offset;
-    }
-    
-    // Clamp left to viewport
-    left = Math.max(gutter, Math.min(left, window.innerWidth - previewWidth - gutter));
-
-    // Top aligns with the top of the chip
-    let top = rect.top;
-    
-    // Clamp to viewport vertically
-    top = Math.max(gutter, Math.min(top, window.innerHeight - previewHeight - gutter));
+    // Fixed position: bottom-right corner of viewport for ALL thumbnails
+    // This ensures uniform appearance regardless of where the chip is located
+    const margin = 24;
 
     setPreviewStyle({
       position: "fixed",
-      top,
-      left,
+      bottom: margin,
+      right: margin,
       width: previewWidth,
       zIndex: 1000,
       pointerEvents: "none",
     });
-  }, [isHovering, thumbnailUrl, previewHeight, previewWidth]);
+  }, [isHovering, thumbnailUrl, previewWidth]);
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();
