@@ -21,7 +21,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   const url = getGuestVideoUrl(guest);
   const episodeCount = getGuestEpisodeCount(guest);
   const videoIds = getAllGuestVideoIds(guest);
-  const thumbnailUrl = videoIds.length > 0 ? getYouTubeThumbnail(videoIds[0], 'hq') : null;
+  const thumbnailUrl = videoIds.length > 0 ? getYouTubeThumbnail(videoIds[0], 'maxres') : null;
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -88,7 +88,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
             <img
               src={thumbnailUrl}
               alt={`${guest} episode thumbnail`}
-              className="w-72 md:w-80 lg:w-96 h-auto"
+              className="w-80 md:w-[420px] lg:w-[480px] h-auto"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -100,8 +100,8 @@ const GuestChip = ({ guest }: GuestChipProps) => {
             </div>
             {/* Play button overlay */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/90 flex items-center justify-center shadow-lg">
-                <Play className="w-7 h-7 md:w-8 md:h-8 text-primary-foreground ml-0.5" fill="currentColor" />
+              <div className="w-8 h-8 rounded-full bg-primary/80 flex items-center justify-center shadow-md">
+                <Play className="w-4 h-4 text-primary-foreground ml-0.5" fill="currentColor" />
               </div>
             </div>
           </div>
