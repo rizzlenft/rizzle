@@ -237,6 +237,7 @@ import manifoldArtImg from "@/assets/manifold-art.png";
 import zerooneArtImg from "@/assets/zeroone-art.png";
 import openseaRizzleImg from "@/assets/opensea-rizzle.avif";
 import openseaVaultImg from "@/assets/opensea-vault.webp";
+import zerooneCollectedImg from "@/assets/zeroone-collected.png";
 // Platform logo components
 const OpenSeaLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 90 90" className={className} fill="currentColor">
@@ -286,6 +287,7 @@ const collectedCollections = [
     description: "Curated collection of digital art on ZeroOne.",
     link: "https://zeroone.art/profile/rizzle",
     logo: ZeroOneLogo,
+    image: zerooneCollectedImg,
   },
   {
     name: "OpenSea (Rizzle)",
