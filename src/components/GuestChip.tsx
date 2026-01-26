@@ -42,22 +42,37 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       return;
     }
 
-    const gutter = 16;
-    const offset = 4;
+    const gutter = 8;
+    const offset = 8;
     const rect = chipRef.current.getBoundingClientRect();
 
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const spaceAbove = rect.top;
-    const openAbove = spaceBelow < previewHeight + offset + gutter && spaceAbove > previewHeight + offset + gutter;
+    // Try to place to the right of the chip
+    const spaceRight = window.innerWidth - rect.right;
+    const spaceLeft = rect.left;
+    
+    let left: number;
+    let top: number;
 
-    const top = openAbove
-      ? rect.top - offset - previewHeight
-      : rect.bottom + offset;
+    if (spaceRight >= previewWidth + offset + gutter) {
+      // Place to the right
+      left = rect.right + offset;
+    } else if (spaceLeft >= previewWidth + offset + gutter) {
+      // Place to the left
+      left = rect.left - previewWidth - offset;
+    } else {
+      // Center horizontally if no room on sides
+      const idealLeft = rect.left + rect.width / 2 - previewWidth / 2;
+      left = Math.min(
+        window.innerWidth - previewWidth - gutter,
+        Math.max(gutter, idealLeft)
+      );
+    }
 
-    const idealLeft = rect.left + rect.width / 2 - previewWidth / 2;
-    const left = Math.min(
-      window.innerWidth - previewWidth - gutter,
-      Math.max(gutter, idealLeft)
+    // Vertically center with the chip, but clamp to viewport
+    const idealTop = rect.top + rect.height / 2 - previewHeight / 2;
+    top = Math.min(
+      window.innerHeight - previewHeight - gutter,
+      Math.max(gutter, idealTop)
     );
 
     setPreviewStyle({
