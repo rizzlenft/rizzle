@@ -133,11 +133,11 @@ const projects = [
     image: onchainchainImg,
   },
   {
-    name: "Avastars",
-    description: "Pioneering generative avatar NFT project. Onchain art that actually meant something.",
-    emoji: "👾",
-    link: "https://opensea.io/collection/avastar",
-    image: avastarsImg,
+    name: "Rizzlefest",
+    description: "A legendary, recurrent web3 camping retreat bringing the community together IRL for adventure, connection, and unforgettable vibes in the great outdoors.",
+    emoji: "🏕️",
+    link: "https://twitter.com/hashtag/rizzlefest",
+    image: rizzlefestImg,
   },
   {
     name: "The Matthew & Rizzle Show",
@@ -169,11 +169,11 @@ const projects = [
     image: metalympicsImg,
   },
   {
-    name: "Rizzlefest",
-    description: "A web3 camping retreat hosted two years in a row, bringing the community together IRL for adventure, connection, and good vibes in the great outdoors.",
-    emoji: "🏕️",
-    link: "https://twitter.com/hashtag/rizzlefest",
-    image: rizzlefestImg,
+    name: "Avastars",
+    description: "Pioneering generative avatar NFT project. Onchain art that actually meant something.",
+    emoji: "👾",
+    link: "https://opensea.io/collection/avastar",
+    image: avastarsImg,
   },
 ];
 
