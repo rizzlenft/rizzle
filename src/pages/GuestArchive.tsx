@@ -1,10 +1,15 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Search, ArrowLeft, Users } from "lucide-react";
+import { Search, ArrowLeft, Users, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import wipLogo from "@/assets/wip-logo.gif";
 import marsLogo from "@/assets/mattandrizz.jpeg";
+
+// Helper to generate Twitter search URL
+const getTwitterSearchUrl = (name: string) => {
+  return `https://x.com/search?q=${encodeURIComponent(name)}&src=typed_query&f=user`;
+};
 
 // Comprehensive guest list extracted from WIP Meetup and Matthew & Rizzle Show
 const guestData = [
@@ -246,13 +251,17 @@ const GuestArchive = () => {
               </div>
               <div className="flex flex-wrap gap-2">
                 {groupedGuests[letter].map((guest) => (
-                  <motion.span
+                  <motion.a
                     key={guest}
+                    href={getTwitterSearchUrl(guest)}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
-                    className="rounded-full border border-border/50 bg-card/30 px-3 py-1.5 text-sm text-foreground hover:border-primary/50 hover:bg-card/60 transition-all cursor-default"
+                    className="group inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-card/30 px-3 py-1.5 text-sm text-foreground hover:border-primary/50 hover:bg-card/60 transition-all cursor-pointer"
                   >
-                    {guest}
-                  </motion.span>
+                    <span>{guest}</span>
+                    <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-60 transition-opacity" />
+                  </motion.a>
                 ))}
               </div>
             </div>
