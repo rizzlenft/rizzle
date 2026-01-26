@@ -37,13 +37,13 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       return;
     }
 
-    // Fixed position: bottom-right corner of viewport for ALL thumbnails
-    // This ensures uniform appearance regardless of where the chip is located
+    // Fixed position: top-right corner of viewport for ALL thumbnails
+    // This ensures they appear above the category headings
     const margin = 24;
 
     setPreviewStyle({
       position: "fixed",
-      bottom: margin,
+      top: margin,
       right: margin,
       width: previewWidth,
       zIndex: 1000,
