@@ -1,64 +1,13 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Search, ArrowLeft, Users, Play, Copy, Check } from "lucide-react";
+import { Search, ArrowLeft, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import wipLogo from "@/assets/wip-logo.gif";
 import marsLogo from "@/assets/mattandrizz.jpeg";
-import { guestData, getGuestVideoUrl, hasDirectLink } from "@/data/guestData";
-
-// Guest chip component with copy functionality
-const GuestChip = ({ guest }: { guest: string }) => {
-  const [copied, setCopied] = useState(false);
-  const { toast } = useToast();
-  const url = getGuestVideoUrl(guest);
-
-  const handleCopy = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      toast({
-        title: "Link copied!",
-        description: `YouTube link for ${guest} copied to clipboard`,
-      });
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      toast({
-        title: "Failed to copy",
-        description: "Please try again",
-        variant: "destructive",
-      });
-    }
-  };
-
-  return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      className={`group inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all ${
-        hasDirectLink(guest) 
-          ? "border-primary/30 hover:border-primary" 
-          : "border-border/50 hover:border-primary/50"
-      }`}
-    >
-      <Play className="h-3 w-3 opacity-40 group-hover:opacity-80 transition-opacity" />
-      <span>{guest}</span>
-      <button
-        onClick={handleCopy}
-        className="ml-1 p-0.5 rounded hover:bg-primary/20 transition-colors"
-        title="Copy YouTube link"
-      >
-        {copied ? (
-          <Check className="h-3 w-3 text-primary" />
-        ) : (
-          <Copy className="h-3 w-3 opacity-40 group-hover:opacity-80 transition-opacity" />
-        )}
-      </button>
-    </motion.div>
-  );
-};
+import { guestData } from "@/data/guestData";
+import GuestChip from "@/components/GuestChip";
+import RandomEpisodeButton from "@/components/RandomEpisodeButton";
 
 const GuestArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -210,22 +159,25 @@ const GuestArchive = () => {
 
       {/* Search and guest list */}
       <main className="mx-auto max-w-6xl px-6 py-12">
-        {/* Search bar */}
+        {/* Search bar and Random button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.5 }}
           className="mb-10"
         >
-          <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search guests..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-card/50 border-border/50 focus:border-primary/50"
-            />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto">
+            <div className="relative flex-1 w-full">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search guests..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-card/50 border-border/50 focus:border-primary/50"
+              />
+            </div>
+            <RandomEpisodeButton />
           </div>
           {searchQuery && (
             <p className="text-center text-sm text-muted-foreground mt-3">

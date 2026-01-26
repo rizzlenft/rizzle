@@ -414,6 +414,47 @@ export const getGuestVideoUrl = (name: string): string => {
   return `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " WIP Meetup OR Matthew Rizzle")}`;
 };
 
+// Get all video IDs for a guest
+export const getAllGuestVideoIds = (name: string): string[] => {
+  const videoId = guestVideoLinks[name];
+  if (!videoId) return [];
+  return Array.isArray(videoId) ? videoId : [videoId];
+};
+
+// Get episode count for a guest
+export const getGuestEpisodeCount = (name: string): number => {
+  const videoId = guestVideoLinks[name];
+  if (!videoId) return 0;
+  return Array.isArray(videoId) ? videoId.length : 1;
+};
+
+// Get YouTube thumbnail URL for a video
+export const getYouTubeThumbnail = (videoId: string, quality: 'default' | 'mq' | 'hq' | 'sd' | 'maxres' = 'mq'): string => {
+  const qualityMap = {
+    default: 'default',
+    mq: 'mqdefault',
+    hq: 'hqdefault',
+    sd: 'sddefault',
+    maxres: 'maxresdefault'
+  };
+  return `https://img.youtube.com/vi/${videoId}/${qualityMap[quality]}.jpg`;
+};
+
+// Get a random episode (returns guest name and video URL)
+export const getRandomEpisode = (): { guest: string; videoId: string; url: string } => {
+  // Get all guests with direct links
+  const guestsWithLinks = Object.keys(guestVideoLinks);
+  const randomGuest = guestsWithLinks[Math.floor(Math.random() * guestsWithLinks.length)];
+  const videoIds = getAllGuestVideoIds(randomGuest);
+  const randomVideoId = videoIds[Math.floor(Math.random() * videoIds.length)];
+  
+  return {
+    guest: randomGuest,
+    videoId: randomVideoId,
+    url: `https://youtube.com/watch?v=${randomVideoId}`
+  };
+};
+
 // Check if guest has a direct video link
 export const hasDirectLink = (name: string) => !!guestVideoLinks[name];
 
@@ -449,7 +490,7 @@ export const guestData = [
   "Grifter Squaddies",
   // H
   "Hackatao", "Han", "HerStoryDAO", "HEXGO", "HiddenForces", "Hom3work", "Hool", "Hot DougsNFT",
-  "HPrivakos", "HubzzHQ", "Hugh McDonaugh", "Hunky Heroes", "HyperCastle Explorers",
+  "HPrivakos", "HubzzHQ", "Hugh McDonaugh", "Hugo McDonaugh", "Hunky Heroes", "HyperCastle Explorers",
   // I
   "Interface", "Intro To Music Theory", "Iraxlab",
   // J
@@ -463,18 +504,19 @@ export const guestData = [
   // L
   "LapinMignon", "Latashá", "Leandro", "Leo Da Gotchi", "Leonie Engel", "Leyline", "Lighthouse",
   "Lilia", "Lin Dai", "Los Cat", "Louie C Rhymes", "Lucidhouse", "Lucho Poletti", "LuckyManekiNFT",
-  "Ludovica",
+  "Ludovica", "Lumens",
   // M
   "MAKEANFT", "MakersPlace", "MarbleCards", "Maria-Helena-Trad", "Matt Kane", "Matt Mason",
   "Mattias", "Matty DCLBlogger", "Mavenarte", "MC Vandal", "Meme.com", "MetaCartel", "MetaFactory",
-  "MetaJax", "MetaRick", "Metageist", "Metavoxelz", "Micah Johnson", "Micol", "Mike Casey",
-  "Mintbase", "MisfitPixels", "MomentumXYZ", "MovieShots", "Movement Generation", "Mr. Y",
-  "MrRichi", "Musashi", "Museum of CryptoArt",
+  "MetaJax", "Metalympics", "MetaRick", "Metageist", "Metavoxelz", "Micah Johnson", "Micol",
+  "Mike Casey", "Mintbase", "MisfitPixels", "MomentumXYZ", "Monaverse", "MovieShots",
+  "Movement Generation", "Mr. Y", "MrRichi", "Musashi", "Museum of CryptoArt",
   // N
-  "Nate Alex", "Nate Geier", "Nathan", "Nedos", "NeonGlitch", "NFT Garage", "NFT Plazas",
-  "NFTconomy", "NFTfi", "Nifty Island", "Niftytime", "NineOverZero", "NonFunGerbils", "Numomo Art",
+  "Nate Alex", "Nate Geier", "Nathan", "Nedos", "NeonGlitch", "NFT Celsticals", "NFT Garage",
+  "NFT Plazas", "NFTconomy", "NFTfi", "Nifty Island", "Niftytime", "NineOverZero", "NonFunGerbils",
+  "Numomo Art",
   // O
-  "Ogar", "Ol1y Art", "OlgaForce 3D", "Omega Runner", "OnChainChain", "1KX Network", 
+  "Ogar", "Ol1y Art", "OlgaForce 3D", "Omega Runner", "OnChainChain", "1KX Network",
   "105 Collective", "OneOf", "Oona", "OpenVoxels", "Origin Art Museum", "Osinachi", "Ottis",
   // P
   "Paradoxx", "Patrick Amadon", "Patricio W.", "Patrizia", "Pepelangelo", "PfeffUnit",
@@ -486,13 +528,13 @@ export const guestData = [
   "Rocketman", "Rogan X", "RoganX4", "Roham", "Roneil", "Room in Eight", "Roustan", "RussFranky",
   "Rutger Van Der Tas",
   // S
-  "Sam Brukhman", "SandyMe0ws", "Sasha Ivanov", "Scarlet Factory", "Scuube", "Seaofarrows", "Seb",
-  "Sekud Beats", "Sho", "Sid Kalla", "Simona Pop", "Simulacra", "Sinkas", "Skeenee", "SkazOne",
-  "SkyBravo", "SkyGolpe", "SlingshotDAO", "Snail0x", "Snax", "Snowfro", "SongCamp", "Soundcamp",
-  "SoundClash", "Sov", "Spaced Painter", "Sparrow", "Spherical Art", "Spheroid Universe",
-  "Squiggle DAO", "SteadyBreaks", "Stefan Große Halbuer", "Stellabelle", "Stellacat", "Steve K.",
-  "Steve McGarry", "Stina Jones", "StratfordRex", "StrawberrySith", "StudioTBD", "Subs.fun",
-  "Supahmarbler", "SuperRare", "SuperWorld", "Swopes",
+  "Sam Brukhman", "SandyMe0ws", "Sasha Ivanov", "Scarlet Factory", "Scuube", "Seaofarrows",
+  "Seb", "Sekud Beats", "Sho", "Sid Kalla", "Simona Pop", "Simulacra", "Sinkas", "Skeenee",
+  "SkazOne", "SkyBravo", "SkyGolpe", "SlingshotDAO", "Snail0x", "Snax", "Snowfro", "SongCamp",
+  "Soundcamp", "SoundClash", "Sov", "Spaced Painter", "Sparrow", "Spherical Art",
+  "Spheroid Universe", "Squiggle DAO", "SteadyBreaks", "Stefan Große Halbuer", "Stellabelle",
+  "Stellacat", "Steve K.", "Steve McGarry", "Stina Jones", "StratfordRex", "StrawberrySith",
+  "StudioTBD", "Subs.fun", "Supahmarbler", "SuperRare", "SuperWorld", "Swopes",
   // T
   "Terra Virtua", "Teto", "The Guild", "The Lucid Planet", "The Man Who Sold The World",
   "The Sandbox", "TheBeatMiner", "TheSarahShow", "Thomas Dylan Daniel", "ThreadH3ADS", "Tipn",
