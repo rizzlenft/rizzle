@@ -5,13 +5,22 @@ interface SwipeGestureOptions {
   onSwipeRight?: () => void;
   minSwipeDistance?: number;
   enabled?: boolean;
+  hapticFeedback?: boolean;
 }
+
+// Trigger haptic feedback on supported devices
+const triggerHaptic = (duration: number = 10) => {
+  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+    navigator.vibrate(duration);
+  }
+};
 
 export function useSwipeGesture({
   onSwipeLeft,
   onSwipeRight,
   minSwipeDistance = 50,
   enabled = true,
+  hapticFeedback = true,
 }: SwipeGestureOptions) {
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
@@ -38,6 +47,10 @@ export function useSwipeGesture({
 
       // Only trigger swipe if horizontal movement is greater than vertical
       if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+        if (hapticFeedback) {
+          triggerHaptic();
+        }
+        
         if (deltaX > 0) {
           onSwipeRight?.();
         } else {
@@ -48,11 +61,12 @@ export function useSwipeGesture({
       touchStartX.current = null;
       touchStartY.current = null;
     },
-    [enabled, minSwipeDistance, onSwipeLeft, onSwipeRight]
+    [enabled, minSwipeDistance, onSwipeLeft, onSwipeRight, hapticFeedback]
   );
 
   return {
     handleTouchStart,
     handleTouchEnd,
+    triggerHaptic,
   };
 }
