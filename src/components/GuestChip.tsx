@@ -21,7 +21,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   const url = getGuestVideoUrl(guest);
   const episodeCount = getGuestEpisodeCount(guest);
   const videoIds = getAllGuestVideoIds(guest);
-  const thumbnailUrl = videoIds.length > 0 ? getYouTubeThumbnail(videoIds[0], 'mq') : null;
+  const thumbnailUrl = videoIds.length > 0 ? getYouTubeThumbnail(videoIds[0], 'hq') : null;
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -82,26 +82,26 @@ const GuestChip = ({ guest }: GuestChipProps) => {
           initial={{ opacity: 0, y: 10, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 10, scale: 0.9 }}
-          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 pointer-events-none"
+          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-50 pointer-events-none"
         >
-          <div className="relative rounded-lg overflow-hidden shadow-xl border border-border/50 bg-card">
+          <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
             <img
               src={thumbnailUrl}
               alt={`${guest} episode thumbnail`}
-              className="w-48 h-auto"
+              className="w-72 md:w-80 lg:w-96 h-auto"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-2 left-2 right-2">
-              <p className="text-white text-xs font-medium truncate">{guest}</p>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+            <div className="absolute bottom-3 left-3 right-3">
+              <p className="text-white text-sm md:text-base font-semibold truncate drop-shadow-lg">{guest}</p>
               {episodeCount > 1 && (
-                <p className="text-white/70 text-[10px]">{episodeCount} episodes</p>
+                <p className="text-white/80 text-xs md:text-sm">{episodeCount} episodes</p>
               )}
             </div>
             {/* Play button overlay */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center">
-                <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/90 flex items-center justify-center shadow-lg">
+                <Play className="w-7 h-7 md:w-8 md:h-8 text-primary-foreground ml-0.5" fill="currentColor" />
               </div>
             </div>
           </div>
