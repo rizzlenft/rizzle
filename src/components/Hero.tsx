@@ -30,30 +30,29 @@ const Hero = () => {
         </motion.div>
         
         {/* Signature - draws in quickly */}
-        <motion.div
-          className="mb-8 overflow-visible"
-          initial={{ clipPath: "inset(0 100% 0 0)" }}
-          animate={{ clipPath: "inset(0 0% 0 0)" }}
-          transition={{ delay: 0.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <motion.img 
-            src={rizzleSig} 
-            alt="Rizzle" 
-            className="h-32 w-auto sm:h-40 md:h-52"
-            initial={{ opacity: 0 }}
-            animate={{ 
-              opacity: 1,
-              filter: [
-                "drop-shadow(0 0 10px rgba(0,255,136,0.3))",
-                "drop-shadow(0 0 25px rgba(0,255,136,0.5)) drop-shadow(0 0 50px rgba(0,255,136,0.25))",
-              ]
-            }}
-            transition={{
-              opacity: { delay: 0.3, duration: 0.3 },
-              filter: { delay: 0.9, duration: 0.5 }
-            }}
-          />
-        </motion.div>
+        <div className="relative mb-8 h-32 sm:h-40 md:h-52 overflow-hidden">
+          <motion.div
+            className="absolute inset-0"
+            initial={{ x: "-100%" }}
+            animate={{ x: "0%" }}
+            transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <motion.img 
+              src={rizzleSig} 
+              alt="Rizzle" 
+              className="h-full w-auto"
+              animate={{ 
+                filter: [
+                  "drop-shadow(0 0 10px rgba(0,255,136,0.3))",
+                  "drop-shadow(0 0 30px rgba(0,255,136,0.6)) drop-shadow(0 0 60px rgba(0,255,136,0.3))",
+                ]
+              }}
+              transition={{
+                filter: { delay: 1, duration: 0.6 }
+              }}
+            />
+          </motion.div>
+        </div>
         
         {/* Bio */}
         <motion.p
