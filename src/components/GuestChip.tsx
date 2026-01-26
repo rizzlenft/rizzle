@@ -72,18 +72,31 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     }
   };
 
+  const handleChipClick = () => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <>
       <motion.div
         ref={chipRef}
         whileHover={{ scale: 1.05 }}
-        className={`group relative inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all ${
+        className={`group relative inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all cursor-pointer ${
           hasDirectLink(guest) 
             ? "border-primary/30 hover:border-primary" 
             : "border-border/50 hover:border-primary/50"
         }`}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
+        onClick={handleChipClick}
+        role="link"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleChipClick();
+          }
+        }}
       >
       <Play className="h-3 w-3 opacity-40 group-hover:opacity-80 transition-opacity" />
       <span>{guest}</span>
