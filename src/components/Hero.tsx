@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import rizzleSig from "@/assets/rizzlesig.png";
+import rizzleSig from "@/assets/rizzle-sig-v2.png";
 
 const Hero = () => {
   return (

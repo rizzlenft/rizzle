@@ -172,7 +172,7 @@ const projects = [
   },
   {
     name: "Avastars",
-    description: "Pioneering generative avatar NFT project. Onchain art that actually meant something.",
+    description: "Generative PFP NFTs stored entirely onchain. Est. 2020. Pioneering avatar art that actually meant something.",
     emoji: "👾",
     link: "https://opensea.io/collection/avastar",
     image: avastarsImg,
