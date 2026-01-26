@@ -120,12 +120,13 @@ const GuestChip = ({ guest }: GuestChipProps) => {
 
     if (isMobile) {
       // Center on mobile with proper viewport handling
+      const mobileWidth = Math.min(previewWidth, window.innerWidth - 32);
       setPreviewStyle({
         position: "fixed",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: `min(${previewWidth}px, calc(100vw - 32px))`,
+        width: mobileWidth,
         maxWidth: "90vw",
         zIndex: 1000,
       });
