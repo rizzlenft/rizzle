@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Search, ArrowLeft, Users, Play, Copy, Check } from "lucide-react";
@@ -62,6 +62,11 @@ const GuestChip = ({ guest }: { guest: string }) => {
 
 const GuestArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const filteredGuests = useMemo(() => {
     if (!searchQuery.trim()) return guestData;
