@@ -40,13 +40,17 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   // For chip click, use first episode URL
   const url = getGuestVideoUrl(guest);
 
-  const previewWidth = useMemo(() => {
+  // Calculate preview width based on current viewport
+  const getPreviewWidth = () => {
     if (typeof window === "undefined") return 500;
-    if (isMobile) return Math.min(340, window.innerWidth - 32);
-    return Math.min(560, Math.max(320, window.innerWidth * 0.4));
-  }, [isMobile]);
+    const viewportWidth = window.innerWidth;
+    const isCurrentlyMobile = viewportWidth < 768;
+    if (isCurrentlyMobile) return Math.min(340, viewportWidth - 32);
+    return Math.min(560, Math.max(320, viewportWidth * 0.4));
+  };
 
-  const showPreview = isMobile ? showMobilePreview : isHovering;
+  // Use showMobilePreview for mobile (based on viewport detection, not hook)
+  const showPreview = showMobilePreview || isHovering;
 
   // Reset episode index when preview closes
   useEffect(() => {
@@ -110,38 +114,42 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     }
   };
 
+  // Determine if viewport is mobile-sized (direct check, not relying on hook timing)
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  
   useEffect(() => {
-    if (!showPreview || !currentThumbnailUrl) {
-      setPreviewStyle(null);
-      return;
-    }
+    const checkViewport = () => {
+      setIsMobileViewport(window.innerWidth < 768);
+    };
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
+    return () => window.removeEventListener('resize', checkViewport);
+  }, []);
 
-    const margin = isMobile ? 16 : 24;
+  // Simple previewStyle - centering will be handled by CSS media query
+  const mobilePreviewStyle: React.CSSProperties = {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: Math.min(340, typeof window !== "undefined" ? window.innerWidth - 32 : 340),
+    maxWidth: "calc(100vw - 32px)",
+    zIndex: 1000,
+  };
 
-    if (isMobile) {
-      // Center on mobile with proper viewport handling
-      const mobileWidth = Math.min(previewWidth, window.innerWidth - 32);
-      setPreviewStyle({
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        width: mobileWidth,
-        maxWidth: "90vw",
-        zIndex: 1000,
-      });
-    } else {
-      // Top-right on desktop
-      setPreviewStyle({
-        position: "fixed",
-        top: margin,
-        right: margin,
-        width: previewWidth,
-        zIndex: 1000,
-        pointerEvents: "none",
-      });
-    }
-  }, [showPreview, currentThumbnailUrl, previewWidth, isMobile]);
+  const desktopPreviewStyle: React.CSSProperties = {
+    position: "fixed",
+    top: 24,
+    right: 24,
+    width: typeof window !== "undefined" ? Math.min(560, Math.max(320, window.innerWidth * 0.4)) : 500,
+    zIndex: 1000,
+    pointerEvents: "none",
+  };
+
+  // Determine which style to use based on viewport at render time
+  const currentPreviewStyle = typeof window !== "undefined" && window.innerWidth < 768 
+    ? mobilePreviewStyle 
+    : desktopPreviewStyle;
 
   // Close mobile preview when clicking outside
   useEffect(() => {
@@ -163,7 +171,9 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   }, [showMobilePreview, isMobile]);
 
   const handleChipClick = () => {
-    if (isMobile && currentThumbnailUrl) {
+    // Use direct viewport check instead of hook for reliable mobile detection
+    const isCurrentlyMobile = window.innerWidth < 768;
+    if (isCurrentlyMobile && currentThumbnailUrl) {
       // On mobile, show preview first
       setShowMobilePreview(true);
     } else {
@@ -246,7 +256,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       </motion.div>
 
       {/* Thumbnail preview (hover on desktop, tap on mobile) */}
-      {currentThumbnailUrl && showPreview && previewStyle &&
+      {currentThumbnailUrl && showPreview &&
         createPortal(
           <>
             {/* Backdrop for mobile */}
@@ -265,7 +275,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              style={previewStyle}
+              style={currentPreviewStyle}
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
