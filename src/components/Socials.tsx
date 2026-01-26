@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Twitter, MessageCircle, Link2 } from "lucide-react";
+import { Twitter, MessageCircle } from "lucide-react";
 import SocialLink from "./SocialLink";
 
 const Socials = () => {
@@ -44,10 +44,10 @@ const Socials = () => {
             handle="@rizzle"
           />
           <SocialLink
-            href="https://linktr.ee/rizzlethings"
-            icon={Link2}
-            label="Linktree"
-            handle="All Links"
+            href="https://discord.com/users/_rizzle"
+            icon={MessageCircle}
+            label="Discord"
+            handle="_rizzle"
           />
         </motion.div>
       </div>
