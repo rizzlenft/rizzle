@@ -29,14 +29,14 @@ const projects = [
   },
   {
     name: "Avastars",
-    description: "Pioneering generative avatar NFT project. On-chain art that actually meant something.",
+    description: "Pioneering generative avatar NFT project. Onchain art that actually meant something.",
     emoji: "👾",
     link: "https://opensea.io/collection/avastar",
     image: avastarsImg,
   },
   {
     name: "The Matthew & Rizzle Show",
-    description: "One of web3's earliest podcasts (2019-2024). Iconic guests, real talk, and five years of cutting through the noise. Now concluded.",
+    description: "One of web3's earliest podcasts (2019-2026). Iconic guests, real talk, and five years of cutting through the noise. Now concluded.",
     emoji: "🎧",
     link: "https://www.youtube.com/playlist?list=PLaEMvzi1A8c9xU0pw1CZJOTAsrwfydGNK",
     image: marsPodcastImg,
