@@ -28,6 +28,10 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   const episodeCount = getGuestEpisodeCount(guest);
   const videoIds = getAllGuestVideoIds(guest);
   
+  // Swipe gesture state
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  
   // Get current episode's video ID and URL
   const currentVideoId = videoIds[currentEpisodeIndex] || videoIds[0];
   const currentUrl = currentVideoId ? `https://youtube.com/watch?v=${currentVideoId}` : getGuestVideoUrl(guest);
@@ -57,14 +61,53 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     if (!win) window.location.assign(targetUrl);
   };
 
-  const goToPreviousEpisode = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const goToPreviousEpisode = () => {
     setCurrentEpisodeIndex((prev) => (prev > 0 ? prev - 1 : videoIds.length - 1));
   };
 
-  const goToNextEpisode = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const goToNextEpisode = () => {
     setCurrentEpisodeIndex((prev) => (prev < videoIds.length - 1 ? prev + 1 : 0));
+  };
+
+  // Swipe gesture handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null || episodeCount <= 1) {
+      return;
+    }
+
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const deltaX = touchEndX - touchStartX.current;
+    const deltaY = touchEndY - touchStartY.current;
+
+    // Only trigger swipe if horizontal movement is greater than vertical (prevents accidental swipes during scroll)
+    const minSwipeDistance = 50;
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+      if (deltaX > 0) {
+        // Swipe right - go to previous
+        goToPreviousEpisode();
+      } else {
+        // Swipe left - go to next
+        goToNextEpisode();
+      }
+    }
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
+
+  const handleArrowClick = (e: React.MouseEvent, direction: 'prev' | 'next') => {
+    e.stopPropagation();
+    if (direction === 'prev') {
+      goToPreviousEpisode();
+    } else {
+      goToNextEpisode();
+    }
   };
 
   useEffect(() => {
@@ -222,6 +265,8 @@ const GuestChip = ({ guest }: GuestChipProps) => {
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
               style={previewStyle}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
               <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
                 {/* Close button for mobile */}
@@ -242,9 +287,10 @@ const GuestChip = ({ guest }: GuestChipProps) => {
                     transition={{ duration: 0.15 }}
                     src={currentThumbnailUrl}
                     alt={`${guest} episode ${currentEpisodeIndex + 1} thumbnail`}
-                    className={isMobile ? "w-full h-auto cursor-pointer" : "w-full h-auto"}
+                    className={isMobile ? "w-full h-auto cursor-pointer select-none" : "w-full h-auto"}
                     loading="lazy"
                     onClick={isMobile ? handleWatchNow : undefined}
+                    draggable={false}
                   />
                 </AnimatePresence>
                 
@@ -252,14 +298,14 @@ const GuestChip = ({ guest }: GuestChipProps) => {
                 {episodeCount > 1 && (
                   <>
                     <button
-                      onClick={goToPreviousEpisode}
+                      onClick={(e) => handleArrowClick(e, 'prev')}
                       className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
                       aria-label="Previous episode"
                     >
                       <ChevronLeft className="w-5 h-5" />
                     </button>
                     <button
-                      onClick={goToNextEpisode}
+                      onClick={(e) => handleArrowClick(e, 'next')}
                       className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
                       aria-label="Next episode"
                     >
@@ -273,6 +319,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
                     {episodeCount > 1 && (
                       <p className="text-white/80 text-xs md:text-sm leading-tight">
                         Episode {currentEpisodeIndex + 1} of {episodeCount}
+                        {isMobile && <span className="ml-1 opacity-70">• Swipe to browse</span>}
                       </p>
                     )}
                   </div>
