@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { Play, Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -72,17 +73,18 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   };
 
   return (
-    <motion.div
-      ref={chipRef}
-      whileHover={{ scale: 1.05 }}
-      className={`group relative inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all ${
-        hasDirectLink(guest) 
-          ? "border-primary/30 hover:border-primary" 
-          : "border-border/50 hover:border-primary/50"
-      }`}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-    >
+    <>
+      <motion.div
+        ref={chipRef}
+        whileHover={{ scale: 1.05 }}
+        className={`group relative inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all ${
+          hasDirectLink(guest) 
+            ? "border-primary/30 hover:border-primary" 
+            : "border-border/50 hover:border-primary/50"
+        }`}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
       <Play className="h-3 w-3 opacity-40 group-hover:opacity-80 transition-opacity" />
       <span>{guest}</span>
       
@@ -105,41 +107,42 @@ const GuestChip = ({ guest }: GuestChipProps) => {
         )}
       </button>
 
-      {/* Thumbnail preview on hover */}
-      {thumbnailUrl && isHovering && previewStyle && (
-        <motion.div
-          initial={{ opacity: 0, y: 8, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 8, scale: 0.98 }}
-          style={previewStyle}
-        >
-          <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
-            <img
-              src={thumbnailUrl}
-              alt={`${guest} episode thumbnail`}
-              className="w-full h-auto"
-              loading="lazy"
-            />
-            {/* Remove full-image overlays to avoid banding/"black bar" artifacts.
-                Use a small caption pill instead for readability. */}
-            <div className="absolute bottom-3 left-3 right-3 flex flex-col gap-0.5">
-              <div className="inline-flex w-fit max-w-full flex-col rounded-md bg-black/60 px-2 py-1">
-                <p className="text-white text-sm md:text-base font-semibold truncate">{guest}</p>
-                {episodeCount > 1 && (
-                  <p className="text-white/80 text-xs md:text-sm leading-tight">{episodeCount} episodes</p>
-                )}
+      </motion.div>
+
+      {/* Thumbnail preview on hover (portal to body to avoid stacking artifacts with sticky rows) */}
+      {thumbnailUrl && isHovering && previewStyle &&
+        createPortal(
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            style={previewStyle}
+          >
+            <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
+              <img
+                src={thumbnailUrl}
+                alt={`${guest} episode thumbnail`}
+                className="w-full h-auto"
+                loading="lazy"
+              />
+              <div className="absolute bottom-3 left-3 right-3 flex flex-col gap-0.5">
+                <div className="inline-flex w-fit max-w-full flex-col rounded-md bg-black/60 px-2 py-1">
+                  <p className="text-white text-sm md:text-base font-semibold truncate">{guest}</p>
+                  {episodeCount > 1 && (
+                    <p className="text-white/80 text-xs md:text-sm leading-tight">{episodeCount} episodes</p>
+                  )}
+                </div>
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-primary/80 flex items-center justify-center shadow-md">
+                  <Play className="w-4 h-4 text-primary-foreground ml-0.5" fill="currentColor" />
+                </div>
               </div>
             </div>
-            {/* Play button overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 rounded-full bg-primary/80 flex items-center justify-center shadow-md">
-                <Play className="w-4 h-4 text-primary-foreground ml-0.5" fill="currentColor" />
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </motion.div>
+          </motion.div>,
+          document.body
+        )}
+    </>
   );
 };
 
