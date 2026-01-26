@@ -106,6 +106,7 @@ import onchainchainImg from "@/assets/onchainchain.png";
 import flyfrog3dImg from "@/assets/flyfrog.jpg";
 import tokensmartImg from "@/assets/tokensmart.png";
 import metalympicsImg from "@/assets/metalympics-new.jpeg";
+import rizzlefestImg from "@/assets/rizzlefest.gif";
 import babacciImg from "@/assets/babacci-new.jpeg";
 
 const projects = [
@@ -166,6 +167,13 @@ const projects = [
     emoji: "🏆",
     link: "https://twitter.com/metalympics",
     image: metalympicsImg,
+  },
+  {
+    name: "Rizzlefest",
+    description: "A web3 camping retreat hosted two years in a row, bringing the community together IRL for adventure, connection, and good vibes in the great outdoors.",
+    emoji: "🏕️",
+    link: "https://twitter.com/hashtag/rizzlefest",
+    image: rizzlefestImg,
   },
 ];
 
