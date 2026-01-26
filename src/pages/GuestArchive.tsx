@@ -1,69 +1,127 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Search, ArrowLeft, Users, ExternalLink } from "lucide-react";
+import { Search, ArrowLeft, Users, Play } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import wipLogo from "@/assets/wip-logo.gif";
 import marsLogo from "@/assets/mattandrizz.jpeg";
 
-// Known Twitter/X handles (add more as needed)
-const twitterHandles: Record<string, string> = {
-  "Beeple": "beeple",
-  "Gary Vee": "garyvee",
-  "Steve Aoki": "steveaoki",
-  "Paris Hilton": "ParisHilton",
-  "Serena Williams": "serenawilliams",
-  "Kevin Rose": "kevinrose",
-  "Tyler Winklevoss": "tyler",
-  "Kimbal Musk": "kimikibal",
-  "Rob Gronkowski": "RobGronkowski",
-  "Waka Flocka Flame": "WakaFlocka",
-  "DJ 3LAU": "3aborLAU",
-  "Don Diablo": "DonDiablo",
-  "Pharrell": "Pharrell",
-  "Snowfro": "snowfro",
-  "XCOPY": "XCOPYART",
-  "Pranksy": "praboranksy",
-  "Fvckrender": "fvckrender",
-  "gmoney": "gabormoneyeth",
-  "Farokh": "farokh",
-  "Tyler Hobbs": "tylerxhoabbs",
-  "Sam Spratt": "SamSpratt",
-  "Coldie": "Coldie",
-  "Hackatao": "Hackatao",
-  "Slimesunday": "slimesunday",
-  "Gremplin": "gremplin",
-  "WhaleShark": "WhaleShark_Pro",
-  "DCinvestor": "iamDCinvestor",
-  "Devin Finzer": "daborefinzer",
-  "Andrew Steinwold": "AndrewSteinwold",
-  "Alexis Ohanian": "alexisohanian",
-  "Richerd": "richerd",
-  "Cool Cats": "coolcats",
-  "Deadfellaz": "Deadfellaz",
-  "Pudgy Penguins": "pudaborgypenguins",
-  "Boss Beauties": "BossBeauties",
-  "Luca Netz": "LucaNetz",
-  "Keith Grossman": "KeithGrossman",
-  "Robbie Ferguson": "roabbie",
-  "Fewocious": "faborewocious",
-  "Jason Bailey": "artnome",
-  "Jen Stark": "JenStark",
-  "Yam Karkai": "YKaborarkai",
-  "Hasan Piker": "hasanthehun",
+// YouTube video links for guests (video ID -> title mapping extracted from show data)
+// Format: "Guest Name": "videoId" or "Guest Name": ["videoId1", "videoId2"] for multiple appearances
+const guestVideoLinks: Record<string, string | string[]> = {
+  // WIP Meetup guests
+  "Aavegotchi": "oa-ZHgUfsC0",
+  "AlottaMoney": ["HjBXgYHEB1I", "E03MpEELYJA", "eYeaMJXk_eU"],
+  "Bay Backner": ["S10exnY4JX8", "DC7eh7wJEJo", "dc1cuikwxCE", "5pq8laex-eI", "MWHQ_U3Wjr8", "p74132sdDDM"],
+  "Bryan Brinkman": ["lPiv6MZRMjw", "eRlUfTQSmWg"],
+  "Coldie": ["PXGvdekJB_E", "1hwIKxuh-5s"],
+  "Cypherdudes": ["5aQT2AAbLhk", "sZ53ckyx5dY"],
+  "Deadfellaz": "01lf9fUSFS0",
+  "Devin Finzer": "L-okxuih1FQ",
+  "Eclectic Method": ["zmSDyAc_fJE", "eYeaMJXk_eU"],
+  "Ezincrypto": ["JiAGx8tgesk", "g8JJJOrr0AA", "BwZwJlM8Lvg"],
+  "Fabiano Speziari": ["RGaE-Q1cUgQ", "IVMSINiEQTY", "-fQWgh5TVLk"],
+  "FlyFrogs": ["8Il7I-m2MeA", "YF-jMFgKSkU"],
+  "George Boya": ["clhTmPoGK_o", "Sfh9nHoS-_s"],
+  "Hackatao": "G3acrDmxp10",
+  "HiddenForces": ["f31_yDKN5TI", "BfLmmIHU_7M", "GpRRg_qCu5o"],
+  "Jin": ["cbfb6cQ13p8", "n74Nu9HIjHE"],
+  "Johan Unger": ["4Q9FaZxGeK0", "cZhVDS563-Y", "PyehQOdaSE4"],
+  "Josie Bellini": ["10EeXXZLQMI", "SfYrkuSZyeo"],
+  "JoyWorld": "U6_2Yv6kjLM",
+  "Kane Mayfield": ["GiW4ZkntnaU", "hjNqub1P6mE"],
+  "Kim Currier": ["MWHQ_U3Wjr8", "j1uhC602saE"],
+  "Metageist": ["HFhqKFfejcs", "mBHuMLWTDHU", "AP3ogxMp3wY"],
+  "Nate Alex": "lXPdR_OLprY",
+  "Nifty Island": ["tKPN9prPj3M", "lPiv6MZRMjw", "a9dxB06qlfY"],
+  "Osinachi": "PuQYoVxIlKM",
+  "Paradoxx": ["rR84beVlHvs", "FaUneAAh-Lw"],
+  "Roustan": ["odVsoispuwg", "8jLOVvAbgLU"],
+  "Snowfro": ["IWoiDjjLs7M", "eeW35ZeJc0s"],
+  "Stina Jones": ["Jj_QfbmM6zQ", "E-h72NwQivQ", "k4dbYmA08Jo"],
+  "SuperRare": "T3gw4bAiw2w",
+  "The Sandbox": "b3tJeG6Ftug",
+  "TheBeatMiner": ["uDBrYHUgTKk", "vCvetj59TaY", "a_C4vr5m1fc"],
+  "Toxsam": ["tj4wQOsFNhU", "U_nLdzyLYGw"],
+  "Twobadour": ["1tCF_qc6xDc", "2hEJrbxNFiw"],
+  "WhaleShark": ["beoGBvDgvTI", "T3gw4bAiw2w"],
+  
+  // MARS Podcast guests (Special Interviews)
+  "John Crain": "lPwgSt3ukfY",
+  "Alex Salnikov": "1y0J6NCRqfM",
+  "Caty Tedman": "lZ8PLAuuUyo",
+  "Drew Harding": "txdo8WCCgOY",
+  "Hugo McDonaugh": "fKT5WBYs9zA",
+  "Jess Sloss": "yTCIhAsl9kQ",
+  "Jesse Johnson": "UF-7NYeVDrk",
+  "Jiho": ["ozIJSXowfMQ", "zo9pnsqK-NQ"],
+  "Leandro": ["07Pzun67qBg", "PSMVxROZP6U"],
+  "Lin Dai": "YUWcLZ-x0pQ",
+  "Matt Kane": "mDYfRnMPy5M",
+  "Matty DCLBlogger": "l6cRYQfiHCQ",
+  "Nate Geier": ["TSk-1f_2X6A", "PCMzW_Jnokw"],
+  "Patricio W.": ["ufPl2-WCiV0", "tZuomhC2O7s"],
+  "Roham": "J9_pz7F7Qmg",
+  "Roneil": "9B-8JpTYHpc",
+  "Sasha Ivanov": "mSrCtW0I3-A",
+  "Sid Kalla": "TGnlGkPLcrI",
+  "Simona Pop": "Qt4GQI21csA",
+  "Steve K.": "HmCLtF9HifE",
+  "Viktor Radchenko": "na-u-RVF7WM",
+  
+  // Spotlight guests
+  "Bitpixi": "wSd2lPKJHhY",
+  "Conlan": ["irP60587Rdo", "sRPd0GBhnfQ"],
+  "Cryptoyuna": "KhN6AzXfUJ0",
+  "Cryptonatrix": "VEMCfwuNSZM",
+  "DirtyRobot": "hiIqIzzgNGM",
+  "Edmotions": "M1Dle6oB38o",
+  "Green Giant": "NYdconr9nvc",
+  "Han": "3t7rClPeJAI",
+  "Hool": "-JzGzliM5Gs",
+  "Jeremy Cowart": "RToHXm9WGCk",
+  "JisuArtist": "wXvhk5RnzcI",
+  "Jonathan Mann": "1TdbOJGjdVg",
+  "Kitty Bast": "EXqF4lrD6xo",
+  "Latashá": "r8XB4RGbgDI",
+  "Lucidhouse": "1yayIHlpcmQ",
+  "Mike Casey": "B9tYZUJ1Gqs",
+  "Pointshark": "UkjgracmlyE",
+  "Richard F. Yates": "aY4WtbBx5sI",
+  "Stefan Große Halbuer": "9l7DsSO7mUw",
+  "TheSarahShow": "yny_xjTYvqA",
+  "Thomas Dylan Daniel": "j-nqf2b0CBY",
+  "UrBen": "F0rOo8e3DwU",
+  "WoodenCyclops": "qXNS9QuDEbo",
+  "YRDGZ": "hiIqIzzgNGM",
+  
+  // Additional notable guests
+  "Dirk Lueth": "ecuZdbM2Vzg",
+  "Dannie Chu": "IlqyXSEvmfo",
+  "Al Morris": "i1VdV6GrjAo",
+  "Antara": "01lf9fUSFS0",
+  "Azeem": "6Ub7ReUdQRA",
+  "MovieShots": "ZHYKOzJStw8",
+  "Foxyoga": "4eVGh0W0Qi8",
+  "Esther": "d12iZ6W0BjU",
+  "Dragonate": "Jm9F_ribTnY",
+  "Amir": "QoPE2-MFNxc",
+  "ChangeDAO": "FYxyjiy0r5U",
 };
 
-// Get Twitter URL - direct profile if known, search if not
-const getTwitterUrl = (name: string) => {
-  const handle = twitterHandles[name];
-  if (handle) {
-    return `https://x.com/${handle}`;
+// Get YouTube URL for a guest - returns first video if multiple, or search if not found
+const getGuestVideoUrl = (name: string): string => {
+  const videoId = guestVideoLinks[name];
+  if (videoId) {
+    const id = Array.isArray(videoId) ? videoId[0] : videoId;
+    return `https://youtube.com/watch?v=${id}`;
   }
-  return `https://x.com/search?q=${encodeURIComponent(name)}&src=typed_query&f=user`;
+  // Fallback to YouTube search for the show
+  return `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " WIP Meetup OR Matthew Rizzle")}`;
 };
 
-// Check if guest has a known handle
-const hasKnownHandle = (name: string) => !!twitterHandles[name];
+// Check if guest has a direct video link
+const hasDirectLink = (name: string) => !!guestVideoLinks[name];
 
 // Comprehensive guest list extracted from WIP Meetup and Matthew & Rizzle Show
 const guestData = [
@@ -307,18 +365,18 @@ const GuestArchive = () => {
                 {groupedGuests[letter].map((guest) => (
                   <motion.a
                     key={guest}
-                    href={getTwitterUrl(guest)}
+                    href={getGuestVideoUrl(guest)}
                     target="_blank"
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
                     className={`group inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all cursor-pointer ${
-                      hasKnownHandle(guest) 
+                      hasDirectLink(guest) 
                         ? "border-primary/30 hover:border-primary" 
                         : "border-border/50 hover:border-primary/50"
                     }`}
                   >
+                    <Play className="h-3 w-3 opacity-40 group-hover:opacity-80 transition-opacity" />
                     <span>{guest}</span>
-                    <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-60 transition-opacity" />
                   </motion.a>
                 ))}
               </div>
