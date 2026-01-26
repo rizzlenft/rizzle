@@ -236,6 +236,7 @@ import truthMagazineImg from "@/assets/truth-magazine.png";
 import manifoldArtImg from "@/assets/manifold-art.png";
 import zerooneArtImg from "@/assets/zeroone-art.png";
 import openseaRizzleImg from "@/assets/opensea-rizzle.avif";
+import openseaVaultImg from "@/assets/opensea-vault.webp";
 // Platform logo components
 const OpenSeaLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 90 90" className={className} fill="currentColor">
@@ -298,6 +299,7 @@ const collectedCollections = [
     description: "Extended vault of collected digital art.",
     link: "https://opensea.io/Rizzlevault",
     logo: OpenSeaLogo,
+    image: openseaVaultImg,
   },
   {
     name: "Objkt (Tezos)",
