@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Play, Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -17,11 +17,58 @@ interface GuestChipProps {
 const GuestChip = ({ guest }: GuestChipProps) => {
   const [copied, setCopied] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const chipRef = useRef<HTMLDivElement | null>(null);
+  const [previewStyle, setPreviewStyle] = useState<React.CSSProperties | null>(null);
   const { toast } = useToast();
   const url = getGuestVideoUrl(guest);
   const episodeCount = getGuestEpisodeCount(guest);
   const videoIds = getAllGuestVideoIds(guest);
   const thumbnailUrl = videoIds.length > 0 ? getYouTubeThumbnail(videoIds[0], 'maxres') : null;
+
+  const previewWidth = useMemo(() => {
+    if (typeof window === "undefined") return 600;
+    // Keep it huge on desktop, but never exceed viewport.
+    return Math.min(720, Math.max(360, window.innerWidth - 32));
+  }, []);
+
+  const previewHeight = useMemo(() => {
+    // Approx 16:9 thumbnail.
+    return Math.round(previewWidth * 9 / 16);
+  }, [previewWidth]);
+
+  useEffect(() => {
+    if (!isHovering || !thumbnailUrl || !chipRef.current) {
+      setPreviewStyle(null);
+      return;
+    }
+
+    const gutter = 16;
+    const offset = 12;
+    const rect = chipRef.current.getBoundingClientRect();
+
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const openAbove = spaceBelow < previewHeight + offset + gutter && spaceAbove > previewHeight + offset + gutter;
+
+    const top = openAbove
+      ? rect.top - offset - previewHeight
+      : rect.bottom + offset;
+
+    const idealLeft = rect.left + rect.width / 2 - previewWidth / 2;
+    const left = Math.min(
+      window.innerWidth - previewWidth - gutter,
+      Math.max(gutter, idealLeft)
+    );
+
+    setPreviewStyle({
+      position: "fixed",
+      top,
+      left,
+      width: previewWidth,
+      zIndex: 1000,
+      pointerEvents: "none",
+    });
+  }, [isHovering, thumbnailUrl, previewHeight, previewWidth]);
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -45,6 +92,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
 
   return (
     <motion.div
+      ref={chipRef}
       whileHover={{ scale: 1.05 }}
       className={`group relative inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all ${
         hasDirectLink(guest) 
@@ -77,18 +125,18 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       </button>
 
       {/* Thumbnail preview on hover */}
-      {thumbnailUrl && isHovering && (
+      {thumbnailUrl && isHovering && previewStyle && (
         <motion.div
-          initial={{ opacity: 0, y: -10, scale: 0.98 }}
+          initial={{ opacity: 0, y: 8, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -10, scale: 0.98 }}
-          className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-[100] pointer-events-none"
+          exit={{ opacity: 0, y: 8, scale: 0.98 }}
+          style={previewStyle}
         >
           <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
             <img
               src={thumbnailUrl}
               alt={`${guest} episode thumbnail`}
-              className="w-[400px] md:w-[520px] lg:w-[600px] h-auto"
+              className="w-full h-auto"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -105,8 +153,6 @@ const GuestChip = ({ guest }: GuestChipProps) => {
               </div>
             </div>
           </div>
-          {/* Arrow */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-full w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-card" />
         </motion.div>
       )}
     </motion.div>
