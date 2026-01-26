@@ -5,7 +5,7 @@ import ProjectCard from "./ProjectCard";
 import wipMeetupImg from "@/assets/wip-logo.gif";
 import marsPodcastImg from "@/assets/mars-podcast.jpg";
 import avastarsImg from "@/assets/avastars.avif";
-import onchainchainImg from "@/assets/onchainchain.jpg";
+import onchainchainImg from "@/assets/onchainchain.png";
 import flyfrog3dImg from "@/assets/flyfrog3d.jpg";
 import nftsmartImg from "@/assets/nftsmart.jpg";
 import metalympicsImg from "@/assets/metalympics.jpg";
@@ -21,11 +21,11 @@ const projects = [
     image: wipMeetupImg,
   },
   {
-    name: "Matt & Rizz Show",
-    description: "Web3 podcast cutting through the noise. Real talk, no fluff, calling out grifters.",
-    emoji: "🎧",
-    link: "https://twitter.com/mattandrizzshow",
-    image: marsPodcastImg,
+    name: "OnChainChain",
+    description: "Building for the blockchain, staying true to decentralization principles.",
+    emoji: "⛓️",
+    link: "https://opensea.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
+    image: onchainchainImg,
   },
   {
     name: "Avastars",
@@ -35,11 +35,11 @@ const projects = [
     image: avastarsImg,
   },
   {
-    name: "OnChainChain",
-    description: "Building for the blockchain, staying true to decentralization principles.",
-    emoji: "⛓️",
-    link: "https://twitter.com/onchainchain",
-    image: onchainchainImg,
+    name: "Matt & Rizz Show",
+    description: "Web3 podcast cutting through the noise. Real talk, no fluff, calling out grifters.",
+    emoji: "🎧",
+    link: "https://twitter.com/mattandrizzshow",
+    image: marsPodcastImg,
   },
   {
     name: "FlyFrog3D",
