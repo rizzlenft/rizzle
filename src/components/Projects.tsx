@@ -22,9 +22,9 @@ const projects = [
   },
   {
     name: "OnChainChain",
-    description: "Building for the blockchain, staying true to onchain principles.",
+    description: "Whimsical high-end metaverse fashion pushing web3 interoperability. Wearable chains across multiple NFTs & platforms.",
     emoji: "⛓️",
-    link: "https://opensea.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
+    link: "https://www.artblocks.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
     image: onchainchainImg,
   },
   {
