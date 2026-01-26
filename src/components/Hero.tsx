@@ -29,28 +29,28 @@ const Hero = () => {
           <span className="text-lg">🐸</span>
         </motion.div>
         
-        {/* Signature */}
+        {/* Signature - draws in quickly */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.7 }}
-          className="mb-8"
+          className="mb-8 overflow-visible"
+          initial={{ clipPath: "inset(0 100% 0 0)" }}
+          animate={{ clipPath: "inset(0 0% 0 0)" }}
+          transition={{ delay: 0.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           <motion.img 
             src={rizzleSig} 
             alt="Rizzle" 
-            className="mx-auto h-28 w-auto invert sm:h-36 md:h-44"
-            animate={{
+            className="h-32 w-auto sm:h-40 md:h-52"
+            initial={{ opacity: 0 }}
+            animate={{ 
+              opacity: 1,
               filter: [
-                "drop-shadow(0 0 20px rgba(0,255,136,0.4)) drop-shadow(0 0 40px rgba(0,255,136,0.2))",
-                "drop-shadow(0 0 30px rgba(0,255,136,0.6)) drop-shadow(0 0 60px rgba(0,255,136,0.3))",
-                "drop-shadow(0 0 20px rgba(0,255,136,0.4)) drop-shadow(0 0 40px rgba(0,255,136,0.2))"
+                "drop-shadow(0 0 10px rgba(0,255,136,0.3))",
+                "drop-shadow(0 0 25px rgba(0,255,136,0.5)) drop-shadow(0 0 50px rgba(0,255,136,0.25))",
               ]
             }}
             transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
+              opacity: { delay: 0.3, duration: 0.3 },
+              filter: { delay: 0.9, duration: 0.5 }
             }}
           />
         </motion.div>
