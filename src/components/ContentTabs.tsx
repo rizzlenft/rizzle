@@ -234,6 +234,7 @@ const ProjectsContent = () => {
 import { ExternalLink, Palette, Heart } from "lucide-react";
 import truthMagazineImg from "@/assets/truth-magazine.png";
 import manifoldArtImg from "@/assets/manifold-art.png";
+import zerooneArtImg from "@/assets/zeroone-art.png";
 // Platform logo components
 const OpenSeaLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 90 90" className={className} fill="currentColor">
@@ -273,6 +274,7 @@ const createdCollections = [
     description: "Curated digital art exploring AI and imagination.",
     link: "https://zeroone.art/profile/rizzle",
     logo: ZeroOneLogo,
+    image: zerooneArtImg,
   },
 ];
 
