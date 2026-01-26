@@ -3,7 +3,7 @@ import rizzleSig from "@/assets/rizzle-sig-v2.png";
 
 const Hero = () => {
   return (
-    <section className="relative flex min-h-[70vh] flex-col items-center justify-center px-6 py-20">
+    <section className="relative flex min-h-[50vh] flex-col items-center justify-center px-6 py-12">
       {/* Background grid pattern */}
       <div className="pointer-events-none absolute inset-0 grid-pattern opacity-30" />
       
@@ -82,23 +82,6 @@ const Hero = () => {
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">6+</div>
             <div className="text-sm text-muted-foreground">Years in Web3</div>
           </div>
-        </motion.div>
-      </motion.div>
-      
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-2"
-        >
-          <span className="text-xs text-muted-foreground">scroll</span>
-          <div className="h-6 w-px bg-gradient-to-b from-primary to-transparent" />
         </motion.div>
       </motion.div>
     </section>
