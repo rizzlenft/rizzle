@@ -253,7 +253,7 @@ export const guestVideoLinks: Record<string, string | string[]> = {
   "1KX Network": "JDJM0ReMrUA",
   "105 Collective": "_-nQ06AYRqA",
   "OneOf": "YUWcLZ-x0pQ",
-  "Oona": "WHl7672Q6zo",
+  "Oona": ["WHl7672Q6zo", "DcYDHBp3phY"],
   "OpenVoxels": ["n74Nu9HIjHE", "WlF4VYaf7Yw"],
   "Origin Art Museum": "HuSUR6h3k7Q",
   "Osinachi": "PuQYoVxIlKM",
