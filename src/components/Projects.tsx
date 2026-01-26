@@ -3,7 +3,7 @@ import ProjectCard from "./ProjectCard";
 
 // Import project images
 import wipMeetupImg from "@/assets/wip-logo.gif";
-import marsPodcastImg from "@/assets/mars-podcast.jpg";
+import marsPodcastImg from "@/assets/mattandrizz.jpeg";
 import avastarsImg from "@/assets/avastars.avif";
 import onchainchainImg from "@/assets/onchainchain.png";
 import flyfrog3dImg from "@/assets/flyfrog3d.jpg";
@@ -35,10 +35,10 @@ const projects = [
     image: avastarsImg,
   },
   {
-    name: "Matt & Rizz Show",
-    description: "Web3 podcast cutting through the noise. Real talk, no fluff, calling out grifters.",
+    name: "The Matthew & Rizzle Show",
+    description: "One of web3's earliest podcasts (2019-2024). Iconic guests, real talk, and five years of cutting through the noise. Now concluded.",
     emoji: "🎧",
-    link: "https://twitter.com/mattandrizzshow",
+    link: "https://www.youtube.com/playlist?list=PLaEMvzi1A8c9xU0pw1CZJOTAsrwfydGNK",
     image: marsPodcastImg,
   },
   {
