@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Play, Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useIsMobile } from "@/hooks/use-mobile";
+
 import { useEpisodeNavigation } from "@/hooks/useEpisodeNavigation";
 import GuestPreviewModal from "./GuestPreviewModal";
 import {
@@ -22,7 +22,19 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const { toast } = useToast();
-  const isMobile = useIsMobile();
+  
+  // Use direct viewport check for reliable mobile detection
+  const [isMobileViewport, setIsMobileViewport] = useState(() => 
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+  
+  useEffect(() => {
+    const checkViewport = () => {
+      setIsMobileViewport(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", checkViewport);
+    return () => window.removeEventListener("resize", checkViewport);
+  }, []);
 
   const videoIds = getAllGuestVideoIds(guest);
   const episodeCount = getGuestEpisodeCount(guest);
@@ -51,7 +63,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
 
   // Close mobile preview when clicking outside
   useEffect(() => {
-    if (!showMobilePreview || !isMobile) return;
+    if (!showMobilePreview || !isMobileViewport) return;
 
     const handleClickOutside = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLElement;
@@ -69,7 +81,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       document.removeEventListener("touchstart", handleClickOutside);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showMobilePreview, isMobile]);
+  }, [showMobilePreview, isMobileViewport]);
 
   const openVideo = (videoUrl?: string) => {
     const targetUrl = videoUrl || currentUrl;
@@ -165,7 +177,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
           episodeCount={episodeCount}
           hasMultipleEpisodes={hasMultipleEpisodes}
           currentVideoId={currentVideoId}
-          isMobile={isMobile}
+          isMobile={isMobileViewport}
           onClose={() => setShowMobilePreview(false)}
           onWatchNow={handleWatchNow}
           onPrevious={goToPrevious}
