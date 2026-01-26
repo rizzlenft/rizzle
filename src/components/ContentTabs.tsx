@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Briefcase, Sparkles } from "lucide-react";
+import { Briefcase, Sparkles, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 import Projects from "./Projects";
 import CryptoArt from "./CryptoArt";
 
@@ -56,6 +57,13 @@ const ContentTabs = () => {
               <Sparkles className="relative z-10 h-4 w-4" />
               <span className="relative z-10">CryptoArt</span>
             </button>
+            <Link
+              to="/guests"
+              className="relative flex items-center gap-2 px-5 py-2 text-sm font-medium transition-colors rounded-full text-muted-foreground hover:text-foreground"
+            >
+              <Users className="relative z-10 h-4 w-4" />
+              <span className="relative z-10">Guests</span>
+            </Link>
           </div>
 
           {/* Dynamic title */}
@@ -240,6 +248,11 @@ const createdCollections = [
 ];
 
 const collectedCollections = [
+  {
+    name: "ZeroOne Gallery",
+    description: "Curated collection of digital art on ZeroOne.",
+    link: "https://zeroone.art/profile/rizzle",
+  },
   {
     name: "OpenSea (Rizzle)",
     description: "Primary collection of curated cryptoart pieces.",
