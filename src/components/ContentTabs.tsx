@@ -116,6 +116,7 @@ const projects = [
     emoji: "🎙️",
     link: "https://twitter.com/theWIPmeetup",
     secondaryLink: "https://discord.gg/PmDbSQ4Uwp",
+    secondaryLinkLabel: "Discord",
     featured: true,
     image: wipMeetupImg,
   },
