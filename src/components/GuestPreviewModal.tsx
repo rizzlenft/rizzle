@@ -1,9 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
-
 interface GuestPreviewModalProps {
   guest: string;
   thumbnailUrl: string;
@@ -39,6 +38,28 @@ const GuestPreviewModal = ({
     enabled: hasMultipleEpisodes,
   });
 
+  // Thumbnail quality fallback - many YouTube videos don't have maxresdefault
+  const [thumbFallbackStep, setThumbFallbackStep] = useState(0);
+
+  // Reset fallback when video changes
+  useEffect(() => {
+    setThumbFallbackStep(0);
+  }, [currentVideoId]);
+
+  // Build thumbnail URL with fallback quality levels
+  const resolvedThumbnailUrl = useMemo(() => {
+    if (!currentVideoId) return thumbnailUrl;
+    const base = `https://i.ytimg.com/vi/${currentVideoId}`;
+    if (thumbFallbackStep === 0) return `${base}/maxresdefault.jpg`;
+    if (thumbFallbackStep === 1) return `${base}/hqdefault.jpg`;
+    return `${base}/mqdefault.jpg`;
+  }, [currentVideoId, thumbFallbackStep, thumbnailUrl]);
+
+  const handleThumbnailError = () => {
+    if (thumbFallbackStep < 2) {
+      setThumbFallbackStep((prev) => prev + 1);
+    }
+  };
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -133,17 +154,18 @@ const GuestPreviewModal = ({
           
           <AnimatePresence mode="wait">
             <motion.img
-              key={currentVideoId}
+              key={`${currentVideoId}-${thumbFallbackStep}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              src={thumbnailUrl}
+              src={resolvedThumbnailUrl}
               alt={`${guest} episode ${currentIndex + 1} thumbnail`}
               className={isMobile ? "w-full h-auto cursor-pointer select-none" : "w-full h-auto"}
               loading="lazy"
               onClick={isMobile ? onWatchNow : undefined}
               draggable={false}
+              onError={handleThumbnailError}
             />
           </AnimatePresence>
 
