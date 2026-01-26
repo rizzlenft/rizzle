@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import rizzleSig from "@/assets/rizzlesig.png";
 
 const Hero = () => {
   return (
@@ -28,15 +29,19 @@ const Hero = () => {
           <span className="text-lg">🐸</span>
         </motion.div>
         
-        {/* Name */}
-        <motion.h1
+        {/* Signature */}
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.7 }}
-          className="mb-6 font-display text-6xl font-black tracking-tight text-foreground sm:text-7xl md:text-8xl"
+          className="mb-6"
         >
-          <span className="text-glow">RIZZLE</span>
-        </motion.h1>
+          <img 
+            src={rizzleSig} 
+            alt="Rizzle" 
+            className="mx-auto h-24 w-auto drop-shadow-[0_0_20px_rgba(0,255,136,0.4)] sm:h-32 md:h-40 invert"
+          />
+        </motion.div>
         
         {/* Bio */}
         <motion.p
