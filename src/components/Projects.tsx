@@ -6,7 +6,7 @@ import wipMeetupImg from "@/assets/wip-logo.gif";
 import marsPodcastImg from "@/assets/mattandrizz.jpeg";
 import avastarsImg from "@/assets/avastars.avif";
 import onchainchainImg from "@/assets/onchainchain.png";
-import flyfrog3dImg from "@/assets/flyfrog3d.jpg";
+import flyfrog3dImg from "@/assets/flyfrog.jpg";
 import nftsmartImg from "@/assets/nftsmart.jpg";
 import metalympicsImg from "@/assets/metalympics.jpg";
 import babacciImg from "@/assets/babacci.jpg";
@@ -42,10 +42,11 @@ const projects = [
     image: marsPodcastImg,
   },
   {
-    name: "FlyFrog3D",
-    description: "3D metaverse experiences and assets. Making virtual worlds more interesting.",
+    name: "Fly Frogs",
+    description: "Joined forces with Josh & Molly's 2021 NFT project post-launch. Sold through 10k NFTs and built the foundation of the Fly Frogs brand.",
     emoji: "🐸",
-    link: "https://twitter.com/flyfrog3d",
+    link: "https://flyfrogs.xyz/",
+    secondaryLink: "https://opensea.io/collection/fly-frogs",
     image: flyfrog3dImg,
   },
   {
