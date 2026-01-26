@@ -184,17 +184,31 @@ const GuestPreviewModal = ({
             {hasMultipleEpisodes && (
               <div className="flex items-center justify-center gap-1.5">
                 {Array.from({ length: episodeCount }).map((_, index) => (
-                  <button
+                  <motion.button
                     key={index}
                     onClick={(e) => {
                       e.stopPropagation();
                       onGoToIndex(index);
                     }}
-                    className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                      index === currentIndex
-                        ? "bg-primary scale-125"
-                        : "bg-white/50 hover:bg-white/80"
-                    }`}
+                    initial={false}
+                    animate={{
+                      scale: index === currentIndex ? 1.4 : 1,
+                      opacity: index === currentIndex ? 1 : 0.5,
+                      backgroundColor: index === currentIndex 
+                        ? "hsl(var(--primary))" 
+                        : "rgba(255, 255, 255, 0.5)",
+                    }}
+                    whileHover={{ 
+                      scale: index === currentIndex ? 1.4 : 1.2,
+                      opacity: 0.9,
+                    }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ 
+                      type: "spring", 
+                      stiffness: 400, 
+                      damping: 25,
+                    }}
+                    className="w-2 h-2 rounded-full"
                     aria-label={`Go to episode ${index + 1}`}
                   />
                 ))}
