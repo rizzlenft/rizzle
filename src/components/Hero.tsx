@@ -57,7 +57,7 @@ const Hero = () => {
           className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
         >
           <span className="text-primary font-semibold">Web3 Founder & Builder</span> — Been in the game since before the hype. 
-          Community strategy, NFT launches, Metaverse Builds — if it's onchain, I've probably shipped it. 
+          Community strategy, NFT launches, Metaverse builds — if it's onchain, I've probably shipped it. 
           Open to <span className="text-primary">consulting & advisory</span> if you're building something real.
         </motion.p>
         
