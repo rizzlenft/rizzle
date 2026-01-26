@@ -34,12 +34,24 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.7 }}
-          className="mb-6"
+          className="mb-8"
         >
-          <img 
+          <motion.img 
             src={rizzleSig} 
             alt="Rizzle" 
-            className="mx-auto h-24 w-auto drop-shadow-[0_0_20px_rgba(0,255,136,0.4)] sm:h-32 md:h-40 invert"
+            className="mx-auto h-28 w-auto invert sm:h-36 md:h-44"
+            animate={{
+              filter: [
+                "drop-shadow(0 0 20px rgba(0,255,136,0.4)) drop-shadow(0 0 40px rgba(0,255,136,0.2))",
+                "drop-shadow(0 0 30px rgba(0,255,136,0.6)) drop-shadow(0 0 60px rgba(0,255,136,0.3))",
+                "drop-shadow(0 0 20px rgba(0,255,136,0.4)) drop-shadow(0 0 40px rgba(0,255,136,0.2))"
+              ]
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
           />
         </motion.div>
         
@@ -50,9 +62,9 @@ const Hero = () => {
           transition={{ delay: 0.5, duration: 0.6 }}
           className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
         >
-          Building the metaverse, one project at a time. Community-first, no-BS approach to web3.
-          Hosting <span className="text-primary">The WIP Meetup</span>, creating chaos in virtual worlds,
-          and calling out grifters since day one.
+          <span className="text-primary font-semibold">Web3 Founder & Strategist</span> — Building the metaverse, one project at a time. 
+          Expert in community growth, NFT launches, and virtual world development. 
+          Available for <span className="text-primary">consulting & advisory</span> roles.
         </motion.p>
         
         {/* Stats */}
