@@ -37,6 +37,13 @@ const GuestChip = ({ guest }: GuestChipProps) => {
 
   const showPreview = isMobile ? showMobilePreview : isHovering;
 
+  const openVideo = () => {
+    // Some mobile browsers block window.open even on direct taps.
+    // Prefer new tab, but fall back to same-tab navigation.
+    const win = window.open(url, "_blank", "noopener,noreferrer");
+    if (!win) window.location.assign(url);
+  };
+
   useEffect(() => {
     if (!showPreview || !thumbnailUrl) {
       setPreviewStyle(null);
@@ -93,13 +100,14 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       setShowMobilePreview(true);
     } else {
       // On desktop, open directly
-      window.open(url, '_blank', 'noopener,noreferrer');
+      openVideo();
     }
   };
 
   const handleWatchNow = () => {
+    // Open first to keep the action firmly in the user-gesture stack.
+    openVideo();
     setShowMobilePreview(false);
-    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleCopy = async (e: React.MouseEvent) => {
@@ -203,8 +211,9 @@ const GuestChip = ({ guest }: GuestChipProps) => {
                 <img
                   src={thumbnailUrl}
                   alt={`${guest} episode thumbnail`}
-                  className="w-full h-auto"
+                  className={isMobile ? "w-full h-auto cursor-pointer" : "w-full h-auto"}
                   loading="lazy"
+                  onClick={isMobile ? handleWatchNow : undefined}
                 />
                 <div className="absolute bottom-3 left-3 right-3 flex flex-col gap-2">
                   <div className="inline-flex w-fit max-w-full flex-col rounded-md bg-black/60 px-2 py-1">
