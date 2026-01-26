@@ -22,7 +22,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 font-mono text-sm text-primary"
+          className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 font-mono text-sm text-primary"
         >
           <span className="text-lg">🏴‍☠️</span>
           <span>web3 founder since 2019</span>
@@ -31,7 +31,7 @@ const Hero = () => {
         
         {/* Signature */}
         <motion.div
-          className="mb-8"
+          className="mb-4"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
@@ -57,7 +57,7 @@ const Hero = () => {
           className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
         >
           <span className="text-primary font-semibold">Web3 Founder & Builder</span> — Been in the game since before the hype. 
-          Community strategy, NFT launches, metaverse builds — if it's onchain, I've probably shipped it. 
+          Community strategy, NFT launches, Metaverse Builds — if it's onchain, I've probably shipped it. 
           Open to <span className="text-primary">consulting & advisory</span> if you're building something real.
         </motion.p>
         
