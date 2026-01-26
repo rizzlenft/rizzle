@@ -43,7 +43,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     }
 
     const gutter = 16;
-    const offset = 12;
+    const offset = 4;
     const rect = chipRef.current.getBoundingClientRect();
 
     const spaceBelow = window.innerHeight - rect.bottom;
