@@ -8,7 +8,7 @@ import avastarsImg from "@/assets/avastars.avif";
 import onchainchainImg from "@/assets/onchainchain.png";
 import flyfrog3dImg from "@/assets/flyfrog.jpg";
 import nftsmartImg from "@/assets/nftsmart.jpg";
-import metalympicsImg from "@/assets/metalympics.jpg";
+import metalympicsImg from "@/assets/metalympics-new.jpeg";
 import babacciImg from "@/assets/babacci.jpg";
 
 const projects = [
@@ -58,7 +58,7 @@ const projects = [
   },
   {
     name: "Metalympics",
-    description: "Competitive gaming meets the metaverse. Sports for the digital age.",
+    description: "In 2020, the Metalympics was a 3-month metaverse event attracting 20+ web3 sponsors, hundreds of competitors, and became one of the largest cutting-edge web3 events to date.",
     emoji: "🏆",
     link: "https://twitter.com/metalympics",
     image: metalympicsImg,
