@@ -29,30 +29,19 @@ const Hero = () => {
           <span className="text-lg">🐸</span>
         </motion.div>
         
-        {/* Signature - draws in quickly */}
-        <div className="relative mb-8 h-32 sm:h-40 md:h-52 overflow-hidden">
-          <motion.div
-            className="absolute inset-0"
-            initial={{ x: "-100%" }}
-            animate={{ x: "0%" }}
-            transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <motion.img 
-              src={rizzleSig} 
-              alt="Rizzle" 
-              className="h-full w-auto"
-              animate={{ 
-                filter: [
-                  "drop-shadow(0 0 10px rgba(0,255,136,0.3))",
-                  "drop-shadow(0 0 30px rgba(0,255,136,0.6)) drop-shadow(0 0 60px rgba(0,255,136,0.3))",
-                ]
-              }}
-              transition={{
-                filter: { delay: 1, duration: 0.6 }
-              }}
-            />
-          </motion.div>
-        </div>
+        {/* Signature */}
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+        >
+          <img 
+            src={rizzleSig} 
+            alt="Rizzle" 
+            className="mx-auto h-32 w-auto drop-shadow-[0_0_30px_rgba(0,255,136,0.5)] sm:h-40 md:h-52"
+          />
+        </motion.div>
         
         {/* Bio */}
         <motion.p
