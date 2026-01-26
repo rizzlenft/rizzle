@@ -39,7 +39,7 @@ const Hero = () => {
           <img 
             src={rizzleSig} 
             alt="Rizzle" 
-            className="mx-auto h-44 w-auto sm:h-56 md:h-72 lg:h-80 invert"
+            className="mx-auto h-[10rem] w-auto sm:h-[14rem] md:h-[18rem] lg:h-[22rem] invert"
             style={{ 
               imageRendering: 'auto',
               WebkitFontSmoothing: 'antialiased'
