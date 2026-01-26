@@ -112,9 +112,10 @@ import babacciImg from "@/assets/babacci-new.jpeg";
 const projects = [
   {
     name: "The WIP Meetup",
-    description: "Weekly community gatherings exploring the cutting edge of web3, metaverse, and digital culture. Free gifts, WIPcoin, and controlled chaos.",
+    description: "Every Thursday at 3pm ET — community gatherings exploring web3, metaverse, and digital culture. Free gifts, WIPcoin, and controlled chaos.",
     emoji: "🎙️",
     link: "https://twitter.com/theWIPmeetup",
+    secondaryLink: "https://discord.gg/PmDbSQ4Uwp",
     featured: true,
     image: wipMeetupImg,
   },
