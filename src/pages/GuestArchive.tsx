@@ -84,15 +84,14 @@ const GuestArchive = () => {
                 />
               </motion.div>
 
-              <motion.div
+              <motion.span
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4, duration: 0.3 }}
-                className="flex flex-col items-center gap-1"
+                className="text-3xl sm:text-4xl"
               >
-                <span className="text-3xl sm:text-4xl">×</span>
-                <span className="font-mono text-xs text-muted-foreground">featuring</span>
-              </motion.div>
+                ×
+              </motion.span>
 
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
