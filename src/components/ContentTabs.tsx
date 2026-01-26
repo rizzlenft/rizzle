@@ -238,6 +238,7 @@ import zerooneArtImg from "@/assets/zeroone-art.png";
 import openseaRizzleImg from "@/assets/opensea-rizzle.avif";
 import openseaVaultImg from "@/assets/opensea-vault.webp";
 import zerooneCollectedImg from "@/assets/zeroone-collected.png";
+import objktArtImg from "@/assets/objkt-art.gif";
 // Platform logo components
 const OpenSeaLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 90 90" className={className} fill="currentColor">
@@ -308,6 +309,7 @@ const collectedCollections = [
     description: "Tezos-based art collection on Objkt.",
     link: "https://objkt.com/@rizzle/owned",
     logo: ObjktLogo,
+    image: objktArtImg,
   },
 ];
 
