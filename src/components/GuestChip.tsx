@@ -20,7 +20,6 @@ interface GuestChipProps {
 const GuestChip = ({ guest }: GuestChipProps) => {
   const [copied, setCopied] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [showMobilePreview, setShowMobilePreview] = useState(false);
   const { toast } = useToast();
   
   // Use direct viewport check for reliable mobile detection
@@ -49,7 +48,8 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     goToIndex,
   } = useEpisodeNavigation({
     videoIds,
-    isOpen: showMobilePreview || isHovering,
+    // Only needed to drive the desktop hover preview.
+    isOpen: isHovering,
   });
 
   const currentUrl = currentVideoId
@@ -66,29 +66,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     ? getYouTubeThumbnail(previewVideoId, "hq")
     : null;
 
-  const showPreview = showMobilePreview || isHovering;
-
-  // Close mobile preview when clicking outside
-  useEffect(() => {
-    if (!showMobilePreview || !isMobileViewport) return;
-
-    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        !target.closest("[data-mobile-preview]") &&
-        !target.closest("[data-guest-chip]")
-      ) {
-        setShowMobilePreview(false);
-      }
-    };
-
-    document.addEventListener("touchstart", handleClickOutside);
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("touchstart", handleClickOutside);
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showMobilePreview, isMobileViewport]);
+  const showDesktopPreview = !isMobileViewport && isHovering;
 
   const openVideo = (videoUrl?: string) => {
     const targetUrl = videoUrl || currentUrl;
@@ -97,19 +75,8 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   };
 
   const handleChipClick = () => {
-    const isCurrentlyMobile = window.innerWidth < 768;
-    // On mobile, always open the preview when we have at least one video.
-    // (Do not gate on thumbnail URL existence/quality; the modal handles fallbacks.)
-    if (isCurrentlyMobile && videoIds.length > 0) {
-      setShowMobilePreview(true);
-    } else {
-      openVideo();
-    }
-  };
-
-  const handleWatchNow = () => {
+    // Mobile thumbnails are disabled; always open the correct YouTube link.
     openVideo();
-    setShowMobilePreview(false);
   };
 
   const handleCopy = async (e: React.MouseEvent) => {
@@ -178,7 +145,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       </motion.div>
 
       {/* Thumbnail preview modal */}
-      {currentThumbnailUrl && showPreview && (
+      {currentThumbnailUrl && showDesktopPreview && (
         <GuestPreviewModal
           guest={guest}
           thumbnailUrl={currentThumbnailUrl}
@@ -187,8 +154,10 @@ const GuestChip = ({ guest }: GuestChipProps) => {
           hasMultipleEpisodes={hasMultipleEpisodes}
           currentVideoId={previewVideoId}
           isMobile={isMobileViewport}
-          onClose={() => setShowMobilePreview(false)}
-          onWatchNow={handleWatchNow}
+          onClose={() => {
+            // Desktop-only: hover drives visibility
+          }}
+          onWatchNow={() => openVideo()}
           onPrevious={goToPrevious}
           onNext={goToNext}
           onGoToIndex={goToIndex}
