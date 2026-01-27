@@ -55,10 +55,15 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   const currentUrl = currentVideoId
     ? `https://youtube.com/watch?v=${currentVideoId}`
     : url;
+
+  // On first open (especially on mobile), `currentVideoId` may still be null for a render.
+  // Use a deterministic fallback so the modal can render immediately.
+  const previewVideoId = currentVideoId || videoIds[0] || "";
+
   // Use a reliable default thumbnail quality for the initial render.
   // The modal itself will still attempt higher-quality fallbacks.
-  const currentThumbnailUrl = currentVideoId
-    ? getYouTubeThumbnail(currentVideoId, "hq")
+  const currentThumbnailUrl = previewVideoId
+    ? getYouTubeThumbnail(previewVideoId, "hq")
     : null;
 
   const showPreview = showMobilePreview || isHovering;
@@ -180,7 +185,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
           currentIndex={currentIndex}
           episodeCount={episodeCount}
           hasMultipleEpisodes={hasMultipleEpisodes}
-          currentVideoId={currentVideoId}
+          currentVideoId={previewVideoId}
           isMobile={isMobileViewport}
           onClose={() => setShowMobilePreview(false)}
           onWatchNow={handleWatchNow}

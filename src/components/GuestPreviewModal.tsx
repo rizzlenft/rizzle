@@ -131,17 +131,25 @@ const GuestPreviewModal = ({
           onClick={onClose}
         />
       )}
-      <motion.div
+      {/*
+        IMPORTANT:
+        Keep the centering translate() on a non-animated wrapper.
+        Framer Motion animates via `transform` and would otherwise overwrite
+        `translate(-50%, -50%)`, causing the modal to be off-center on mobile.
+      */}
+      <div
         data-mobile-preview
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.2 }}
         style={getPreviewStyle()}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          <div className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-primary/30 bg-card">
           {/* Close button for mobile */}
           {isMobile && (
             <button
@@ -257,8 +265,9 @@ const GuestPreviewModal = ({
               </div>
             </div>
           )}
-        </div>
-      </motion.div>
+          </div>
+        </motion.div>
+      </div>
     </>,
     document.body
   );
