@@ -55,8 +55,10 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   const currentUrl = currentVideoId
     ? `https://youtube.com/watch?v=${currentVideoId}`
     : url;
+  // Use a reliable default thumbnail quality for the initial render.
+  // The modal itself will still attempt higher-quality fallbacks.
   const currentThumbnailUrl = currentVideoId
-    ? getYouTubeThumbnail(currentVideoId, "maxres")
+    ? getYouTubeThumbnail(currentVideoId, "hq")
     : null;
 
   const showPreview = showMobilePreview || isHovering;
@@ -91,7 +93,9 @@ const GuestChip = ({ guest }: GuestChipProps) => {
 
   const handleChipClick = () => {
     const isCurrentlyMobile = window.innerWidth < 768;
-    if (isCurrentlyMobile && currentThumbnailUrl) {
+    // On mobile, always open the preview when we have at least one video.
+    // (Do not gate on thumbnail URL existence/quality; the modal handles fallbacks.)
+    if (isCurrentlyMobile && videoIds.length > 0) {
       setShowMobilePreview(true);
     } else {
       openVideo();
