@@ -203,6 +203,7 @@ export const guestVideoLinks: Record<string, string | string[]> = {
   "Maria-Helena-Trad": "Av4mUX-6rRg",
   "Matt Kane": "mDYfRnMPy5M",
   "Matt Mason": "GoJHCEF4zNE",
+  "MattiaC": ["wjQENZXdNzk", "xScDZRnw6GA"],
   "Mattias": "cZhVDS563-Y",
   "Matty DCLBlogger": "l6cRYQfiHCQ",
   "Mavenarte": "H18GwoDhcZE",
@@ -507,7 +508,7 @@ export const guestData = [
   "Ludovica", "Lumens",
   // M
   "MAKEANFT", "MakersPlace", "MarbleCards", "Maria-Helena-Trad", "Matt Kane", "Matt Mason",
-  "Mattias", "Matty DCLBlogger", "Mavenarte", "MC Vandal", "Meme.com", "MetaCartel", "MetaFactory",
+  "MattiaC", "Mattias", "Matty DCLBlogger", "Mavenarte", "MC Vandal", "Meme.com", "MetaCartel", "MetaFactory",
   "MetaJax", "Metalympics", "MetaRick", "Metageist", "Metavoxelz", "Micah Johnson", "Micol",
   "Mike Casey", "Mintbase", "MisfitPixels", "MomentumXYZ", "Monaverse", "MovieShots",
   "Movement Generation", "Mr. Y", "MrRichi", "Musashi", "Museum of CryptoArt",
