@@ -471,7 +471,7 @@ export const guestData = [
   "Bryan Brinkman", "Buildtree", "BullyMeow", "Burcin IO",
   // C
   "Carguin", "Carlos Marcial", "Carved", "CatsWillEatYou", "Caty Tedman", "Causality", 
-  "Cawa George", "Chainscribe", "ChangeDAO", "Charged Particles", "Charl3s", "Chauncey St. John",
+  "Cawa George", "Chainscribe", "ChangeDAO", "Charged Particles", "Charles Crain", "Charl3s", "Chauncey St. John",
   "Chris Dawe", "Cobuild", "CodeTrip", "Colborn", "Coldie", "CollectPods", "Conlan", 
   "Connie Digital", "Cryptograph", "CryptoArcade", "CryptoAvatars", "CryptoMotors", "Cryptonatrix",
   "CryptoSpectr", "Cryptoyuna", "CTRL Builders", "CyberBrokers", "Cynxx", "Cypherdudes",
@@ -497,18 +497,18 @@ export const guestData = [
   // J
   "Jacob Martin", "Jaen", "Jake", "Jason Schadt", "Jax HideAway", "jaygotgame", "Jeremy Cowart",
   "Jess Sloss", "Jesse Johnson", "Jiho", "Jin", "JisuArtist", "Jivinci", "J.J. Weinberg", "Joel",
-  "Johan Unger", "John Crain", "Jonathan Mann", "Jonathan Wolfe", "Jose Cabrera", "Josie Bellini",
+  "Johan Unger", "John Crain", "Jon Perkins", "Jonathan Mann", "Jonathan Wolfe", "Jose Cabrera", "Josie Bellini",
   "JoyWorld", "Julie Pacino", "Juxton",
   // K
   "Kaigani", "Kane Mayfield", "KikiCity", "Kim Currier", "Kinchasa", "Kitty Bast", "KnownOrigin",
-  "Koii Network",
+  "Koii Network", "Kwigbelle",
   // L
   "LapinMignon", "Latashá", "Leandro", "Leo Da Gotchi", "Leonie Engel", "Leyline", "Lighthouse",
   "Lilia", "Lin Dai", "Los Cat", "Louie C Rhymes", "Lucidhouse", "Lucho Poletti", "LuckyManekiNFT",
   "Ludovica", "Lumens",
   // M
   "MAKEANFT", "MakersPlace", "MarbleCards", "Maria-Helena-Trad", "Matt Kane", "Matt Mason",
-  "MattiaC", "Mattias", "Matty DCLBlogger", "Mavenarte", "MC Vandal", "Meme.com", "MetaCartel", "MetaFactory",
+  "MattiaC", "Mattias", "Matty DCLBlogger", "Mavenarte", "Max Osiris", "MC Vandal", "Meme.com", "MetaCartel", "MetaFactory",
   "MetaJax", "Metalympics", "MetaRick", "Metageist", "Metavoxelz", "Micah Johnson", "Micol",
   "Mike Casey", "Mintbase", "MisfitPixels", "MomentumXYZ", "Monaverse", "MovieShots",
   "Movement Generation", "Mr. Y", "MrRichi", "Musashi", "Museum of CryptoArt",
@@ -539,7 +539,7 @@ export const guestData = [
   // T
   "Terra Virtua", "Teto", "The Guild", "The Lucid Planet", "The Man Who Sold The World",
   "The Sandbox", "TheBeatMiner", "TheSarahShow", "Thomas Dylan Daniel", "ThreadH3ADS", "Tipn",
-  "Tom Erik Smith", "Toxsam", "Transient Labs", "Trippyogi", "Trislit", "TryRoll", "Twobadour",
+  "Tom Erik Smith", "Toxsam", "Transient Labs", "Trippyogi", "Trislit", "TryRoll", "Twobadour", "TwistedVacancy",
   // U
   "UndeadLu", "Untitledxyz", "Upland", "Upstreet", "UrBen", "Utopia Labs",
   // V
