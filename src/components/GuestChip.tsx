@@ -12,8 +12,9 @@ import {
   getAllGuestVideoIds,
   getYouTubeThumbnail,
   isSpotifyOnlyGuest,
+  guestSpotifyLinks,
 } from "@/data/guestData";
-import tokensmartThumbnail from "@/assets/tokensmart-thumbnail.png";
+import tokensmartThumbnail from "@/assets/tokensmart-thumbnail-hq.png";
 
 interface GuestChipProps {
   guest: string;
@@ -64,18 +65,15 @@ const GuestChip = ({ guest }: GuestChipProps) => {
 
   // Use a reliable default thumbnail quality for the initial render.
   // The modal itself will still attempt higher-quality fallbacks.
-  // For Spotify-only guests, use the TokenSmart thumbnail
+  // For any guest that has a Spotify episode link, always show the high-res TokenSmart thumbnail.
+  // This prevents missing/low-quality YouTube thumbs (e.g. Sparrow) and keeps Spotify branding consistent.
+  const hasSpotifyLink = !!guestSpotifyLinks[guest];
   const isSpotifyOnly = isSpotifyOnlyGuest(guest);
-  const currentThumbnailUrl = isSpotifyOnly
+  const currentThumbnailUrl = hasSpotifyLink
     ? tokensmartThumbnail
     : previewVideoId
       ? getYouTubeThumbnail(previewVideoId, "hq")
       : null;
-
-  // Debug logging for Spotify guests
-  if (isSpotifyOnly && isHovering) {
-    console.log(`[GuestChip] ${guest}: isSpotifyOnly=${isSpotifyOnly}, thumbnailUrl=${currentThumbnailUrl?.substring(0, 50)}...`);
-  }
 
   const showDesktopPreview = !isMobileViewport && isHovering;
 
@@ -165,7 +163,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
           hasMultipleEpisodes={hasMultipleEpisodes}
           currentVideoId={previewVideoId}
           isMobile={isMobileViewport}
-          isSpotifyOnly={isSpotifyOnly}
+          isSpotifyOnly={hasSpotifyLink || isSpotifyOnly}
           onClose={() => {
             // Desktop-only: hover drives visibility
           }}
