@@ -11,7 +11,9 @@ import {
   getGuestEpisodeCount,
   getAllGuestVideoIds,
   getYouTubeThumbnail,
+  isSpotifyOnlyGuest,
 } from "@/data/guestData";
+import tokensmartThumbnail from "@/assets/tokensmart-thumbnail.png";
 
 interface GuestChipProps {
   guest: string;
@@ -62,9 +64,13 @@ const GuestChip = ({ guest }: GuestChipProps) => {
 
   // Use a reliable default thumbnail quality for the initial render.
   // The modal itself will still attempt higher-quality fallbacks.
-  const currentThumbnailUrl = previewVideoId
-    ? getYouTubeThumbnail(previewVideoId, "hq")
-    : null;
+  // For Spotify-only guests, use the TokenSmart thumbnail
+  const isSpotifyOnly = isSpotifyOnlyGuest(guest);
+  const currentThumbnailUrl = isSpotifyOnly
+    ? tokensmartThumbnail
+    : previewVideoId
+      ? getYouTubeThumbnail(previewVideoId, "hq")
+      : null;
 
   const showDesktopPreview = !isMobileViewport && isHovering;
 
@@ -144,8 +150,8 @@ const GuestChip = ({ guest }: GuestChipProps) => {
         </button>
       </motion.div>
 
-      {/* Thumbnail preview modal */}
-      {currentThumbnailUrl && showDesktopPreview && (
+      {/* Thumbnail preview modal - show for YouTube guests or Spotify-only guests */}
+      {(currentThumbnailUrl && showDesktopPreview) && (
         <GuestPreviewModal
           guest={guest}
           thumbnailUrl={currentThumbnailUrl}

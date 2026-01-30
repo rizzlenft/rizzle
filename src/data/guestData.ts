@@ -468,6 +468,11 @@ export const getYouTubeThumbnail = (videoId: string, quality: 'default' | 'mq' |
   return `https://img.youtube.com/vi/${videoId}/${qualityMap[quality]}.jpg`;
 };
 
+// Check if guest is Spotify-only (has Spotify link but no YouTube)
+export const isSpotifyOnlyGuest = (name: string): boolean => {
+  return !guestVideoLinks[name] && !!guestSpotifyLinks[name];
+};
+
 // Get a random episode (returns guest name and video URL)
 export const getRandomEpisode = (): { guest: string; videoId: string; url: string } => {
   // Get all guests with direct links
