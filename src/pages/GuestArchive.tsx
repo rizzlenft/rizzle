@@ -72,7 +72,7 @@ const GuestArchive = () => {
             {/* Triple logo display */}
             <div className="mb-8 flex items-center justify-center gap-4 sm:gap-8">
               <motion.a
-                href="https://discord.gg/wipmeetup"
+                href="https://x.com/thewipmeetup"
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, x: -30 }}
@@ -100,7 +100,7 @@ const GuestArchive = () => {
               </motion.span>
 
               <motion.a
-                href="https://www.youtube.com/@TheMatthewAndRizzleShow"
+                href="https://www.youtube.com/playlist?list=PLaEMvzi1A8c9xU0pw1CZJOTAsrwfydGNK"
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 20 }}
@@ -128,7 +128,7 @@ const GuestArchive = () => {
               </motion.span>
 
               <motion.a
-                href="https://open.spotify.com/show/4gLDv9hBBxlNSLvrd6qB9v"
+                href="https://open.spotify.com/show/6JH4a7vdHnravKJdWPua21"
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, x: 30 }}
