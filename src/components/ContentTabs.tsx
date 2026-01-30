@@ -114,6 +114,7 @@ import tokensmartImg from "@/assets/tokensmart.png";
 import metalympicsImg from "@/assets/metalympics-new.jpeg";
 import rizzlefestImg from "@/assets/rizzlefest.gif";
 import babacciImg from "@/assets/babacci-new.jpeg";
+import nft42Img from "@/assets/nft42.png";
 
 const projects = [
   {
@@ -177,6 +178,14 @@ const projects = [
     emoji: "🏆",
     link: "https://twitter.com/metalympics",
     image: metalympicsImg,
+  },
+  {
+    name: "nft42",
+    description: "Co-founded this pioneering NFT studio (2019-2022). Launched Avastars, TokenSmart, and Stealthtest. Helped Gary Vee, Snoop Dogg, Nyan Cat, and other icons create their first NFT collections.",
+    emoji: "✨",
+    link: "https://nft42.com",
+    featured: true,
+    image: nft42Img,
   },
   {
     name: "Avastars",
