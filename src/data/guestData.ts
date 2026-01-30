@@ -419,7 +419,7 @@ export const guestSpotifyLinks: Record<string, string> = {
   "Charles Crain": "https://open.spotify.com/episode/3OSyHgkr3SxIEjgDUWD004",
   "Jon Perkins": "https://open.spotify.com/episode/3OSyHgkr3SxIEjgDUWD004",
   "Ezincrypto": "https://open.spotify.com/episode/3jV5jCOMYlOL9pNQrBBY2Z",
-  "WhaleShark": "https://open.spotify.com/episode/5DRyRcEGp1JlRdSzm0vAFC",
+  "WhaleShark": "https://open.spotify.com/episode/05tZbqqKGmaTofXlsxqK6Z",
   "Sparrow": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Clash-of-the-Titans---The-real-OGs-Jim-and-Sparrow-grab-the-mic--w-Sparrow--Jim--and-Rizzle-eeb1m1",
   "Kwigbelle": "https://open.spotify.com/episode/4YkDKk5qUtzMhGrzEf8Jlk",
   "Rizzle": "https://open.spotify.com/episode/2e8wSHy0U4eiJxOsChQ9Hn",
