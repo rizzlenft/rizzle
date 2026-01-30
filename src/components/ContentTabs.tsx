@@ -180,18 +180,18 @@ const projects = [
     image: metalympicsImg,
   },
   {
-    name: "nft42",
-    description: "Co-founded this pioneering NFT studio (2019-2022). Launched Avastars, TokenSmart, and Stealthtest. Collaborated with Gary Vee, Snoop Dogg, Nyan Cat, and other icons to build their first NFT collections.",
-    emoji: "✨",
-    link: "https://nft42.com",
-    image: nft42Img,
-  },
-  {
     name: "Avastars",
     description: "Generative PFP NFTs stored entirely onchain. Est. 2020. Pioneering avatar art that actually meant something.",
     emoji: "👾",
     link: "https://opensea.io/collection/avastar",
     image: avastarsImg,
+  },
+  {
+    name: "nft42",
+    description: "Co-founded this pioneering NFT studio (2019-2022). Launched Avastars, TokenSmart, and Stealthtest. Collaborated with Gary Vee, Snoop Dogg, Nyan Cat, and other icons to build their first NFT collections.",
+    emoji: "✨",
+    link: "https://nft42.com",
+    image: nft42Img,
   },
 ];
 
