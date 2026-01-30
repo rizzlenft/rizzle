@@ -172,17 +172,32 @@ const GuestArchive = () => {
               transition={{ delay: 0.7, duration: 0.5 }}
               className="flex flex-wrap items-center justify-center gap-2 text-sm"
             >
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-primary border border-primary/30">
+              <a
+                href="https://x.com/thewipmeetup"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-primary/10 px-3 py-1 text-primary border border-primary/30 hover:bg-primary/20 hover:border-primary/50 transition-all cursor-pointer"
+              >
                 The WIP Meetup
-              </span>
+              </a>
               <span className="text-muted-foreground">&</span>
-              <span className="rounded-full bg-accent/10 px-3 py-1 text-accent border border-accent/30">
+              <a
+                href="https://www.youtube.com/playlist?list=PLaEMvzi1A8c9xU0pw1CZJOTAsrwfydGNK"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-accent/10 px-3 py-1 text-accent border border-accent/30 hover:bg-accent/20 hover:border-accent/50 transition-all cursor-pointer"
+              >
                 The Matthew & Rizzle Show
-              </span>
+              </a>
               <span className="text-muted-foreground">&</span>
-              <span className="rounded-full bg-yellow-500/10 px-3 py-1 text-yellow-500 border border-yellow-500/30">
+              <a
+                href="https://open.spotify.com/show/6JH4a7vdHnravKJdWPua21"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-yellow-500/10 px-3 py-1 text-yellow-500 border border-yellow-500/30 hover:bg-yellow-500/20 hover:border-yellow-500/50 transition-all cursor-pointer"
+              >
                 TokenSmart Podcast
-              </span>
+              </a>
             </motion.div>
 
             {/* Stats */}
