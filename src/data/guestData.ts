@@ -413,7 +413,7 @@ export const guestSpotifyLinks: Record<string, string> = {
   "Skeenee": "https://open.spotify.com/episode/461HKAy69mDrJTsqyC5Df9",
   "Metageist": "https://open.spotify.com/episode/6TcEpmWGXCzxJeOb3jcs9r",
   "J1mmy.eth": "https://open.spotify.com/episode/4tsL5KptOPcDVQj8K3CtwI",
-  "Max Osiris": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Life-is-CryptoArt--CryptoArt-is-Life-wMax-Osiris-ehgdt0",
+  "Max Osiris": "https://open.spotify.com/episode/40xH3wqVXcS4g6CbR6ZIqB",
   // SuperRare family episode - John Crain, Charles Crain, Jon Perkins
   "John Crain": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-SuperRare---The-Family-that-Decided-to-Change-the-Art-World-egps8p",
   "Charles Crain": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-SuperRare---The-Family-that-Decided-to-Change-the-Art-World-egps8p",
