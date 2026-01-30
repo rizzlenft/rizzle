@@ -160,6 +160,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
           hasMultipleEpisodes={hasMultipleEpisodes}
           currentVideoId={previewVideoId}
           isMobile={isMobileViewport}
+          isSpotifyOnly={isSpotifyOnly}
           onClose={() => {
             // Desktop-only: hover drives visibility
           }}
