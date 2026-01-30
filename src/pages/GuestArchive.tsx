@@ -5,6 +5,7 @@ import { Search, ArrowLeft, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import wipLogo from "@/assets/wip-logo.gif";
 import marsLogo from "@/assets/mattandrizz.jpeg";
+import tokensmartLogo from "@/assets/tokensmart.png";
 import { guestData } from "@/data/guestData";
 import GuestChip from "@/components/GuestChip";
 import RandomEpisodeButton from "@/components/RandomEpisodeButton";
@@ -68,8 +69,8 @@ const GuestArchive = () => {
             transition={{ duration: 0.6 }}
             className="flex flex-col items-center"
           >
-            {/* Dual logo display */}
-            <div className="mb-8 flex items-center justify-center gap-6 sm:gap-10">
+            {/* Triple logo display */}
+            <div className="mb-8 flex items-center justify-center gap-4 sm:gap-8">
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -80,7 +81,30 @@ const GuestArchive = () => {
                 <img
                   src={wipLogo}
                   alt="The WIP Meetup"
-                  className="relative h-20 w-20 sm:h-28 sm:w-28 rounded-full border-2 border-primary/30 shadow-lg"
+                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-full border-2 border-primary/30 shadow-lg"
+                />
+              </motion.div>
+
+              <motion.span
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3, duration: 0.3 }}
+                className="text-2xl sm:text-3xl text-muted-foreground"
+              >
+                ×
+              </motion.span>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 0.5 }}
+                className="relative"
+              >
+                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-yellow-500/20 via-primary/20 to-yellow-500/20 blur-xl" />
+                <img
+                  src={tokensmartLogo}
+                  alt="TokenSmart Podcast"
+                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-yellow-500/30 shadow-lg object-cover"
                 />
               </motion.div>
 
@@ -88,7 +112,7 @@ const GuestArchive = () => {
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4, duration: 0.3 }}
-                className="text-3xl sm:text-4xl"
+                className="text-2xl sm:text-3xl text-muted-foreground"
               >
                 ×
               </motion.span>
@@ -103,7 +127,7 @@ const GuestArchive = () => {
                 <img
                   src={marsLogo}
                   alt="The Matthew & Rizzle Show"
-                  className="relative h-20 w-20 sm:h-28 sm:w-28 rounded-2xl border-2 border-accent/30 shadow-lg object-cover"
+                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-accent/30 shadow-lg object-cover"
                 />
               </motion.div>
             </div>
@@ -135,6 +159,10 @@ const GuestArchive = () => {
             >
               <span className="rounded-full bg-primary/10 px-3 py-1 text-primary border border-primary/30">
                 The WIP Meetup
+              </span>
+              <span className="text-muted-foreground">&</span>
+              <span className="rounded-full bg-yellow-500/10 px-3 py-1 text-yellow-500 border border-yellow-500/30">
+                TokenSmart Podcast
               </span>
               <span className="text-muted-foreground">&</span>
               <span className="rounded-full bg-accent/10 px-3 py-1 text-accent border border-accent/30">
