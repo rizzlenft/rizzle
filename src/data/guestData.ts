@@ -424,6 +424,7 @@ export const guestSpotifyLinks: Record<string, string> = {
   "Kwigbelle": "https://open.spotify.com/episode/4YkDKk5qUtzMhGrzEf8Jlk",
   "Rizzle": "https://open.spotify.com/episode/2e8wSHy0U4eiJxOsChQ9Hn",
   "Sho": "https://open.spotify.com/episode/0x0dMoPlMV0DtK74yJsUVw",
+  "SandyMe0ws": "https://open.spotify.com/episode/6JSpd5WP0Xt9gpzQUAKbh7",
 };
 
 // Get URL for a guest - returns YouTube if available, Spotify if available, or search fallback
