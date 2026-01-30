@@ -72,6 +72,11 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       ? getYouTubeThumbnail(previewVideoId, "hq")
       : null;
 
+  // Debug logging for Spotify guests
+  if (isSpotifyOnly && isHovering) {
+    console.log(`[GuestChip] ${guest}: isSpotifyOnly=${isSpotifyOnly}, thumbnailUrl=${currentThumbnailUrl?.substring(0, 50)}...`);
+  }
+
   const showDesktopPreview = !isMobileViewport && isHovering;
 
   const openVideo = (videoUrl?: string) => {
