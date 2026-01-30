@@ -100,11 +100,11 @@ const GuestArchive = () => {
                 transition={{ delay: 0.25, duration: 0.5 }}
                 className="relative"
               >
-                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-yellow-500/20 via-primary/20 to-yellow-500/20 blur-xl" />
+                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-accent/20 via-primary/20 to-accent/20 blur-xl" />
                 <img
-                  src={tokensmartLogo}
-                  alt="TokenSmart Podcast"
-                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-yellow-500/30 shadow-lg object-cover"
+                  src={marsLogo}
+                  alt="The Matthew & Rizzle Show"
+                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-accent/30 shadow-lg object-cover"
                 />
               </motion.div>
 
@@ -123,11 +123,11 @@ const GuestArchive = () => {
                 transition={{ delay: 0.2, duration: 0.5 }}
                 className="relative"
               >
-                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-accent/20 via-primary/20 to-accent/20 blur-xl" />
+                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-yellow-500/20 via-primary/20 to-yellow-500/20 blur-xl" />
                 <img
-                  src={marsLogo}
-                  alt="The Matthew & Rizzle Show"
-                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-accent/30 shadow-lg object-cover"
+                  src={tokensmartLogo}
+                  alt="TokenSmart Podcast"
+                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-yellow-500/30 shadow-lg object-cover"
                 />
               </motion.div>
             </div>
@@ -161,12 +161,12 @@ const GuestArchive = () => {
                 The WIP Meetup
               </span>
               <span className="text-muted-foreground">&</span>
-              <span className="rounded-full bg-yellow-500/10 px-3 py-1 text-yellow-500 border border-yellow-500/30">
-                TokenSmart Podcast
-              </span>
-              <span className="text-muted-foreground">&</span>
               <span className="rounded-full bg-accent/10 px-3 py-1 text-accent border border-accent/30">
                 The Matthew & Rizzle Show
+              </span>
+              <span className="text-muted-foreground">&</span>
+              <span className="rounded-full bg-yellow-500/10 px-3 py-1 text-yellow-500 border border-yellow-500/30">
+                TokenSmart Podcast
               </span>
             </motion.div>
 
