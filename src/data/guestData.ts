@@ -404,15 +404,30 @@ export const guestVideoLinks: Record<string, string | string[]> = {
   "Zoo Tokens": "raJZj-cn6Hc",
 };
 
-// Get YouTube URL for a guest - returns first video if multiple, or search if not found
+// Spotify podcast episode links for TokenSmart Podcast guests (Spotify-only episodes)
+export const guestSpotifyLinks: Record<string, string> = {
+  "TwistedVacancy": "https://open.spotify.com/episode/3xJgNl0k0VlQmYqQj0vWpK",
+  "Kwigbelle": "https://open.spotify.com/episode/5QQY8VjZ3vTqZ1mZM8xJnP",
+  "Max Osiris": "https://open.spotify.com/episode/4TcZl6mYvNKqPjHwNlLMzR",
+  "Charles Crain": "https://open.spotify.com/episode/2WlMnKjVqZmN8VQX5oLpWe",
+  "Jon Perkins": "https://open.spotify.com/episode/6YqRnV3pPkXqZ8lMjN0vTz",
+};
+
+// Get URL for a guest - returns YouTube if available, Spotify if available, or search fallback
 export const getGuestVideoUrl = (name: string): string => {
+  // First check YouTube links
   const videoId = guestVideoLinks[name];
   if (videoId) {
     const id = Array.isArray(videoId) ? videoId[0] : videoId;
     return `https://youtube.com/watch?v=${id}`;
   }
+  // Then check Spotify links
+  const spotifyUrl = guestSpotifyLinks[name];
+  if (spotifyUrl) {
+    return spotifyUrl;
+  }
   // Fallback to YouTube search for the show
-  return `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " WIP Meetup OR Matthew Rizzle")}`;
+  return `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " WIP Meetup OR Matthew Rizzle OR TokenSmart")}`;
 };
 
 // Get all video IDs for a guest
@@ -456,8 +471,8 @@ export const getRandomEpisode = (): { guest: string; videoId: string; url: strin
   };
 };
 
-// Check if guest has a direct video link
-export const hasDirectLink = (name: string) => !!guestVideoLinks[name];
+// Check if guest has a direct link (YouTube or Spotify)
+export const hasDirectLink = (name: string) => !!guestVideoLinks[name] || !!guestSpotifyLinks[name];
 
 // Verified guest list - extracted from all video titles in CSV
 export const guestData = [
