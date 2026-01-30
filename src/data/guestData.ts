@@ -404,15 +404,25 @@ export const guestVideoLinks: Record<string, string | string[]> = {
   "Zoo Tokens": "raJZj-cn6Hc",
 };
 
-// Spotify podcast episode links for TokenSmart Podcast guests (Spotify-only episodes)
+// Spotify podcast episode links for TokenSmart Podcast guests
 export const guestSpotifyLinks: Record<string, string> = {
-  // Note: these are Spotify search URLs to reliably route to the correct episode without guessing IDs.
-  // If you provide exact episode URLs, we can replace these with direct /episode/... links.
-  "TwistedVacancy": "https://open.spotify.com/search/TokenSmart%20TwistedVacancy",
+  // Episodes with exact URLs from TokenSmart Podcast
+  "FrankyNeedles": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Serving-It-Up-In-Decentraland-w-Franky-Needles-e112f86",
+  "TwistedVacancy": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-TONS-of-Controversy--Lets-Not-Get-it-Twisted--w-TwistedVacancy--Rizzle-eu9b8p",
+  "Connie Digital": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-The-OGs-Would-Like-a-Word-With-You--Ft-Connie-Digital--Skeenee-et8ac5",
+  "Skeenee": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-The-OGs-Would-Like-a-Word-With-You--Ft-Connie-Digital--Skeenee-et8ac5",
+  "Metageist": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Virtual-Reality-is-here--w-Metageist-emilrn",
+  "J1mmy.eth": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Building-the-future-of-NFTland-w-j1mmy-eth--whaleshark_pro-nftland-ekksju",
+  "Max Osiris": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Life-is-CryptoArt--CryptoArt-is-Life-wMax-Osiris-ehgdt0",
+  // SuperRare family episode - John Crain, Charles Crain, Jon Perkins
+  "John Crain": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-SuperRare---The-Family-that-Decided-to-Change-the-Art-World-egps8p",
+  "Charles Crain": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-SuperRare---The-Family-that-Decided-to-Change-the-Art-World-egps8p",
+  "Jon Perkins": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-SuperRare---The-Family-that-Decided-to-Change-the-Art-World-egps8p",
+  "Ezincrypto": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Picking-a-Lane-Isnt-Always-EZ-w-Rizzle-and-Ezincrypto-efhv7r",
+  "WhaleShark": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-The-End-Result-Never-Looks-Like-What-You-Started-With-in-the-Beginning-w-Rizzle-and-WhaleShark-eeobhb",
+  "Sparrow": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Clash-of-the-Titans---The-real-OGs-Jim-and-Sparrow-grab-the-mic--w-Sparrow--Jim--and-Rizzle-eeb1m1",
+  // Kwigbelle - Spotify search fallback (no specific episode URL provided)
   "Kwigbelle": "https://open.spotify.com/search/TokenSmart%20Kwigbelle",
-  "Max Osiris": "https://open.spotify.com/search/TokenSmart%20Max%20Osiris",
-  "Charles Crain": "https://open.spotify.com/search/TokenSmart%20Charles%20Crain",
-  "Jon Perkins": "https://open.spotify.com/search/TokenSmart%20Jon%20Perkins",
 };
 
 // Get URL for a guest - returns YouTube if available, Spotify if available, or search fallback
@@ -512,7 +522,7 @@ export const guestData = [
   // I
   "Interface", "Intro To Music Theory", "Iraxlab",
   // J
-  "Jacob Martin", "Jaen", "Jake", "Jason Schadt", "Jax HideAway", "jaygotgame", "Jeremy Cowart",
+  "J1mmy.eth", "Jacob Martin", "Jaen", "Jake", "Jason Schadt", "Jax HideAway", "jaygotgame", "Jeremy Cowart",
   "Jess Sloss", "Jesse Johnson", "Jiho", "Jin", "JisuArtist", "Jivinci", "J.J. Weinberg", "Joel",
   "Johan Unger", "John Crain", "Jon Perkins", "Jonathan Mann", "Jonathan Wolfe", "Jose Cabrera", "Josie Bellini",
   "JoyWorld", "Julie Pacino", "Juxton",
