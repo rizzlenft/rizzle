@@ -406,11 +406,13 @@ export const guestVideoLinks: Record<string, string | string[]> = {
 
 // Spotify podcast episode links for TokenSmart Podcast guests (Spotify-only episodes)
 export const guestSpotifyLinks: Record<string, string> = {
-  "TwistedVacancy": "https://open.spotify.com/episode/3xJgNl0k0VlQmYqQj0vWpK",
-  "Kwigbelle": "https://open.spotify.com/episode/5QQY8VjZ3vTqZ1mZM8xJnP",
-  "Max Osiris": "https://open.spotify.com/episode/4TcZl6mYvNKqPjHwNlLMzR",
-  "Charles Crain": "https://open.spotify.com/episode/2WlMnKjVqZmN8VQX5oLpWe",
-  "Jon Perkins": "https://open.spotify.com/episode/6YqRnV3pPkXqZ8lMjN0vTz",
+  // Note: these are Spotify search URLs to reliably route to the correct episode without guessing IDs.
+  // If you provide exact episode URLs, we can replace these with direct /episode/... links.
+  "TwistedVacancy": "https://open.spotify.com/search/TokenSmart%20TwistedVacancy",
+  "Kwigbelle": "https://open.spotify.com/search/TokenSmart%20Kwigbelle",
+  "Max Osiris": "https://open.spotify.com/search/TokenSmart%20Max%20Osiris",
+  "Charles Crain": "https://open.spotify.com/search/TokenSmart%20Charles%20Crain",
+  "Jon Perkins": "https://open.spotify.com/search/TokenSmart%20Jon%20Perkins",
 };
 
 // Get URL for a guest - returns YouTube if available, Spotify if available, or search fallback
