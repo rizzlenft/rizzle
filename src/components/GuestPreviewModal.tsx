@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
+
 interface GuestPreviewModalProps {
   guest: string;
   thumbnailUrl: string;
@@ -11,6 +12,7 @@ interface GuestPreviewModalProps {
   hasMultipleEpisodes: boolean;
   currentVideoId: string;
   isMobile: boolean;
+  isSpotifyOnly?: boolean;
   onClose: () => void;
   onWatchNow: () => void;
   onPrevious: () => void;
@@ -26,6 +28,7 @@ const GuestPreviewModal = ({
   hasMultipleEpisodes,
   currentVideoId,
   isMobile,
+  isSpotifyOnly = false,
   onClose,
   onWatchNow,
   onPrevious,
@@ -39,6 +42,7 @@ const GuestPreviewModal = ({
   });
 
   // Thumbnail quality fallback - many YouTube videos don't have maxresdefault
+  // Only used for YouTube guests, not Spotify-only guests
   const [thumbFallbackStep, setThumbFallbackStep] = useState(0);
 
   // Reset fallback when video changes
@@ -47,15 +51,18 @@ const GuestPreviewModal = ({
   }, [currentVideoId]);
 
   // Build thumbnail URL with fallback quality levels
+  // For Spotify-only guests, always use the provided thumbnailUrl (TokenSmart logo)
   const resolvedThumbnailUrl = useMemo(() => {
-    if (!currentVideoId) return thumbnailUrl;
+    if (isSpotifyOnly || !currentVideoId) return thumbnailUrl;
     const base = `https://i.ytimg.com/vi/${currentVideoId}`;
     if (thumbFallbackStep === 0) return `${base}/maxresdefault.jpg`;
     if (thumbFallbackStep === 1) return `${base}/hqdefault.jpg`;
     return `${base}/mqdefault.jpg`;
-  }, [currentVideoId, thumbFallbackStep, thumbnailUrl]);
+  }, [currentVideoId, thumbFallbackStep, thumbnailUrl, isSpotifyOnly]);
 
   const handleThumbnailError = () => {
+    // Don't fallback for Spotify-only guests
+    if (isSpotifyOnly) return;
     if (thumbFallbackStep < 2) {
       setThumbFallbackStep((prev) => prev + 1);
     }
