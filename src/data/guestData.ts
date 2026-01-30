@@ -423,6 +423,7 @@ export const guestSpotifyLinks: Record<string, string> = {
   "Sparrow": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Clash-of-the-Titans---The-real-OGs-Jim-and-Sparrow-grab-the-mic--w-Sparrow--Jim--and-Rizzle-eeb1m1",
   "Kwigbelle": "https://open.spotify.com/episode/4YkDKk5qUtzMhGrzEf8Jlk",
   "Rizzle": "https://open.spotify.com/episode/2e8wSHy0U4eiJxOsChQ9Hn",
+  "Sho": "https://open.spotify.com/episode/0x0dMoPlMV0DtK74yJsUVw",
 };
 
 // Get URL for a guest - returns YouTube if available, Spotify if available, or search fallback
