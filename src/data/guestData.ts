@@ -412,7 +412,7 @@ export const guestSpotifyLinks: Record<string, string> = {
   "Connie Digital": "https://open.spotify.com/episode/461HKAy69mDrJTsqyC5Df9",
   "Skeenee": "https://open.spotify.com/episode/461HKAy69mDrJTsqyC5Df9",
   "Metageist": "https://open.spotify.com/episode/6TcEpmWGXCzxJeOb3jcs9r",
-  "J1mmy.eth": "https://open.spotify.com/episode/4tsL5KptOPcDVQj8K3CtwI",
+  "J1mmy.eth": "https://open.spotify.com/episode/4oFX358spUznNG3NNIIxoC",
   "Max Osiris": "https://open.spotify.com/episode/40xH3wqVXcS4g6CbR6ZIqB",
   // SuperRare family episode - John Crain, Charles Crain, Jon Perkins
   "John Crain": "https://open.spotify.com/episode/3OSyHgkr3SxIEjgDUWD004",
