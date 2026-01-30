@@ -71,19 +71,24 @@ const GuestArchive = () => {
           >
             {/* Triple logo display */}
             <div className="mb-8 flex items-center justify-center gap-4 sm:gap-8">
-              <motion.div
+              <motion.a
+                href="https://discord.gg/wipmeetup"
+                target="_blank"
+                rel="noopener noreferrer"
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="relative"
+                className="relative group cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 blur-xl" />
+                <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 blur-xl group-hover:from-primary/40 group-hover:via-accent/40 group-hover:to-primary/40 transition-all" />
                 <img
                   src={wipLogo}
                   alt="The WIP Meetup"
-                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-full border-2 border-primary/30 shadow-lg"
+                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-full border-2 border-primary/30 group-hover:border-primary/60 shadow-lg transition-all"
                 />
-              </motion.div>
+              </motion.a>
 
               <motion.span
                 initial={{ opacity: 0, scale: 0 }}
@@ -94,19 +99,24 @@ const GuestArchive = () => {
                 ×
               </motion.span>
 
-              <motion.div
+              <motion.a
+                href="https://www.youtube.com/@TheMatthewAndRizzleShow"
+                target="_blank"
+                rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.5 }}
-                className="relative"
+                className="relative group cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-accent/20 via-primary/20 to-accent/20 blur-xl" />
+                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-accent/20 via-primary/20 to-accent/20 blur-xl group-hover:from-accent/40 group-hover:via-primary/40 group-hover:to-accent/40 transition-all" />
                 <img
                   src={marsLogo}
                   alt="The Matthew & Rizzle Show"
-                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-accent/30 shadow-lg object-cover"
+                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-accent/30 group-hover:border-accent/60 shadow-lg object-cover transition-all"
                 />
-              </motion.div>
+              </motion.a>
 
               <motion.span
                 initial={{ opacity: 0, scale: 0 }}
@@ -117,19 +127,24 @@ const GuestArchive = () => {
                 ×
               </motion.span>
 
-              <motion.div
+              <motion.a
+                href="https://open.spotify.com/show/4gLDv9hBBxlNSLvrd6qB9v"
+                target="_blank"
+                rel="noopener noreferrer"
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="relative"
+                className="relative group cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-yellow-500/20 via-primary/20 to-yellow-500/20 blur-xl" />
+                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-yellow-500/20 via-primary/20 to-yellow-500/20 blur-xl group-hover:from-yellow-500/40 group-hover:via-primary/40 group-hover:to-yellow-500/40 transition-all" />
                 <img
                   src={tokensmartLogo}
                   alt="TokenSmart Podcast"
-                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-yellow-500/30 shadow-lg object-cover"
+                  className="relative h-16 w-16 sm:h-24 sm:w-24 rounded-2xl border-2 border-yellow-500/30 group-hover:border-yellow-500/60 shadow-lg object-cover transition-all"
                 />
-              </motion.div>
+              </motion.a>
             </div>
 
             {/* Title */}
