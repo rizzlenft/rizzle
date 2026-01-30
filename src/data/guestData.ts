@@ -407,7 +407,7 @@ export const guestVideoLinks: Record<string, string | string[]> = {
 // Spotify podcast episode links for TokenSmart Podcast guests
 export const guestSpotifyLinks: Record<string, string> = {
   // Episodes with exact URLs from TokenSmart Podcast
-  "FrankyNeedles": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Serving-It-Up-In-Decentraland-w-Franky-Needles-e112f86",
+  "FrankyNeedles": "https://open.spotify.com/episode/4IzjXV7lAjNYxQLWnktq1p",
   "TwistedVacancy": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-TONS-of-Controversy--Lets-Not-Get-it-Twisted--w-TwistedVacancy--Rizzle-eu9b8p",
   "Connie Digital": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-The-OGs-Would-Like-a-Word-With-You--Ft-Connie-Digital--Skeenee-et8ac5",
   "Skeenee": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-The-OGs-Would-Like-a-Word-With-You--Ft-Connie-Digital--Skeenee-et8ac5",
