@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     if (!response.ok) {
       console.error(`Firecrawl error:`, data);
       return new Response(
-        JSON.stringify({ success: false, error: data.error || 'Failed to scrape' }),
+        JSON.stringify({ success: false, error: 'Failed to process request' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Error:', error);
     return new Response(
-      JSON.stringify({ success: false, error: error instanceof Error ? error.message : 'Unknown error' }),
+      JSON.stringify({ success: false, error: 'An unexpected error occurred' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
