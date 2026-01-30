@@ -60,7 +60,7 @@ const projects = [
   },
   {
     name: "TokenSmart",
-    description: "One of the largest early web3 communities (2019-2021). Featuring the TokenSmart Podcast on Spotify, daily/weekly events with builders and creators, and over 20,000 Discord members.",
+    description: "One of the largest early web3 communities (2019-2021). Home of the TokenSmart Podcast (now on Spotify), plus daily/weekly community events featuring top builders and creators, growing to over 20,000 Discord members.",
     emoji: "🧠",
     link: "https://twitter.com/nftsmart",
     secondaryLink: "https://creators.spotify.com/pod/profile/tokensmart",
