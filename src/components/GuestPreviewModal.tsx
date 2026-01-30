@@ -53,16 +53,12 @@ const GuestPreviewModal = ({
   // Build thumbnail URL with fallback quality levels
   // For Spotify-only guests, always use the provided thumbnailUrl (TokenSmart logo)
   const resolvedThumbnailUrl = useMemo(() => {
-    console.log(`[GuestPreviewModal] ${guest}: isSpotifyOnly=${isSpotifyOnly}, currentVideoId="${currentVideoId}", thumbnailUrl=${thumbnailUrl?.substring(0, 50)}...`);
-    if (isSpotifyOnly || !currentVideoId) {
-      console.log(`[GuestPreviewModal] Using passed thumbnailUrl for ${guest}`);
-      return thumbnailUrl;
-    }
+    if (isSpotifyOnly || !currentVideoId) return thumbnailUrl;
     const base = `https://i.ytimg.com/vi/${currentVideoId}`;
     if (thumbFallbackStep === 0) return `${base}/maxresdefault.jpg`;
     if (thumbFallbackStep === 1) return `${base}/hqdefault.jpg`;
     return `${base}/mqdefault.jpg`;
-  }, [currentVideoId, thumbFallbackStep, thumbnailUrl, isSpotifyOnly, guest]);
+  }, [currentVideoId, thumbFallbackStep, thumbnailUrl, isSpotifyOnly]);
 
   const handleThumbnailError = () => {
     // Don't fallback for Spotify-only guests
