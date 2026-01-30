@@ -411,7 +411,7 @@ export const guestSpotifyLinks: Record<string, string> = {
   "TwistedVacancy": "https://open.spotify.com/episode/2u85chSjUyOCmm9IE5UFbk",
   "Connie Digital": "https://open.spotify.com/episode/461HKAy69mDrJTsqyC5Df9",
   "Skeenee": "https://open.spotify.com/episode/461HKAy69mDrJTsqyC5Df9",
-  "Metageist": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Virtual-Reality-is-here--w-Metageist-emilrn",
+  "Metageist": "https://open.spotify.com/episode/6TcEpmWGXCzxJeOb3jcs9r",
   "J1mmy.eth": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Building-the-future-of-NFTland-w-j1mmy-eth--whaleshark_pro-nftland-ekksju",
   "Max Osiris": "https://creators.spotify.com/pod/profile/tokensmart/episodes/Special-Episode-Life-is-CryptoArt--CryptoArt-is-Life-wMax-Osiris-ehgdt0",
   // SuperRare family episode - John Crain, Charles Crain, Jon Perkins
