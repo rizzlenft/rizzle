@@ -565,7 +565,7 @@ export const guestData = [
   // S
   "Sam Brukhman", "SandyMe0ws", "Sasha Ivanov", "Scarlet Factory", "Scuube", "Seaofarrows",
   "Seb", "Sekud Beats", "Sho", "Sid Kalla", "Simona Pop", "Simulacra", "Sinkas", "Skeenee",
-  "SkazOne", "SkyBravo", "SkyGolpe", "SlingshotDAO", "Snail0x", "Snax", "Snowfro", "SongCamp",
+  "SkazOne", "SkyBravo", "SkyGolpe", "SlingshotDAO", "Smoke", "Snail0x", "Snax", "Snowfro", "SongCamp",
   "Soundcamp", "SoundClash", "Sov", "Spaced Painter", "Sparrow", "Spherical Art",
   "Spheroid Universe", "Squiggle DAO", "SteadyBreaks", "Stefan Große Halbuer", "Stellabelle",
   "Stellacat", "Steve K.", "Steve McGarry", "Stina Jones", "StratfordRex", "StrawberrySith",
