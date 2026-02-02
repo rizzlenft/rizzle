@@ -1,5 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import WipLivePreview from "./WipLivePreview";
 
 interface ProjectCardProps {
   name: string;
@@ -10,9 +11,10 @@ interface ProjectCardProps {
   secondaryLinkLabel?: string;
   featured?: boolean;
   image?: string;
+  showLivePreview?: boolean;
 }
 
-const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryLinkLabel, featured, image }: ProjectCardProps) => {
+const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryLinkLabel, featured, image, showLivePreview }: ProjectCardProps) => {
   const content = (
     <motion.div
       whileHover={{ scale: 1.02, y: -4 }}
@@ -64,6 +66,13 @@ const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryL
         <p className="text-sm leading-relaxed text-muted-foreground">
           {description}
         </p>
+
+        {/* Live preview for WIP Meetup */}
+        {showLivePreview && (
+          <div className="mt-4">
+            <WipLivePreview />
+          </div>
+        )}
       </div>
     </motion.div>
   );

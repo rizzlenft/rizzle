@@ -21,6 +21,7 @@ const projects = [
     secondaryLinkLabel: "Discord",
     featured: true,
     image: wipMeetupImg,
+    showLivePreview: true,
   },
   {
     name: "Babacci",
