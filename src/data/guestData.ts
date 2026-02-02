@@ -318,6 +318,7 @@ export const guestVideoLinks: Record<string, string | string[]> = {
   "SkyBravo": "sXfIhUsYsjA",
   "SkyGolpe": "0WnLwQ8_Nbs",
   "SlingshotDAO": "jxsEoJaqhYE",
+  "Smoke": "bcDx_9I9vJc",
   "Snail0x": "tpzk6lcpBj8",
   "Snax": "CyIaI4-dPsU",
   "Snowfro": ["IWoiDjjLs7M", "eeW35ZeJc0s"],
