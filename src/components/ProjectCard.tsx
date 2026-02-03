@@ -32,6 +32,12 @@ const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryL
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+          {/* Live preview overlay in top-right corner */}
+          {showLivePreview && (
+            <div className="absolute right-2 top-2 z-10">
+              <WipLivePreview />
+            </div>
+          )}
         </div>
       )}
       
@@ -67,12 +73,6 @@ const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryL
           {description}
         </p>
 
-        {/* Live preview for WIP Meetup */}
-        {showLivePreview && (
-          <div className="mt-4">
-            <WipLivePreview />
-          </div>
-        )}
       </div>
     </motion.div>
   );
