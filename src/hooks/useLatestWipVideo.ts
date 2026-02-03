@@ -6,6 +6,7 @@ interface LatestVideo {
   title: string;
   thumbnailUrl: string;
   videoUrl: string;
+  publishedAt?: string;
 }
 
 export const useLatestWipVideo = () => {
