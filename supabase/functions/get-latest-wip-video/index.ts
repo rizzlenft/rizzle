@@ -103,11 +103,16 @@ serve(async (req) => {
     // Extract the video title
     const titleMatch = xml.match(/<media:title>([^<]+)<\/media:title>/);
     const title = titleMatch ? titleMatch[1] : 'Latest WIP Meetup';
+    
+    // Extract the publish date
+    const publishedMatch = xml.match(/<published>([^<]+)<\/published>/);
+    const publishedAt = publishedMatch ? publishedMatch[1] : null;
 
     return new Response(
       JSON.stringify({ 
         videoId, 
         title,
+        publishedAt,
         thumbnailUrl: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
         videoUrl: `https://www.youtube.com/watch?v=${videoId}`
       }),
