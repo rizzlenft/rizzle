@@ -1,9 +1,13 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
+
+// Cache duration in hours
+const CACHE_HOURS = 3;
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -12,6 +16,39 @@ serve(async (req) => {
   }
 
   try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Check cache first
+    const { data: cached } = await supabase
+      .from('wip_video_cache')
+      .select('*')
+      .eq('id', 'latest')
+      .maybeSingle();
+
+    if (cached) {
+      const cachedAt = new Date(cached.cached_at);
+      const now = new Date();
+      const hoursSinceCached = (now.getTime() - cachedAt.getTime()) / (1000 * 60 * 60);
+      
+      if (hoursSinceCached < CACHE_HOURS) {
+        console.log(`Returning cached video (${hoursSinceCached.toFixed(1)}h old)`);
+        return new Response(
+          JSON.stringify({ 
+            videoId: cached.video_id,
+            title: cached.title,
+            publishedAt: cached.published_at,
+            thumbnailUrl: cached.thumbnail_url,
+            videoUrl: cached.video_url
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    console.log('Cache miss or expired, fetching fresh data...');
+
     // First, fetch the channel page to get the channel ID
     const channelUrl = 'https://www.youtube.com/@theWIPmeetup';
     const pageResponse = await fetch(channelUrl, {
@@ -23,7 +60,20 @@ serve(async (req) => {
     if (!pageResponse.ok) {
       console.error('Failed to fetch channel page:', pageResponse.status);
       
-      // Fallback: use a known recent video ID
+      // Return cached data if available, otherwise fallback
+      if (cached) {
+        return new Response(
+          JSON.stringify({ 
+            videoId: cached.video_id,
+            title: cached.title,
+            publishedAt: cached.published_at,
+            thumbnailUrl: cached.thumbnail_url,
+            videoUrl: cached.video_url
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       return new Response(
         JSON.stringify({ 
           videoId: 'lyeA_lJdQns',
@@ -49,7 +99,18 @@ serve(async (req) => {
 
     if (!channelId) {
       console.log('Could not extract channel ID, using fallback');
-      // Fallback to a known recent video
+      if (cached) {
+        return new Response(
+          JSON.stringify({ 
+            videoId: cached.video_id,
+            title: cached.title,
+            publishedAt: cached.published_at,
+            thumbnailUrl: cached.thumbnail_url,
+            videoUrl: cached.video_url
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
       return new Response(
         JSON.stringify({ 
           videoId: 'lyeA_lJdQns',
@@ -69,6 +130,18 @@ serve(async (req) => {
     
     if (!rssResponse.ok) {
       console.error('Failed to fetch RSS feed:', rssResponse.status);
+      if (cached) {
+        return new Response(
+          JSON.stringify({ 
+            videoId: cached.video_id,
+            title: cached.title,
+            publishedAt: cached.published_at,
+            thumbnailUrl: cached.thumbnail_url,
+            videoUrl: cached.video_url
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
       return new Response(
         JSON.stringify({ 
           videoId: 'lyeA_lJdQns',
@@ -87,6 +160,18 @@ serve(async (req) => {
     
     if (!videoIdMatch || !videoIdMatch[1]) {
       console.error('Could not parse video ID from RSS feed');
+      if (cached) {
+        return new Response(
+          JSON.stringify({ 
+            videoId: cached.video_id,
+            title: cached.title,
+            publishedAt: cached.published_at,
+            thumbnailUrl: cached.thumbnail_url,
+            videoUrl: cached.video_url
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
       return new Response(
         JSON.stringify({ 
           videoId: 'lyeA_lJdQns',
@@ -108,14 +193,31 @@ serve(async (req) => {
     const publishedMatch = xml.match(/<published>([^<]+)<\/published>/);
     const publishedAt = publishedMatch ? publishedMatch[1] : null;
 
-    return new Response(
-      JSON.stringify({ 
-        videoId, 
+    const videoData = {
+      videoId, 
+      title,
+      publishedAt,
+      thumbnailUrl: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
+      videoUrl: `https://www.youtube.com/watch?v=${videoId}`
+    };
+
+    // Update the cache
+    await supabase
+      .from('wip_video_cache')
+      .upsert({
+        id: 'latest',
+        video_id: videoId,
         title,
-        publishedAt,
-        thumbnailUrl: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
-        videoUrl: `https://www.youtube.com/watch?v=${videoId}`
-      }),
+        thumbnail_url: videoData.thumbnailUrl,
+        video_url: videoData.videoUrl,
+        published_at: publishedAt,
+        cached_at: new Date().toISOString()
+      });
+
+    console.log('Cache updated with fresh video data');
+
+    return new Response(
+      JSON.stringify(videoData),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
