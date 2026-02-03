@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      wip_video_cache: {
+        Row: {
+          cached_at: string
+          id: string
+          published_at: string | null
+          thumbnail_url: string
+          title: string
+          video_id: string
+          video_url: string
+        }
+        Insert: {
+          cached_at?: string
+          id?: string
+          published_at?: string | null
+          thumbnail_url: string
+          title: string
+          video_id: string
+          video_url: string
+        }
+        Update: {
+          cached_at?: string
+          id?: string
+          published_at?: string | null
+          thumbnail_url?: string
+          title?: string
+          video_id?: string
+          video_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
