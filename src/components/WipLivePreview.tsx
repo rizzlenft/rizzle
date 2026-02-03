@@ -20,27 +20,24 @@ const WipLivePreview = () => {
       target="_blank"
       rel="noopener noreferrer"
       onClick={(e) => e.stopPropagation()}
-      className="group/preview relative block aspect-video w-full max-w-[180px] overflow-hidden rounded-lg border border-border/50 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10"
+      className="group/preview relative block aspect-video w-20 overflow-hidden rounded border border-white/20 shadow-lg transition-all duration-300 hover:scale-105 hover:border-primary/50 hover:shadow-primary/20"
     >
       {/* Thumbnail */}
       <img
         src={video.thumbnailUrl}
         alt={video.title}
-        className="h-full w-full object-cover transition-transform duration-300 group-hover/preview:scale-105"
+        className="h-full w-full object-cover"
       />
       
       {/* Play button overlay */}
-      <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors duration-300 group-hover/preview:bg-black/20">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg transition-transform duration-300 group-hover/preview:scale-110">
-          <Play className="h-5 w-5 fill-current" />
+      <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-colors duration-300 group-hover/preview:bg-black/20">
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg">
+          <Play className="h-2.5 w-2.5 fill-current" />
         </div>
       </div>
       
-      {/* "Latest" badge */}
-      <div className="absolute left-2 top-2 flex items-center gap-1 rounded bg-destructive/90 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-destructive-foreground">
-        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-destructive-foreground" />
-        Latest
-      </div>
+      {/* "Live" indicator dot */}
+      <div className="absolute left-1 top-1 h-2 w-2 animate-pulse rounded-full bg-destructive shadow-sm shadow-destructive/50" />
     </a>
   );
 };
