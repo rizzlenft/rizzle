@@ -49,7 +49,7 @@ const Socials = () => {
     <section className="relative px-6 py-16 overflow-hidden">
       {/* Background gif */}
       <div 
-        className="pointer-events-none absolute inset-0 opacity-20"
+        className="pointer-events-none absolute inset-0 opacity-40"
         style={{
           backgroundImage: `url(${crowdsurfingGif})`,
           backgroundSize: 'cover',
