@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import crowdsurfingGif from "@/assets/crowdsurfing-rizzle.gif";
 
 // Custom brand icons as SVG components
 const XIcon = ({ className }: { className?: string }) => (
@@ -45,9 +46,19 @@ const socials = [
 
 const Socials = () => {
   return (
-    <section className="relative px-6 py-16">
-      {/* Background accent */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+    <section className="relative px-6 py-16 overflow-hidden">
+      {/* Background gif */}
+      <div 
+        className="pointer-events-none absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `url(${crowdsurfingGif})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+      {/* Gradient overlay for better text readability */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background/60" />
       
       <div className="relative mx-auto max-w-4xl">
         <motion.div
