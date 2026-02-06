@@ -155,11 +155,42 @@ serve(async (req) => {
 
     const xml = await rssResponse.text();
     
-    // Parse the XML to extract the latest video ID
-    const videoIdMatch = xml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
+    // Parse the XML to extract the first entry (latest video)
+    // The RSS structure has <entry> elements for each video
+    const entryMatch = xml.match(/<entry>([\s\S]*?)<\/entry>/);
+    
+    if (!entryMatch) {
+      console.error('Could not find any entry in RSS feed');
+      if (cached) {
+        return new Response(
+          JSON.stringify({ 
+            videoId: cached.video_id,
+            title: cached.title,
+            publishedAt: cached.published_at,
+            thumbnailUrl: cached.thumbnail_url,
+            videoUrl: cached.video_url
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      return new Response(
+        JSON.stringify({ 
+          videoId: 'lyeA_lJdQns',
+          title: 'Latest WIP Meetup',
+          thumbnailUrl: 'https://img.youtube.com/vi/lyeA_lJdQns/mqdefault.jpg',
+          videoUrl: 'https://www.youtube.com/watch?v=lyeA_lJdQns'
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    const entryXml = entryMatch[1];
+    
+    // Extract video ID from within the entry
+    const videoIdMatch = entryXml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
     
     if (!videoIdMatch || !videoIdMatch[1]) {
-      console.error('Could not parse video ID from RSS feed');
+      console.error('Could not parse video ID from entry');
       if (cached) {
         return new Response(
           JSON.stringify({ 
@@ -185,13 +216,15 @@ serve(async (req) => {
 
     const videoId = videoIdMatch[1];
     
-    // Extract the video title
-    const titleMatch = xml.match(/<media:title>([^<]+)<\/media:title>/);
+    // Extract the video title from within the entry
+    const titleMatch = entryXml.match(/<media:title>([^<]+)<\/media:title>/);
     const title = titleMatch ? titleMatch[1] : 'Latest WIP Meetup';
     
-    // Extract the publish date
-    const publishedMatch = xml.match(/<published>([^<]+)<\/published>/);
+    // Extract the publish date from within the entry (not the feed's published date)
+    const publishedMatch = entryXml.match(/<published>([^<]+)<\/published>/);
     const publishedAt = publishedMatch ? publishedMatch[1] : null;
+    
+    console.log(`Parsed video: ${videoId}, title: ${title}, published: ${publishedAt}`);
 
     const videoData = {
       videoId, 
