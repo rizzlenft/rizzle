@@ -44,7 +44,7 @@ export const guestVideoLinks: Record<string, string | string[]> = {
   "Burcin IO": "4Ngg1e03E-g",
   // C
   "Carguin": "tIN3VfvV-P0",
-  "Carlos Marcial": ["lyeA_lJdQns", "O6Ay-4dFb08"],
+  "Carlos Marcial": ["A_CrnPJrI7M", "lyeA_lJdQns", "O6Ay-4dFb08"],
   "Carved": "raJZj-cn6Hc",
   "CatsWillEatYou": "cjEj3OQvJ2Q",
   "Caty Tedman": "lZ8PLAuuUyo",
@@ -337,7 +337,7 @@ export const guestVideoLinks: Record<string, string | string[]> = {
   "Stellacat": "8bAjqzMzzF8",
   "Steve K.": ["HmCLtF9HifE", "raJZj-cn6Hc"],
   "Steve McGarry": "8ezYt7lnYQI",
-  "Stina Jones": ["lyeA_lJdQns", "Jj_QfbmM6zQ", "E-h72NwQivQ", "k4dbYmA08Jo", "zgJjx7vPXrE"],
+  "Stina Jones": ["A_CrnPJrI7M", "lyeA_lJdQns", "Jj_QfbmM6zQ", "E-h72NwQivQ", "k4dbYmA08Jo", "zgJjx7vPXrE"],
   "StratfordRex": "GoJHCEF4zNE",
   "StrawberrySith": "mLuRfzL269Q",
   "StudioTBD": "8tLq55UVnek",
