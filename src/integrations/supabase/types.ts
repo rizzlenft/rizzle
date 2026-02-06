@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      guest_appearances: {
+        Row: {
+          confirmed: boolean
+          extracted_at: string
+          guest_name: string
+          id: string
+          video_id: string
+          video_title: string | null
+        }
+        Insert: {
+          confirmed?: boolean
+          extracted_at?: string
+          guest_name: string
+          id?: string
+          video_id: string
+          video_title?: string | null
+        }
+        Update: {
+          confirmed?: boolean
+          extracted_at?: string
+          guest_name?: string
+          id?: string
+          video_id?: string
+          video_title?: string | null
+        }
+        Relationships: []
+      }
       wip_video_cache: {
         Row: {
           cached_at: string

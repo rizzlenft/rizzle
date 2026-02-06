@@ -6,24 +6,34 @@ import { Input } from "@/components/ui/input";
 import wipLogo from "@/assets/wip-logo.gif";
 import marsLogo from "@/assets/mattandrizz.jpeg";
 import tokensmartLogo from "@/assets/tokensmart.png";
-import { guestData } from "@/data/guestData";
+import { guestData, guestVideoLinks } from "@/data/guestData";
+import { useExtractedGuests, mergeGuestData } from "@/hooks/useExtractedGuests";
 import GuestChip from "@/components/GuestChip";
 import RandomEpisodeButton from "@/components/RandomEpisodeButton";
 
 const GuestArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { data: extractedGuests = [] } = useExtractedGuests();
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Merge static guest list with dynamically extracted guests
+  const allGuests = useMemo(() => {
+    const mergedLinks = mergeGuestData(guestVideoLinks, extractedGuests);
+    // Combine static guest names with any new names from database
+    const allNames = new Set([...guestData, ...Object.keys(mergedLinks)]);
+    return Array.from(allNames).sort((a, b) => a.localeCompare(b));
+  }, [extractedGuests]);
+
   const filteredGuests = useMemo(() => {
-    if (!searchQuery.trim()) return guestData;
-    return guestData.filter(guest =>
+    if (!searchQuery.trim()) return allGuests;
+    return allGuests.filter(guest =>
       guest.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [searchQuery, allGuests]);
 
   // Group guests by first letter
   const groupedGuests = useMemo(() => {
@@ -208,7 +218,7 @@ const GuestArchive = () => {
               className="mt-6 flex items-center gap-2 text-sm text-muted-foreground"
             >
               <Users className="h-4 w-4 text-primary" />
-              <span>{guestData.length}+ verified guests since 2020</span>
+              <span>{allGuests.length}+ verified guests since 2020</span>
             </motion.div>
           </motion.div>
         </div>
