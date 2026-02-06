@@ -220,9 +220,21 @@ serve(async (req) => {
     const titleMatch = entryXml.match(/<media:title>([^<]+)<\/media:title>/);
     const title = titleMatch ? titleMatch[1] : 'Latest WIP Meetup';
     
-    // Extract the publish date from within the entry (not the feed's published date)
+    // Extract the publish date from within the entry (fallback)
     const publishedMatch = entryXml.match(/<published>([^<]+)<\/published>/);
-    const publishedAt = publishedMatch ? publishedMatch[1] : null;
+    const youtubePublishedAt = publishedMatch ? publishedMatch[1] : null;
+    
+    // Try to parse event date from title (format: M/D/YYYY or MM/DD/YYYY)
+    const eventDateMatch = title.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    let publishedAt = youtubePublishedAt;
+    
+    if (eventDateMatch) {
+      const [, month, day, year] = eventDateMatch;
+      // Create ISO date string from parsed values
+      const eventDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 12, 0, 0);
+      publishedAt = eventDate.toISOString();
+      console.log(`Parsed event date from title: ${month}/${day}/${year} -> ${publishedAt}`);
+    }
     
     console.log(`Parsed video: ${videoId}, title: ${title}, published: ${publishedAt}`);
 
