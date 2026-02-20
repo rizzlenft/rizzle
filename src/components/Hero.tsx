@@ -104,7 +104,7 @@ const Hero = () => {
                 <Play className="h-3.5 w-3.5 fill-primary text-primary ml-0.5" />
               </span>
               <span className="font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors">
-                <span className="text-primary">@songadaymann</span> wrote a song about me
+                <span className="text-primary">@songadaymann</span> The Legend of Rizzle
               </span>
               <Music className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
             </button>
