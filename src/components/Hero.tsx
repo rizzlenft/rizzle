@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { Music, Play, X } from "lucide-react";
 import rizzleSig from "@/assets/rizzle-sig-v2.png";
 
 const Hero = () => {
+  const [showPlayer, setShowPlayer] = useState(false);
+
   return (
     <section className="relative flex flex-col items-center justify-center px-6 py-8">
       {/* Background grid pattern */}
@@ -82,6 +86,59 @@ const Hero = () => {
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">6+</div>
             <div className="text-sm text-muted-foreground">Years in Web3</div>
           </div>
+        </motion.div>
+
+        {/* Song A Day Mann feature */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9, duration: 0.6 }}
+          className="mt-8"
+        >
+          {!showPlayer ? (
+            <button
+              onClick={() => setShowPlayer(true)}
+              className="group mx-auto flex items-center gap-3 rounded-full border border-primary/20 bg-primary/5 px-5 py-2.5 transition-all duration-300 hover:border-primary/40 hover:bg-primary/10 hover:box-glow-sm"
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 transition-colors group-hover:bg-primary/30">
+                <Play className="h-3.5 w-3.5 fill-primary text-primary ml-0.5" />
+              </span>
+              <span className="font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors">
+                <span className="text-primary">@songadaymann</span> wrote a song about me
+              </span>
+              <Music className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+            </button>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="mx-auto max-w-md overflow-hidden rounded-xl border border-primary/20 bg-card/80 backdrop-blur-sm box-glow-sm"
+            >
+              <div className="flex items-center justify-between px-4 py-2 border-b border-border/50">
+                <span className="font-mono text-xs text-muted-foreground">
+                  🎵 Song by <a href="https://x.com/songadaymann" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@songadaymann</a>
+                </span>
+                <button
+                  onClick={() => setShowPlayer(false)}
+                  className="rounded-full p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <div className="aspect-video">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/Ww7U1H3Ekhg?autoplay=1"
+                  title="Song A Day Mann - Rizzle"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="border-0"
+                />
+              </div>
+            </motion.div>
+          )}
         </motion.div>
       </motion.div>
     </section>
