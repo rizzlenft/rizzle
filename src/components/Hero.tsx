@@ -98,7 +98,7 @@ const Hero = () => {
           {!showPlayer ? (
             <button
               onClick={() => setShowPlayer(true)}
-              className="group mx-auto flex items-center gap-3 rounded-full border border-primary/20 bg-primary/5 px-5 py-2.5 transition-all duration-300 hover:border-primary/40 hover:bg-primary/10 hover:box-glow-sm"
+              className="group mx-auto flex items-center gap-3 rounded-full border border-primary/20 bg-primary/5 px-5 py-2.5 transition-all duration-300 hover:border-primary/40 hover:bg-primary/10 hover:box-glow-sm animate-[song-pulse_3s_ease-in-out_infinite]"
             >
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 transition-colors group-hover:bg-primary/30">
                 <Play className="h-3.5 w-3.5 fill-primary text-primary ml-0.5" />
