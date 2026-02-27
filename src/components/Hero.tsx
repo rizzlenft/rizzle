@@ -8,10 +8,8 @@ const Hero = () => {
 
   const handleLetsTalkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const newWindow = window.open("https://x.com/NFTland", "_blank", "noopener,noreferrer");
-    if (!newWindow) {
-      window.location.assign("https://x.com/NFTland");
-    }
+    e.stopPropagation();
+    window.location.assign("https://x.com/NFTland");
   };
 
   return (
@@ -43,7 +41,7 @@ const Hero = () => {
         
         {/* Signature */}
         <motion.div
-          className="-mb-28"
+          className="-mb-28 pointer-events-none select-none"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
