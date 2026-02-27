@@ -62,7 +62,7 @@ const Hero = () => {
         >
           <span className="text-primary font-semibold">Web3 Founder & Builder</span> — Been in the game since before the hype. 
           Community strategy, product launches, growth — if it's onchain, I've probably shipped it. 
-          My biggest edge is getting projects from zero to traction. <a href="https://x.com/NFTland" target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/40 underline-offset-4 transition-all duration-300 hover:decoration-primary hover:text-glow-sm">Let's talk</a> if you're building something real.
+          My biggest edge is getting projects from zero to traction.{" "}<a href="https://x.com/NFTland" target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/40 underline-offset-4 transition-all duration-300 hover:decoration-primary">Let's talk</a>{" "}if you're building something real.
         </motion.p>
         
         {/* Stats */}
