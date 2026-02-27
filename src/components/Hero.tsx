@@ -16,17 +16,17 @@ const Hero = () => {
   return (
     <section className="relative flex flex-col items-center justify-center px-6 py-8">
       {/* Prominent PFP hero background */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[72vh] overflow-hidden">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[50vh] sm:h-[72vh] overflow-hidden">
         <img
           src={rizzlePfp}
           alt=""
           aria-hidden="true"
-          className="h-full w-full scale-105 object-cover object-center opacity-35"
+          className="h-full w-full scale-105 object-cover object-top sm:object-center opacity-35"
           loading="eager"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/65 to-background" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/50 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/40 via-transparent to-background/40" />
       </div>
 
       {/* Background grid pattern */}
@@ -47,7 +47,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="-mb-24 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 font-mono text-sm text-primary"
+          className="mb-2 sm:-mb-24 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 font-mono text-sm text-primary"
         >
           <span className="text-lg">🏴‍☠️</span>
           <span>web3 founder since 2019</span>
@@ -56,7 +56,7 @@ const Hero = () => {
         
         {/* Signature */}
         <motion.div
-          className="-mb-28 pointer-events-none select-none"
+          className="-mb-8 sm:-mb-28 pointer-events-none select-none"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
@@ -64,7 +64,7 @@ const Hero = () => {
           <img 
             src={rizzleSig} 
             alt="Rizzle" 
-            className="mx-auto h-[18rem] w-auto sm:h-[26rem] md:h-[34rem] lg:h-[42rem] invert"
+            className="mx-auto h-[12rem] w-auto sm:h-[26rem] md:h-[34rem] lg:h-[42rem] invert"
             style={{ 
               imageRendering: 'auto',
               WebkitFontSmoothing: 'antialiased'
