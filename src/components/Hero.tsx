@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Music, Play, X } from "lucide-react";
 import rizzleSig from "@/assets/rizzle-sig-v2.png";
+import rizzlePfp from "@/assets/rizzlepfp.jpeg";
 
 const Hero = () => {
   const [showPlayer, setShowPlayer] = useState(false);
@@ -14,9 +15,23 @@ const Hero = () => {
 
   return (
     <section className="relative flex flex-col items-center justify-center px-6 py-8">
+      {/* Prominent PFP hero background */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[72vh] overflow-hidden">
+        <img
+          src={rizzlePfp}
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full scale-105 object-cover object-center opacity-35"
+          loading="eager"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/65 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/50" />
+      </div>
+
       {/* Background grid pattern */}
       <div className="pointer-events-none absolute inset-0 grid-pattern opacity-30" />
-      
+
       {/* Gradient orbs */}
       <div className="pointer-events-none absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
       <div className="pointer-events-none absolute bottom-1/4 right-1/4 h-64 w-64 rounded-full bg-accent/10 blur-[100px]" />
