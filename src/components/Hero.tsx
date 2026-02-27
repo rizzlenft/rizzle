@@ -60,9 +60,9 @@ const Hero = () => {
           transition={{ delay: 0.5, duration: 0.6 }}
           className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
         >
-          <span className="text-primary font-semibold">Web3 Founder & Builder</span> — Been in the game since before the hype. 
-          Community strategy, NFT launches, Metaverse builds — if it's onchain, I've probably shipped it. 
-          Open to <span className="text-primary">consulting & advisory</span> if you're building something real.
+          <span className="text-primary font-semibold">Go-to-Market Strategist</span> — I help startups cut through the noise and ship what matters. 
+          From community-led growth to full-scale launches, I've taken projects from zero to traction across web3 and beyond. 
+          <span className="text-primary">Let's talk</span> if you need a strategy that actually converts.
         </motion.p>
         
         {/* Stats */}
