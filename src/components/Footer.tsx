@@ -19,10 +19,6 @@ const Footer = () => {
         <p className="mb-6 text-sm text-muted-foreground">
           web3 founder since 2019 • building the metaverse • calling out grifters
         </p>
-        
-        <div className="font-mono text-xs text-muted-foreground/60">
-          no grifting • just vibes • lfg
-        </div>
       </motion.div>
     </footer>
   );
