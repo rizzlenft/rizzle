@@ -82,7 +82,7 @@ const GuestArchive = () => {
             {/* Triple logo display */}
             <div className="mb-8 flex items-center justify-center gap-4 sm:gap-8">
               <motion.a
-                href="https://x.com/thewipmeetup"
+                href="https://thewipmeetup.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, x: -30 }}
@@ -183,7 +183,7 @@ const GuestArchive = () => {
               className="flex flex-wrap items-center justify-center gap-2 text-sm"
             >
               <a
-                href="https://x.com/thewipmeetup"
+                href="https://thewipmeetup.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full bg-primary/10 px-3 py-1 text-primary border border-primary/30 hover:bg-primary/20 hover:border-primary/50 transition-all cursor-pointer"
