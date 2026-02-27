@@ -6,6 +6,14 @@ import rizzleSig from "@/assets/rizzle-sig-v2.png";
 const Hero = () => {
   const [showPlayer, setShowPlayer] = useState(false);
 
+  const handleLetsTalkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const newWindow = window.open("https://x.com/NFTland", "_blank", "noopener,noreferrer");
+    if (!newWindow) {
+      window.location.assign("https://x.com/NFTland");
+    }
+  };
+
   return (
     <section className="relative flex flex-col items-center justify-center px-6 py-8">
       {/* Background grid pattern */}
@@ -62,7 +70,7 @@ const Hero = () => {
         >
           <span className="text-primary font-semibold">Web3 Founder & Builder</span> — Been in the game since before the hype. 
           Community strategy, product launches, growth — if it's onchain, I've probably shipped it. 
-          My biggest edge is getting projects from zero to traction.{" "}<a href="https://x.com/NFTland" target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/40 underline-offset-4 transition-all duration-300 hover:decoration-primary">Let's talk</a>{" "}if you're building something real.
+          My biggest edge is getting projects from zero to traction.{" "}<a href="https://x.com/NFTland" onClick={handleLetsTalkClick} className="inline-flex items-center text-primary underline decoration-primary/40 underline-offset-4 transition-all duration-300 hover:decoration-primary">Let's talk</a>{" "}if you're building something real.
         </motion.p>
         
         {/* Stats */}
