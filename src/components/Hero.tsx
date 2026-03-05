@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Music, Play, X, ChevronDown } from "lucide-react";
+import { Music, Play, X, ChevronDown, MessageCircle } from "lucide-react";
 import rizzleSig from "@/assets/rizzle-sig-v2.png";
 import rizzlePfp from "@/assets/rizzlepfp.jpeg";
 
@@ -90,7 +90,7 @@ const Hero = () => {
           My biggest edge is getting projects from zero to traction.{" "}<a href="https://x.com/NFTland" onClick={handleLetsTalkClick} className="inline-flex items-center text-primary underline decoration-primary/40 underline-offset-4 transition-all duration-300 hover:decoration-primary">Let's talk</a>{" "}if you're building something real.
         </motion.p>
         
-        {/* Stats */}
+        {/* Stats row — includes "Latest Posts" as a clickable item */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -111,6 +111,17 @@ const Hero = () => {
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">6+</div>
             <div className="text-sm text-muted-foreground">Years in Web3</div>
           </div>
+          <div className="h-8 w-px bg-border" />
+          <button
+            onClick={scrollToFeed}
+            className="group text-center cursor-pointer transition-transform hover:scale-105"
+          >
+            <div className="font-display text-3xl font-bold text-primary text-glow-sm flex items-center justify-center gap-1.5">
+              <MessageCircle className="h-6 w-6" />
+              <ChevronDown className="h-5 w-5 animate-bounce" />
+            </div>
+            <div className="text-sm text-muted-foreground group-hover:text-primary transition-colors">Latest Posts</div>
+          </button>
         </motion.div>
 
         {/* Song A Day Mann feature */}
@@ -165,18 +176,6 @@ const Hero = () => {
             </motion.div>
           )}
         </motion.div>
-
-        {/* Subtle scroll CTA to activity feed */}
-        <motion.button
-          onClick={scrollToFeed}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-          className="mx-auto mt-10 flex flex-col items-center gap-1 text-muted-foreground/60 transition-colors hover:text-primary cursor-pointer group"
-        >
-          <span className="font-mono text-[11px] tracking-widest uppercase">Latest posts</span>
-          <ChevronDown className="h-4 w-4 animate-bounce" />
-        </motion.button>
       </motion.div>
     </section>
   );
