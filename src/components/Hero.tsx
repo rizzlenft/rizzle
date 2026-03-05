@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Music, Play, X, ChevronDown, MessageCircle } from "lucide-react";
+import { Music, Play, X } from "lucide-react";
 import rizzleSig from "@/assets/rizzle-sig-v2.png";
 import rizzlePfp from "@/assets/rizzlepfp.jpeg";
 
@@ -13,9 +13,6 @@ const Hero = () => {
     window.location.assign("https://x.com/NFTland");
   };
 
-  const scrollToFeed = () => {
-    document.getElementById("activity-feed")?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <section className="relative flex flex-col items-center justify-center px-6 py-8">
@@ -111,17 +108,6 @@ const Hero = () => {
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">6+</div>
             <div className="text-sm text-muted-foreground">Years in Web3</div>
           </div>
-          <div className="h-8 w-px bg-border" />
-          <button
-            onClick={scrollToFeed}
-            className="group text-center cursor-pointer transition-transform hover:scale-105"
-          >
-            <div className="font-display text-3xl font-bold text-primary text-glow-sm flex items-center justify-center gap-1.5">
-              <MessageCircle className="h-6 w-6" />
-              <ChevronDown className="h-5 w-5 animate-bounce" />
-            </div>
-            <div className="text-sm text-muted-foreground group-hover:text-primary transition-colors">Latest Posts</div>
-          </button>
         </motion.div>
 
         {/* Song A Day Mann feature */}
