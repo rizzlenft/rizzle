@@ -40,27 +40,20 @@ const TwitterEmbed = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="overflow-hidden rounded-xl">
-      <a
-        className="twitter-timeline"
-        data-theme="dark"
-        data-chrome="noheader nofooter noborders transparent"
-        data-tweet-limit="1"
-        data-width="100%"
-        href="https://twitter.com/NFTland"
-      >
-        Loading latest post…
-      </a>
+    <div ref={containerRef} className="overflow-hidden rounded-xl p-2">
+      <blockquote className="twitter-tweet" data-theme="dark" data-conversation="none">
+        <a href="https://x.com/NFTland/status/2029592869363687564">Loading…</a>
+      </blockquote>
     </div>
   );
 };
 
 const FarcasterEmbed = () => (
-  <div className="overflow-hidden rounded-xl">
+  <div className="overflow-hidden rounded-xl p-2">
     <iframe
-      src="https://warpcast.com/rizzle"
+      src="https://warpcast.com/~/embed?url=https://warpcast.com/rizzle/0x70d0d410"
       title="Rizzle's latest cast"
-      className="w-full border-0 rounded-xl bg-card/30"
+      className="w-full border-0 rounded-xl"
       style={{ height: "320px", colorScheme: "dark" }}
       loading="lazy"
       sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
@@ -80,10 +73,6 @@ const ActivityFeed = () => {
         >
           {/* Section header */}
           <div className="mb-8 text-center">
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-mono text-primary">
-              <MessageCircle className="h-3 w-3" />
-              LIVE FEED
-            </div>
             <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
               Latest Activity
             </h2>
