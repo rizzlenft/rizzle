@@ -49,16 +49,16 @@ Deno.serve(async (req) => {
     const markdown = scrapeData?.data?.markdown || "";
 
     const parsedCasts = parseCastsFromMarkdown(markdown).slice(0, 10);
+    const parsedDefaultCast = parsedCasts.find((cast) => normalizeCastUrl(cast.url) === DEFAULT_FARCASTER_URL);
 
-    const castsToStore = parsedCasts.length
-      ? parsedCasts
-      : [
-          {
-            text: DEFAULT_FARCASTER_TEXT,
-            url: DEFAULT_FARCASTER_URL,
-            hash: simpleHash(DEFAULT_FARCASTER_URL),
-          },
-        ];
+    const castsToStore = (
+      parsedDefaultCast
+        ? [parsedDefaultCast, ...parsedCasts.filter((cast) => normalizeCastUrl(cast.url) !== DEFAULT_FARCASTER_URL)]
+        : [
+            { text: DEFAULT_FARCASTER_TEXT, url: DEFAULT_FARCASTER_URL, hash: simpleHash(DEFAULT_FARCASTER_URL) },
+            ...parsedCasts,
+          ]
+    ).slice(0, 10);
 
     const nowIso = new Date().toISOString();
     await Promise.all(

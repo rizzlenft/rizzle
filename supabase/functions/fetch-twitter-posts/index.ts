@@ -38,14 +38,17 @@ Deno.serve(async (req) => {
 
     const newestParsedId = parsedTweets.length ? extractTweetId(parsedTweets[0].url) : 0;
     const defaultTweetId = extractTweetId(DEFAULT_X_URL);
+    const parsedDefaultTweet = parsedTweets.find((tweet) => normalizeXUrl(tweet.url) === DEFAULT_X_URL);
 
     const tweetsToStore = (
-      newestParsedId < defaultTweetId
-        ? [
-            { text: DEFAULT_X_TEXT, url: DEFAULT_X_URL, hash: simpleHash(DEFAULT_X_URL) },
-            ...parsedTweets.filter((tweet) => normalizeXUrl(tweet.url) !== DEFAULT_X_URL),
-          ]
-        : parsedTweets
+      parsedDefaultTweet
+        ? [parsedDefaultTweet, ...parsedTweets.filter((tweet) => normalizeXUrl(tweet.url) !== DEFAULT_X_URL)]
+        : newestParsedId < defaultTweetId
+          ? [
+              { text: DEFAULT_X_TEXT, url: DEFAULT_X_URL, hash: simpleHash(DEFAULT_X_URL) },
+              ...parsedTweets,
+            ]
+          : parsedTweets
     ).slice(0, 10);
 
     if (!tweetsToStore.length) {
