@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      farcaster_casts: {
+        Row: {
+          author_username: string
+          cast_text: string
+          cast_url: string | null
+          hash: string | null
+          id: string
+          published_at: string | null
+          scraped_at: string
+        }
+        Insert: {
+          author_username?: string
+          cast_text: string
+          cast_url?: string | null
+          hash?: string | null
+          id?: string
+          published_at?: string | null
+          scraped_at?: string
+        }
+        Update: {
+          author_username?: string
+          cast_text?: string
+          cast_url?: string | null
+          hash?: string | null
+          id?: string
+          published_at?: string | null
+          scraped_at?: string
+        }
+        Relationships: []
+      }
       guest_appearances: {
         Row: {
           confirmed: boolean

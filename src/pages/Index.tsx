@@ -1,5 +1,6 @@
 import Hero from "@/components/Hero";
 import ContentTabs from "@/components/ContentTabs";
+import ActivityFeed from "@/components/ActivityFeed";
 import Socials from "@/components/Socials";
 import Footer from "@/components/Footer";
 
@@ -28,6 +29,7 @@ const Index = () => {
       <div className="relative z-10">
         <Hero />
         <ContentTabs />
+        <ActivityFeed />
         <Socials />
         <Footer />
       </div>
