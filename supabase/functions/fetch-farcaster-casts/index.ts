@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
 
   try {
     const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
-    const forceRefresh = Boolean(body?.forceRefresh);
+    void body;
 
     const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
     if (!FIRECRAWL_API_KEY) {
@@ -27,28 +27,6 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    if (!forceRefresh) {
-      const { data: recentCasts } = await supabase
-        .from("farcaster_casts")
-        .select("scraped_at")
-        .order("scraped_at", { ascending: false })
-        .limit(1);
-
-      if (recentCasts && recentCasts.length > 0) {
-        const lastScraped = new Date(recentCasts[0].scraped_at);
-        const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
-        if (lastScraped > thirtyMinutesAgo) {
-          const { data: cached } = await supabase
-            .from("farcaster_casts")
-            .select("*")
-            .order("published_at", { ascending: false })
-            .limit(10);
-          return new Response(JSON.stringify({ casts: cached, cached: true }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
-      }
-    }
 
     const scrapeResponse = await fetch("https://api.firecrawl.dev/v1/scrape", {
       method: "POST",
@@ -71,16 +49,16 @@ Deno.serve(async (req) => {
     const markdown = scrapeData?.data?.markdown || "";
 
     const parsedCasts = parseCastsFromMarkdown(markdown).slice(0, 10);
-    const priorityCast = {
-      text: DEFAULT_FARCASTER_TEXT,
-      url: DEFAULT_FARCASTER_URL,
-      hash: simpleHash(DEFAULT_FARCASTER_URL),
-    };
 
-    const castsToStore = [
-      priorityCast,
-      ...parsedCasts.filter((cast) => normalizeCastUrl(cast.url) !== DEFAULT_FARCASTER_URL),
-    ].slice(0, 10);
+    const castsToStore = parsedCasts.length
+      ? parsedCasts
+      : [
+          {
+            text: DEFAULT_FARCASTER_TEXT,
+            url: DEFAULT_FARCASTER_URL,
+            hash: simpleHash(DEFAULT_FARCASTER_URL),
+          },
+        ];
 
     const nowIso = new Date().toISOString();
     await Promise.all(
@@ -147,21 +125,27 @@ function parseCastsFromMarkdown(markdown: string): Array<{ text: string; url: st
   const castUrlRegex = /https?:\/\/(?:warpcast\.com|farcaster\.xyz)\/rizzle\/0x[a-f0-9]+/gi;
   const matchedUrls = [...new Set((markdown.match(castUrlRegex) ?? []).map(normalizeCastUrl))];
 
-  const casts: Array<{ text: string; url: string; hash: string }> = [];
+  const enriched = matchedUrls
+    .map((url) => {
+      const index = markdown.indexOf(url);
+      const snippet = markdown.slice(Math.max(0, index - 220), Math.min(markdown.length, index + 220));
+      const text = cleanPostText(snippet);
+      const ageMinutes = parseAgeMinutes(snippet);
 
-  for (const url of matchedUrls) {
-    const index = markdown.indexOf(url);
-    const snippet = markdown.slice(Math.max(0, index - 350), Math.min(markdown.length, index + 350));
-    const text = cleanPostText(snippet);
+      if (text.length < 20) return null;
 
-    if (text.length >= 20) {
-      casts.push({
+      return {
         text: text.slice(0, 500),
         url,
         hash: simpleHash(`${url}:${text}`),
-      });
-    }
-  }
+        ageMinutes,
+        index,
+      };
+    })
+    .filter((cast): cast is { text: string; url: string; hash: string; ageMinutes: number; index: number } => Boolean(cast))
+    .sort((a, b) => a.ageMinutes - b.ageMinutes || a.index - b.index);
+
+  const casts = enriched.map(({ text, url, hash }) => ({ text, url, hash }));
 
   if (casts.length) return casts;
 
@@ -195,6 +179,20 @@ function cleanPostText(raw: string): string {
 
 function normalizeCastUrl(url: string): string {
   return url.replace(/[),.;!?]+$/, "").split("?")[0].split("#")[0];
+}
+
+function parseAgeMinutes(text: string): number {
+  const minuteMatch = text.match(/(\d+)\s*m\b/i);
+  if (minuteMatch) return Number(minuteMatch[1]);
+
+  const hourMatch = text.match(/(\d+)\s*h\b/i);
+  if (hourMatch) return Number(hourMatch[1]) * 60;
+
+  const dayMatch = text.match(/(\d+)\s*d\b/i);
+  if (dayMatch) return Number(dayMatch[1]) * 1440;
+
+  if (/just now/i.test(text)) return 0;
+  return Number.MAX_SAFE_INTEGER;
 }
 
 function simpleHash(str: string): string {
