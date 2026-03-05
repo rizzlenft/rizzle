@@ -1,8 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { MessageCircle } from "lucide-react";
-
-type FeedTab = "farcaster" | "x";
+import { ExternalLink, MessageCircle } from "lucide-react";
 
 const FarcasterIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
@@ -20,20 +18,17 @@ const TwitterEmbed = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Load Twitter widget script
-    const existingScript = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]');
-    if (!existingScript) {
+    const existing = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]');
+    if (!existing) {
       const script = document.createElement("script");
       script.src = "https://platform.twitter.com/widgets.js";
       script.async = true;
       script.charset = "utf-8";
       document.head.appendChild(script);
     } else {
-      // If script already loaded, re-render widgets
       (window as any).twttr?.widgets?.load(containerRef.current);
     }
 
-    // Re-render when script loads
     const interval = setInterval(() => {
       if ((window as any).twttr?.widgets) {
         (window as any).twttr.widgets.load(containerRef.current);
@@ -45,69 +40,38 @@ const TwitterEmbed = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="mx-auto max-w-lg overflow-hidden rounded-xl">
+    <div ref={containerRef} className="overflow-hidden rounded-xl">
       <a
         className="twitter-timeline"
         data-theme="dark"
         data-chrome="noheader nofooter noborders transparent"
-        data-tweet-limit="5"
+        data-tweet-limit="1"
         data-width="100%"
         href="https://twitter.com/NFTland"
       >
-        Loading posts from @NFTland...
+        Loading latest post…
       </a>
     </div>
   );
 };
 
-const FarcasterEmbed = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [loaded, setLoaded] = useState(false);
-
-  // Warpcast doesn't have a timeline embed widget, so we use individual cast embeds
-  // via their embed URL format: https://warpcast.com/~/embed?url=<cast_url>
-  // For a profile feed, we'll use an iframe approach
-  useEffect(() => {
-    setLoaded(true);
-  }, []);
-
-  return (
-    <div ref={containerRef} className="mx-auto max-w-lg overflow-hidden rounded-xl">
-      {loaded && (
-        <iframe
-          src="https://warpcast.com/rizzle"
-          title="Rizzle's Farcaster Feed"
-          className="w-full border-0 rounded-xl bg-card/30"
-          style={{ height: "600px", colorScheme: "dark" }}
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-        />
-      )}
-    </div>
-  );
-};
+const FarcasterEmbed = () => (
+  <div className="overflow-hidden rounded-xl">
+    <iframe
+      src="https://warpcast.com/rizzle"
+      title="Rizzle's latest cast"
+      className="w-full border-0 rounded-xl bg-card/30"
+      style={{ height: "320px", colorScheme: "dark" }}
+      loading="lazy"
+      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+    />
+  </div>
+);
 
 const ActivityFeed = () => {
-  const [activeTab, setActiveTab] = useState<FeedTab>("farcaster");
-
-  const tabs: { id: FeedTab; label: string; icon: React.ReactNode; color: string }[] = [
-    {
-      id: "farcaster",
-      label: "Farcaster",
-      icon: <FarcasterIcon className="h-4 w-4" />,
-      color: "text-[#8A63D2]",
-    },
-    {
-      id: "x",
-      label: "X / Twitter",
-      icon: <XIcon className="h-4 w-4" />,
-      color: "text-foreground",
-    },
-  ];
-
   return (
     <section id="activity-feed" className="px-6 py-16">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -124,61 +88,57 @@ const ActivityFeed = () => {
               Latest Activity
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Posts, takes & updates from around the web
+              Most recent posts from across the web
             </p>
           </div>
 
-          {/* Tab switcher */}
-          <div className="mb-6 flex justify-center">
-            <div className="inline-flex rounded-xl border border-border/60 bg-card/40 p-1 backdrop-blur-sm">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`relative flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-300 ${
-                    activeTab === tab.id
-                      ? `${tab.color} bg-card shadow-sm border border-border/50`
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
+          {/* Side-by-side feeds */}
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Farcaster */}
+            <div className="flex flex-col rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden">
+              <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3">
+                <FarcasterIcon className="h-4 w-4 text-[#8A63D2]" />
+                <span className="text-sm font-medium text-foreground">Farcaster</span>
+                <span className="text-xs text-muted-foreground">@rizzle</span>
+              </div>
+              <div className="flex-1 min-h-[280px]">
+                <FarcasterEmbed />
+              </div>
+              <div className="border-t border-border/40 px-5 py-3">
+                <a
+                  href="https://warpcast.com/rizzle"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-[#8A63D2]"
                 >
-                  {tab.icon}
-                  {tab.label}
-                </button>
-              ))}
+                  See more on Warpcast
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              </div>
             </div>
-          </div>
 
-          {/* Feed content */}
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="min-h-[400px]"
-          >
-            {activeTab === "x" ? <TwitterEmbed /> : <FarcasterEmbed />}
-          </motion.div>
-
-          {/* Profile links */}
-          <div className="mt-6 flex justify-center gap-6 text-sm">
-            <a
-              href="https://warpcast.com/rizzle"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-[#8A63D2]"
-            >
-              <FarcasterIcon className="h-3.5 w-3.5" />
-              @rizzle on Warpcast
-            </a>
-            <a
-              href="https://x.com/NFTland"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <XIcon className="h-3.5 w-3.5" />
-              @NFTland on X
-            </a>
+            {/* X / Twitter */}
+            <div className="flex flex-col rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden">
+              <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3">
+                <XIcon className="h-4 w-4 text-foreground" />
+                <span className="text-sm font-medium text-foreground">X</span>
+                <span className="text-xs text-muted-foreground">@NFTland</span>
+              </div>
+              <div className="flex-1 min-h-[280px]">
+                <TwitterEmbed />
+              </div>
+              <div className="border-t border-border/40 px-5 py-3">
+                <a
+                  href="https://x.com/NFTland"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  See more on X
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
