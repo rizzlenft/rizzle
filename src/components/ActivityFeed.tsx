@@ -1,17 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, MessageCircle, RefreshCw, Twitter } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { MessageCircle } from "lucide-react";
 
-type SourceType = "farcaster" | "twitter";
-
-interface FeedItem {
-  id: string;
-  text: string;
-  url: string;
-  source: SourceType;
-  publishedAt: string | null;
-}
+type FeedTab = "farcaster" | "x";
 
 const FarcasterIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
@@ -19,160 +10,176 @@ const FarcasterIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const cleanText = (raw: string) => {
-  const noLinks = raw.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1");
-  const noUrls = noLinks.replace(/https?:\/\/\S+/g, "");
-  return noUrls.replace(/\s+/g, " ").trim();
+const XIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+
+const TwitterEmbed = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Load Twitter widget script
+    const existingScript = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]');
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = "https://platform.twitter.com/widgets.js";
+      script.async = true;
+      script.charset = "utf-8";
+      document.head.appendChild(script);
+    } else {
+      // If script already loaded, re-render widgets
+      (window as any).twttr?.widgets?.load(containerRef.current);
+    }
+
+    // Re-render when script loads
+    const interval = setInterval(() => {
+      if ((window as any).twttr?.widgets) {
+        (window as any).twttr.widgets.load(containerRef.current);
+        clearInterval(interval);
+      }
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="mx-auto max-w-lg overflow-hidden rounded-xl">
+      <a
+        className="twitter-timeline"
+        data-theme="dark"
+        data-chrome="noheader nofooter noborders transparent"
+        data-tweet-limit="5"
+        data-width="100%"
+        href="https://twitter.com/NFTland"
+      >
+        Loading posts from @NFTland...
+      </a>
+    </div>
+  );
 };
 
-const formatTimeAgo = (value: string | null) => {
-  if (!value) return "";
-  const date = new Date(value);
-  const diffMs = Date.now() - date.getTime();
-  const mins = Math.floor(diffMs / 60000);
-  const hours = Math.floor(mins / 60);
-  const days = Math.floor(hours / 24);
+const FarcasterEmbed = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [loaded, setLoaded] = useState(false);
 
-  if (mins < 60) return `${mins}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  if (days < 7) return `${days}d ago`;
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  // Warpcast doesn't have a timeline embed widget, so we use individual cast embeds
+  // via their embed URL format: https://warpcast.com/~/embed?url=<cast_url>
+  // For a profile feed, we'll use an iframe approach
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="mx-auto max-w-lg overflow-hidden rounded-xl">
+      {loaded && (
+        <iframe
+          src="https://warpcast.com/rizzle"
+          title="Rizzle's Farcaster Feed"
+          className="w-full border-0 rounded-xl bg-card/30"
+          style={{ height: "600px", colorScheme: "dark" }}
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+        />
+      )}
+    </div>
+  );
 };
 
 const ActivityFeed = () => {
-  const [items, setItems] = useState<FeedItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState<FeedTab>("farcaster");
 
-  const fetchFeed = async (forceRefresh = false) => {
-    try {
-      if (forceRefresh) setRefreshing(true);
-
-      const [castsRes, tweetsRes] = await Promise.all([
-        supabase.from("farcaster_casts").select("id, cast_text, cast_url, published_at").order("published_at", { ascending: false }).limit(8),
-        supabase.from("twitter_tweets").select("id, tweet_text, tweet_url, published_at").order("published_at", { ascending: false }).limit(8),
-      ]);
-
-      const castItems: FeedItem[] = (castsRes.data ?? []).map((row) => ({
-        id: `fc-${row.id}`,
-        text: cleanText(row.cast_text),
-        url: row.cast_url || "https://warpcast.com/rizzle",
-        source: "farcaster",
-        publishedAt: row.published_at,
-      }));
-
-      const tweetItems: FeedItem[] = (tweetsRes.data ?? []).map((row) => ({
-        id: `tw-${row.id}`,
-        text: cleanText(row.tweet_text),
-        url: row.tweet_url || "https://x.com/NFTland",
-        source: "twitter",
-        publishedAt: row.published_at,
-      }));
-
-      const merged = [...castItems, ...tweetItems]
-        .filter((item) => item.text.length > 12)
-        .sort((a, b) => {
-          const aTime = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
-          const bTime = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
-          return bTime - aTime;
-        })
-        .slice(0, 10);
-
-      setItems(merged);
-
-      // Backfill missing sources without blocking render
-      if (forceRefresh || (tweetsRes.data?.length ?? 0) === 0 || (castsRes.data?.length ?? 0) === 0) {
-        await Promise.allSettled([
-          supabase.functions.invoke("fetch-farcaster-casts"),
-          supabase.functions.invoke("fetch-twitter-posts"),
-        ]);
-      }
-    } catch (error) {
-      console.error("Activity feed error:", error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchFeed(false);
-  }, []);
-
-  const hasItems = useMemo(() => items.length > 0, [items]);
+  const tabs: { id: FeedTab; label: string; icon: React.ReactNode; color: string }[] = [
+    {
+      id: "farcaster",
+      label: "Farcaster",
+      icon: <FarcasterIcon className="h-4 w-4" />,
+      color: "text-[#8A63D2]",
+    },
+    {
+      id: "x",
+      label: "X / Twitter",
+      icon: <XIcon className="h-4 w-4" />,
+      color: "text-foreground",
+    },
+  ];
 
   return (
-    <section className="px-6 py-12">
+    <section id="activity-feed" className="px-6 py-16">
       <div className="mx-auto max-w-4xl">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <MessageCircle className="h-5 w-5 text-primary" />
-              <h2 className="font-display text-2xl font-bold text-foreground">Latest Activity</h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5 }}
+        >
+          {/* Section header */}
+          <div className="mb-8 text-center">
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-mono text-primary">
+              <MessageCircle className="h-3 w-3" />
+              LIVE FEED
             </div>
-            <button
-              onClick={() => fetchFeed(true)}
-              disabled={refreshing}
-              title="Refresh feed"
-              className="rounded-lg border border-border bg-card p-2 text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground disabled:opacity-50"
-            >
-              <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
-            </button>
+            <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+              Latest Activity
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Posts, takes & updates from around the web
+            </p>
           </div>
 
-          {loading && (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="animate-pulse rounded-xl border border-border/50 bg-card/30 p-4">
-                  <div className="mb-2 h-4 w-2/3 rounded bg-muted/50" />
-                  <div className="h-4 w-1/2 rounded bg-muted/50" />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {!loading && !hasItems && (
-            <div className="rounded-xl border border-border/50 bg-card/30 p-6 text-center">
-              <p className="text-sm text-muted-foreground">No posts loaded yet. Tap refresh and I’ll pull Farcaster + X.</p>
-            </div>
-          )}
-
-          {!loading && hasItems && (
-            <div className="space-y-3">
-              {items.map((item, index) => (
-                <motion.a
-                  key={item.id}
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex gap-3 rounded-xl border border-border/50 bg-card/30 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-card/60"
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.03, duration: 0.25 }}
+          {/* Tab switcher */}
+          <div className="mb-6 flex justify-center">
+            <div className="inline-flex rounded-xl border border-border/60 bg-card/40 p-1 backdrop-blur-sm">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`relative flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-300 ${
+                    activeTab === tab.id
+                      ? `${tab.color} bg-card shadow-sm border border-border/50`
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                 >
-                  {item.source === "farcaster" ? (
-                    <FarcasterIcon className="mt-1 h-4 w-4 shrink-0 text-primary" />
-                  ) : (
-                    <Twitter className="mt-1 h-4 w-4 shrink-0 text-muted-foreground group-hover:text-foreground" />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <p className="line-clamp-3 text-sm leading-relaxed text-foreground/90">{item.text}</p>
-                    <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>{item.source === "farcaster" ? "Farcaster" : "X"}</span>
-                      {item.publishedAt && (
-                        <>
-                          <span>·</span>
-                          <span>{formatTimeAgo(item.publishedAt)}</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <ExternalLink className="mt-1 h-3.5 w-3.5 shrink-0 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground" />
-                </motion.a>
+                  {tab.icon}
+                  {tab.label}
+                </button>
               ))}
             </div>
-          )}
+          </div>
+
+          {/* Feed content */}
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="min-h-[400px]"
+          >
+            {activeTab === "x" ? <TwitterEmbed /> : <FarcasterEmbed />}
+          </motion.div>
+
+          {/* Profile links */}
+          <div className="mt-6 flex justify-center gap-6 text-sm">
+            <a
+              href="https://warpcast.com/rizzle"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-[#8A63D2]"
+            >
+              <FarcasterIcon className="h-3.5 w-3.5" />
+              @rizzle on Warpcast
+            </a>
+            <a
+              href="https://x.com/NFTland"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <XIcon className="h-3.5 w-3.5" />
+              @NFTland on X
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>

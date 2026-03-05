@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Music, Play, X } from "lucide-react";
+import { Music, Play, X, ChevronDown } from "lucide-react";
 import rizzleSig from "@/assets/rizzle-sig-v2.png";
 import rizzlePfp from "@/assets/rizzlepfp.jpeg";
 
@@ -11,6 +11,10 @@ const Hero = () => {
     e.preventDefault();
     e.stopPropagation();
     window.location.assign("https://x.com/NFTland");
+  };
+
+  const scrollToFeed = () => {
+    document.getElementById("activity-feed")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -161,6 +165,18 @@ const Hero = () => {
             </motion.div>
           )}
         </motion.div>
+
+        {/* Subtle scroll CTA to activity feed */}
+        <motion.button
+          onClick={scrollToFeed}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="mx-auto mt-10 flex flex-col items-center gap-1 text-muted-foreground/60 transition-colors hover:text-primary cursor-pointer group"
+        >
+          <span className="font-mono text-[11px] tracking-widest uppercase">Latest posts</span>
+          <ChevronDown className="h-4 w-4 animate-bounce" />
+        </motion.button>
       </motion.div>
     </section>
   );
