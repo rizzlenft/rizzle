@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
 
   try {
     const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
-    const forceRefresh = Boolean(body?.forceRefresh);
+    void body;
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -27,30 +27,6 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    if (!forceRefresh) {
-      const { data: recentTweets } = await supabase
-        .from("twitter_tweets")
-        .select("scraped_at")
-        .order("scraped_at", { ascending: false })
-        .limit(1);
-
-      if (recentTweets?.length) {
-        const lastScraped = new Date(recentTweets[0].scraped_at);
-        const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
-
-        if (lastScraped > thirtyMinutesAgo) {
-          const { data: cached } = await supabase
-            .from("twitter_tweets")
-            .select("*")
-            .order("published_at", { ascending: false })
-            .limit(10);
-
-          return new Response(JSON.stringify({ tweets: cached ?? [], cached: true }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
-      }
-    }
 
     const mirrorResponse = await fetch("https://r.jina.ai/http://x.com/NFTland");
     if (!mirrorResponse.ok) {
@@ -59,12 +35,22 @@ Deno.serve(async (req) => {
 
     const mirrorText = await mirrorResponse.text();
     const parsedTweets = parseTweetsFromText(mirrorText).slice(0, 10);
-    const priorityTweet = { text: DEFAULT_X_TEXT, url: DEFAULT_X_URL, hash: simpleHash(DEFAULT_X_URL) };
 
-    const tweetsToStore = [
-      priorityTweet,
-      ...parsedTweets.filter((tweet) => normalizeXUrl(tweet.url) !== DEFAULT_X_URL),
-    ].slice(0, 10);
+    const newestParsedId = parsedTweets.length ? extractTweetId(parsedTweets[0].url) : 0;
+    const defaultTweetId = extractTweetId(DEFAULT_X_URL);
+
+    const tweetsToStore = (
+      newestParsedId < defaultTweetId
+        ? [
+            { text: DEFAULT_X_TEXT, url: DEFAULT_X_URL, hash: simpleHash(DEFAULT_X_URL) },
+            ...parsedTweets.filter((tweet) => normalizeXUrl(tweet.url) !== DEFAULT_X_URL),
+          ]
+        : parsedTweets
+    ).slice(0, 10);
+
+    if (!tweetsToStore.length) {
+      tweetsToStore.push({ text: DEFAULT_X_TEXT, url: DEFAULT_X_URL, hash: simpleHash(DEFAULT_X_URL) });
+    }
 
     const nowIso = new Date().toISOString();
     for (const [index, tweet] of tweetsToStore.entries()) {
@@ -132,7 +118,9 @@ Deno.serve(async (req) => {
 
 function parseTweetsFromText(input: string): Array<{ text: string; url: string; hash: string }> {
   const tweetUrlRegex = /https?:\/\/(?:x\.com|twitter\.com)\/NFTland\/status\/\d+/gi;
-  const matchedUrls = [...new Set((input.match(tweetUrlRegex) ?? []).map(normalizeXUrl))];
+  const matchedUrls = [...new Set((input.match(tweetUrlRegex) ?? []).map(normalizeXUrl))].sort(
+    (a, b) => extractTweetId(b) - extractTweetId(a)
+  );
 
   const tweets: Array<{ text: string; url: string; hash: string }> = [];
 
@@ -186,6 +174,11 @@ function normalizeXUrl(url: string): string {
     .replace(/[),.;!?]+$/, "")
     .split("?")[0]
     .split("#")[0];
+}
+
+function extractTweetId(url: string): number {
+  const match = url.match(/status\/(\d+)/i);
+  return match ? Number(match[1]) : 0;
 }
 
 function simpleHash(value: string): string {
