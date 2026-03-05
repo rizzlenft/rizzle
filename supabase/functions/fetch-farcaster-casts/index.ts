@@ -6,12 +6,18 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+const DEFAULT_FARCASTER_URL = "https://farcaster.xyz/rizzle/0x70d0d410";
+const DEFAULT_FARCASTER_TEXT = "Latest cast from @rizzle on Farcaster.";
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
+    const forceRefresh = Boolean(body?.forceRefresh);
+
     const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
     if (!FIRECRAWL_API_KEY) {
       throw new Error("FIRECRAWL_API_KEY is not configured");
@@ -21,30 +27,29 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Check if we have recent data (within last 30 minutes)
-    const { data: recentCasts } = await supabase
-      .from("farcaster_casts")
-      .select("scraped_at")
-      .order("scraped_at", { ascending: false })
-      .limit(1);
+    if (!forceRefresh) {
+      const { data: recentCasts } = await supabase
+        .from("farcaster_casts")
+        .select("scraped_at")
+        .order("scraped_at", { ascending: false })
+        .limit(1);
 
-    if (recentCasts && recentCasts.length > 0) {
-      const lastScraped = new Date(recentCasts[0].scraped_at);
-      const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
-      if (lastScraped > thirtyMinutesAgo) {
-        // Return cached data
-        const { data: cached } = await supabase
-          .from("farcaster_casts")
-          .select("*")
-          .order("published_at", { ascending: false })
-          .limit(10);
-        return new Response(JSON.stringify({ casts: cached, cached: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+      if (recentCasts && recentCasts.length > 0) {
+        const lastScraped = new Date(recentCasts[0].scraped_at);
+        const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
+        if (lastScraped > thirtyMinutesAgo) {
+          const { data: cached } = await supabase
+            .from("farcaster_casts")
+            .select("*")
+            .order("published_at", { ascending: false })
+            .limit(10);
+          return new Response(JSON.stringify({ casts: cached, cached: true }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
       }
     }
 
-    // Scrape Warpcast profile using Firecrawl
     const scrapeResponse = await fetch("https://api.firecrawl.dev/v1/scrape", {
       method: "POST",
       headers: {
@@ -65,30 +70,38 @@ Deno.serve(async (req) => {
     const scrapeData = await scrapeResponse.json();
     const markdown = scrapeData?.data?.markdown || "";
 
-    // Parse casts from the scraped markdown
-    // Warpcast renders casts as text blocks — we extract them heuristically
-    const casts = parseCastsFromMarkdown(markdown);
+    const parsedCasts = parseCastsFromMarkdown(markdown).slice(0, 10);
+    const priorityCast = {
+      text: DEFAULT_FARCASTER_TEXT,
+      url: DEFAULT_FARCASTER_URL,
+      hash: simpleHash(DEFAULT_FARCASTER_URL),
+    };
 
-    if (casts.length > 0) {
-      // Upsert casts into database
-      for (const cast of casts) {
-        await supabase
+    const castsToStore = [
+      priorityCast,
+      ...parsedCasts.filter((cast) => normalizeCastUrl(cast.url) !== DEFAULT_FARCASTER_URL),
+    ].slice(0, 10);
+
+    const nowIso = new Date().toISOString();
+    await Promise.all(
+      castsToStore.map((cast, index) => {
+        const publishedAt = new Date(Date.now() - index * 1000).toISOString();
+        return supabase
           .from("farcaster_casts")
           .upsert(
             {
               cast_text: cast.text,
-              cast_url: cast.url || `https://warpcast.com/rizzle`,
+              cast_url: cast.url,
               author_username: "rizzle",
-              published_at: cast.publishedAt || new Date().toISOString(),
-              scraped_at: new Date().toISOString(),
+              published_at: publishedAt,
+              scraped_at: nowIso,
               hash: cast.hash,
             },
             { onConflict: "hash" }
           );
-      }
-    }
+      })
+    );
 
-    // Return fresh data
     const { data: freshCasts } = await supabase
       .from("farcaster_casts")
       .select("*")
@@ -101,8 +114,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("Error fetching Farcaster casts:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    
-    // Try to return cached data on error
+
     try {
       const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
       const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -113,9 +125,12 @@ Deno.serve(async (req) => {
         .order("published_at", { ascending: false })
         .limit(10);
       if (fallback && fallback.length > 0) {
-        return new Response(JSON.stringify({ casts: fallback, cached: true, warning: "Used cached data due to error" }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ casts: fallback, cached: true, warning: "Used cached data due to error" }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
       }
     } catch (_) {
       // ignore fallback errors
@@ -128,95 +143,58 @@ Deno.serve(async (req) => {
   }
 });
 
-function parseCastsFromMarkdown(markdown: string): Array<{
-  text: string;
-  url?: string;
-  publishedAt?: string;
-  hash: string;
-}> {
-  const casts: Array<{ text: string; url?: string; publishedAt?: string; hash: string }> = [];
+function parseCastsFromMarkdown(markdown: string): Array<{ text: string; url: string; hash: string }> {
+  const castUrlRegex = /https?:\/\/(?:warpcast\.com|farcaster\.xyz)\/rizzle\/0x[a-f0-9]+/gi;
+  const matchedUrls = [...new Set((markdown.match(castUrlRegex) ?? []).map(normalizeCastUrl))];
 
-  // Split by common Warpcast patterns - each cast is typically a paragraph
-  // Filter out navigation, headers, profile info
-  const lines = markdown.split("\n").filter((l) => l.trim().length > 0);
-  
-  const skipPatterns = [
-    /^#/,
-    /^navigation/i,
-    /^home/i,
-    /^direct casts/i,
-    /^explore/i,
-    /^notifications/i,
-    /^\[.*\]\(.*\)$/,
-    /^followers/i,
-    /^following/i,
-    /^rizzle$/i,
-    /^@rizzle$/i,
-    /^!\[/,
-    /^\*/,
-    /^---/,
-    /sign in/i,
-    /sign up/i,
-  ];
+  const casts: Array<{ text: string; url: string; hash: string }> = [];
 
-  let currentCast = "";
+  for (const url of matchedUrls) {
+    const index = markdown.indexOf(url);
+    const snippet = markdown.slice(Math.max(0, index - 350), Math.min(markdown.length, index + 350));
+    const text = cleanPostText(snippet);
+
+    if (text.length >= 20) {
+      casts.push({
+        text: text.slice(0, 500),
+        url,
+        hash: simpleHash(`${url}:${text}`),
+      });
+    }
+  }
+
+  if (casts.length) return casts;
+
+  const lines = markdown
+    .split("\n")
+    .map((line) => cleanPostText(line))
+    .filter((line) => line.length >= 20 && line.length <= 500);
 
   for (const line of lines) {
-    const trimmed = line.trim();
-
-    // Skip navigation/UI elements
-    if (skipPatterns.some((p) => p.test(trimmed))) continue;
-    if (trimmed.length < 10) continue;
-
-    // Time indicators often mark cast boundaries
-    const timePattern = /(\d+[hm]\s*ago|yesterday|just now|\d+d\s*ago)/i;
-    
-    if (timePattern.test(trimmed) && currentCast) {
-      // This line contains a timestamp, save the current cast
-      if (currentCast.length >= 15) {
-        const hash = simpleHash(currentCast);
-        casts.push({
-          text: currentCast.trim(),
-          url: `https://warpcast.com/rizzle`,
-          hash,
-        });
-      }
-      currentCast = "";
-      continue;
-    }
-
-    // Accumulate text
-    if (trimmed.length >= 15 && !trimmed.startsWith("[") && !trimmed.startsWith("!")) {
-      if (currentCast) {
-        currentCast += " " + trimmed;
-      } else {
-        currentCast = trimmed;
-      }
-
-      // If we have a good chunk of text, save it
-      if (currentCast.length > 200) {
-        const hash = simpleHash(currentCast);
-        casts.push({
-          text: currentCast.trim().substring(0, 500),
-          url: `https://warpcast.com/rizzle`,
-          hash,
-        });
-        currentCast = "";
-      }
-    }
-  }
-
-  // Don't forget the last cast
-  if (currentCast.length >= 15) {
-    const hash = simpleHash(currentCast);
+    if (/^(navigation|home|explore|notifications|followers|following)$/i.test(line)) continue;
     casts.push({
-      text: currentCast.trim().substring(0, 500),
-      url: `https://warpcast.com/rizzle`,
-      hash,
+      text: line,
+      url: DEFAULT_FARCASTER_URL,
+      hash: simpleHash(line),
     });
+
+    if (casts.length >= 10) break;
   }
 
-  return casts.slice(0, 10);
+  return casts;
+}
+
+function cleanPostText(raw: string): string {
+  return raw
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/https?:\/\/\S+/g, "")
+    .replace(/^#+\s*/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizeCastUrl(url: string): string {
+  return url.replace(/[),.;!?]+$/, "").split("?")[0].split("#")[0];
 }
 
 function simpleHash(str: string): string {
@@ -227,3 +205,4 @@ function simpleHash(str: string): string {
   }
   return `fc_${Math.abs(hash).toString(36)}`;
 }
+
