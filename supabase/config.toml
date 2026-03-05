@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.extract-wip-guests]
 verify_jwt = false
+
+[functions.fetch-farcaster-casts]
+verify_jwt = false
+
+[functions.fetch-twitter-posts]
+verify_jwt = false

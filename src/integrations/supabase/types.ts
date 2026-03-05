@@ -71,6 +71,36 @@ export type Database = {
         }
         Relationships: []
       }
+      twitter_tweets: {
+        Row: {
+          author_username: string
+          hash: string | null
+          id: string
+          published_at: string | null
+          scraped_at: string
+          tweet_text: string
+          tweet_url: string | null
+        }
+        Insert: {
+          author_username?: string
+          hash?: string | null
+          id?: string
+          published_at?: string | null
+          scraped_at?: string
+          tweet_text: string
+          tweet_url?: string | null
+        }
+        Update: {
+          author_username?: string
+          hash?: string | null
+          id?: string
+          published_at?: string | null
+          scraped_at?: string
+          tweet_text?: string
+          tweet_url?: string | null
+        }
+        Relationships: []
+      }
       wip_video_cache: {
         Row: {
           cached_at: string

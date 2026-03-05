@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MessageCircle, ExternalLink, RefreshCw } from "lucide-react";
+import { MessageCircle, ExternalLink, RefreshCw, Twitter } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-interface Cast {
+interface FeedItem {
   id: string;
-  cast_text: string;
-  cast_url: string | null;
-  author_username: string;
+  text: string;
+  url: string;
+  source: "farcaster" | "twitter";
   published_at: string | null;
-  scraped_at: string;
 }
 
 const FarcasterIcon = ({ className }: { className?: string }) => (
@@ -18,42 +17,121 @@ const FarcasterIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const XIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+
+/** Strip markdown link syntax, leaving just the display text */
+function cleanMarkdownText(text: string): string {
+  // Convert [text](url) to just text, but skip if text looks like a URL
+  let cleaned = text.replace(/\[([^\]]+)\]\([^)]+\)/g, (_, label) => {
+    // If the label itself is a URL, skip it entirely
+    if (/^https?:\/\//.test(label) || /^www\./.test(label)) return "";
+    return label;
+  });
+  // Remove standalone URLs
+  cleaned = cleaned.replace(/https?:\/\/[^\s)]+/g, "");
+  // Clean up extra whitespace
+  cleaned = cleaned.replace(/\s{2,}/g, " ").trim();
+  return cleaned;
+}
+
 const ActivityFeed = () => {
-  const [casts, setCasts] = useState<Cast[]>([]);
+  const [items, setItems] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchCasts = async (forceRefresh = false) => {
+  const fetchAll = async (forceRefresh = false) => {
     try {
       if (forceRefresh) setRefreshing(true);
 
-      // First try cached data from DB
-      const { data: cachedCasts } = await supabase
-        .from("farcaster_casts")
-        .select("*")
-        .order("published_at", { ascending: false })
-        .limit(8);
+      // Fetch both sources in parallel
+      const [castsRes, tweetsRes] = await Promise.all([
+        supabase
+          .from("farcaster_casts")
+          .select("*")
+          .order("published_at", { ascending: false })
+          .limit(6),
+        supabase
+          .from("twitter_tweets")
+          .select("*")
+          .order("published_at", { ascending: false })
+          .limit(6),
+      ]);
 
-      if (cachedCasts && cachedCasts.length > 0 && !forceRefresh) {
-        setCasts(cachedCasts);
-        setLoading(false);
-        return;
+      const feedItems: FeedItem[] = [];
+
+      if (castsRes.data) {
+        for (const c of castsRes.data) {
+          feedItems.push({
+            id: c.id,
+            text: cleanMarkdownText(c.cast_text),
+            url: c.cast_url || "https://warpcast.com/rizzle",
+            source: "farcaster",
+            published_at: c.published_at,
+          });
+        }
       }
 
-      // Trigger edge function to scrape fresh data
-      const { data, error } = await supabase.functions.invoke("fetch-farcaster-casts");
-      
-      if (error) {
-        console.error("Edge function error:", error);
-        // Still use cached if available
-        if (cachedCasts && cachedCasts.length > 0) {
-          setCasts(cachedCasts);
+      if (tweetsRes.data) {
+        for (const t of tweetsRes.data) {
+          feedItems.push({
+            id: t.id,
+            text: cleanMarkdownText(t.tweet_text),
+            url: t.tweet_url || "https://x.com/NFTland",
+            source: "twitter",
+            published_at: t.published_at,
+          });
         }
-      } else if (data?.casts) {
-        setCasts(data.casts);
+      }
+
+      // Sort by date, interleave sources
+      feedItems.sort((a, b) => {
+        const da = a.published_at ? new Date(a.published_at).getTime() : 0;
+        const db = b.published_at ? new Date(b.published_at).getTime() : 0;
+        return db - da;
+      });
+
+      // Filter out empty cleaned texts
+      const validItems = feedItems.filter((i) => i.text.length > 10);
+      setItems(validItems.slice(0, 10));
+
+      // Trigger background refresh if needed
+      if (forceRefresh || validItems.length === 0) {
+        await Promise.allSettled([
+          supabase.functions.invoke("fetch-farcaster-casts"),
+          supabase.functions.invoke("fetch-twitter-posts"),
+        ]);
+
+        // Re-fetch from DB
+        const [freshCasts, freshTweets] = await Promise.all([
+          supabase.from("farcaster_casts").select("*").order("published_at", { ascending: false }).limit(6),
+          supabase.from("twitter_tweets").select("*").order("published_at", { ascending: false }).limit(6),
+        ]);
+
+        const fresh: FeedItem[] = [];
+        if (freshCasts.data) {
+          for (const c of freshCasts.data) {
+            fresh.push({ id: c.id, text: cleanMarkdownText(c.cast_text), url: c.cast_url || "https://warpcast.com/rizzle", source: "farcaster", published_at: c.published_at });
+          }
+        }
+        if (freshTweets.data) {
+          for (const t of freshTweets.data) {
+            fresh.push({ id: t.id, text: cleanMarkdownText(t.tweet_text), url: t.tweet_url || "https://x.com/NFTland", source: "twitter", published_at: t.published_at });
+          }
+        }
+        fresh.sort((a, b) => {
+          const da = a.published_at ? new Date(a.published_at).getTime() : 0;
+          const db = b.published_at ? new Date(b.published_at).getTime() : 0;
+          return db - da;
+        });
+        const validFresh = fresh.filter((i) => i.text.length > 10);
+        if (validFresh.length > 0) setItems(validFresh.slice(0, 10));
       }
     } catch (err) {
-      console.error("Failed to fetch casts:", err);
+      console.error("Failed to fetch activity:", err);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -61,7 +139,7 @@ const ActivityFeed = () => {
   };
 
   useEffect(() => {
-    fetchCasts();
+    fetchAll();
   }, []);
 
   const formatTimeAgo = (dateStr: string | null) => {
@@ -84,8 +162,8 @@ const ActivityFeed = () => {
       <section className="px-6 py-12">
         <div className="mx-auto max-w-4xl">
           <div className="flex items-center gap-3 mb-6">
-            <FarcasterIcon className="h-5 w-5 text-[#8A63D2]" />
-            <h2 className="font-display text-2xl font-bold text-foreground">Latest Casts</h2>
+            <MessageCircle className="h-5 w-5 text-primary" />
+            <h2 className="font-display text-2xl font-bold text-foreground">Latest Activity</h2>
           </div>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
@@ -100,7 +178,7 @@ const ActivityFeed = () => {
     );
   }
 
-  if (casts.length === 0) return null;
+  if (items.length === 0) return null;
 
   return (
     <section className="px-6 py-12">
@@ -114,51 +192,60 @@ const ActivityFeed = () => {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <FarcasterIcon className="h-5 w-5 text-[#8A63D2]" />
-              <h2 className="font-display text-2xl font-bold text-foreground">Latest Casts</h2>
-              <a
-                href="https://warpcast.com/rizzle"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-muted-foreground hover:text-[#8A63D2] transition-colors"
-              >
-                @rizzle
-              </a>
+              <MessageCircle className="h-5 w-5 text-primary" />
+              <h2 className="font-display text-2xl font-bold text-foreground">Latest Activity</h2>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <a href="https://warpcast.com/rizzle" target="_blank" rel="noopener noreferrer" className="hover:text-[#8A63D2] transition-colors flex items-center gap-1">
+                  <FarcasterIcon className="h-3.5 w-3.5" /> Farcaster
+                </a>
+                <span>·</span>
+                <a href="https://x.com/NFTland" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1">
+                  <XIcon className="h-3.5 w-3.5" /> X
+                </a>
+              </div>
             </div>
             <button
-              onClick={() => fetchCasts(true)}
+              onClick={() => fetchAll(true)}
               disabled={refreshing}
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors disabled:opacity-50"
-              title="Refresh casts"
+              title="Refresh feed"
             >
               <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
             </button>
           </div>
 
-          {/* Cast list */}
+          {/* Feed list */}
           <div className="space-y-3">
-            {casts.map((cast, index) => (
+            {items.map((item, index) => (
               <motion.div
-                key={cast.id}
+                key={item.id}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05, duration: 0.4 }}
               >
                 <a
-                  href={cast.cast_url || "https://warpcast.com/rizzle"}
+                  href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex gap-3 rounded-xl border border-border/50 bg-card/30 p-4 transition-all duration-300 hover:border-[#8A63D2]/30 hover:bg-card/60"
+                  className="group flex gap-3 rounded-xl border border-border/50 bg-card/30 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-card/60"
                 >
-                  <MessageCircle className="h-4 w-4 mt-1 shrink-0 text-muted-foreground group-hover:text-[#8A63D2] transition-colors" />
+                  {item.source === "farcaster" ? (
+                    <FarcasterIcon className="h-4 w-4 mt-1 shrink-0 text-[#8A63D2] opacity-60 group-hover:opacity-100 transition-opacity" />
+                  ) : (
+                    <XIcon className="h-4 w-4 mt-1 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  )}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-foreground/90 leading-relaxed line-clamp-3">
-                      {cast.cast_text}
+                      {item.text}
                     </p>
                     <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-                      {cast.published_at && (
-                        <span>{formatTimeAgo(cast.published_at)}</span>
+                      <span className="capitalize">{item.source === "twitter" ? "X" : "Farcaster"}</span>
+                      {item.published_at && (
+                        <>
+                          <span>·</span>
+                          <span>{formatTimeAgo(item.published_at)}</span>
+                        </>
                       )}
                     </div>
                   </div>
@@ -168,16 +255,25 @@ const ActivityFeed = () => {
             ))}
           </div>
 
-          {/* View more link */}
-          <div className="mt-4 text-center">
+          {/* View more links */}
+          <div className="mt-4 flex justify-center gap-6">
             <a
               href="https://warpcast.com/rizzle"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-[#8A63D2] transition-colors"
             >
-              View all on Warpcast
-              <ExternalLink className="h-3.5 w-3.5" />
+              <FarcasterIcon className="h-3.5 w-3.5" /> Warpcast
+              <ExternalLink className="h-3 w-3" />
+            </a>
+            <a
+              href="https://x.com/NFTland"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <XIcon className="h-3.5 w-3.5" /> X / Twitter
+              <ExternalLink className="h-3 w-3" />
             </a>
           </div>
         </motion.div>
