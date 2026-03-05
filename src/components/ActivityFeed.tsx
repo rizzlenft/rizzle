@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
+const LATEST_X_URL = "https://x.com/NFTland/status/2029592869363687564";
+const LATEST_FARCASTER_URL = "https://farcaster.xyz/rizzle/0x70d0d410";
+
 const FarcasterIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
     <path d="M3.5 3h17v18h-3v-5.25c0-1.5-.5-2.75-2.25-2.75s-2.25 1.25-2.25 2.75V21h-3v-5.25c0-1.5-.5-2.75-2.25-2.75S5.5 14.25 5.5 15.75V21h-2V3zm2 2v7h2V5h-2zm10 0v7h2V5h-2z" />
@@ -41,6 +44,10 @@ const formatTimeAgo = (dateStr: string | null) => {
   return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 };
 
+const isPerPostXUrl = (url?: string | null) => Boolean(url && /x\.com\/[^/]+\/status\/\d+/i.test(url));
+const isPerPostFarcasterUrl = (url?: string | null) =>
+  Boolean(url && /(warpcast\.com|farcaster\.xyz)\/rizzle\//i.test(url) && !/\/rizzle\/?$/i.test(url));
+
 const PostCard = ({
   post,
   icon,
@@ -66,12 +73,7 @@ const PostCard = ({
     </div>
     <div className="flex-1 p-5">
       {post ? (
-        <a
-          href={post.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group block"
-        >
+        <a href={post.url} target="_blank" rel="noopener noreferrer" className="group block">
           <p className="text-sm leading-relaxed text-foreground/90 line-clamp-5 group-hover:text-foreground transition-colors">
             {post.text}
           </p>
@@ -118,107 +120,73 @@ const ActivityFeed = () => {
   useEffect(() => {
     const loadPosts = async () => {
       try {
-        // Farcaster: get latest from DB
-        const { data: casts } = await supabase
-          .from("farcaster_casts")
-          .select("cast_text, cast_url, published_at")
-          .order("published_at", { ascending: false })
-          .limit(1);
+        await Promise.all([
+          supabase.functions.invoke("fetch-farcaster-casts", { body: { forceRefresh: true } }),
+          supabase.functions.invoke("fetch-twitter-posts", { body: { forceRefresh: true } }),
+        ]);
+
+        const [{ data: casts }, { data: tweets }] = await Promise.all([
+          supabase
+            .from("farcaster_casts")
+            .select("cast_text, cast_url, published_at")
+            .order("published_at", { ascending: false })
+            .limit(1),
+          supabase
+            .from("twitter_tweets")
+            .select("tweet_text, tweet_url, published_at")
+            .order("published_at", { ascending: false })
+            .limit(1),
+        ]);
 
         if (casts && casts.length > 0) {
           const cleaned = cleanText(casts[0].cast_text);
           if (cleaned.length > 10) {
             setFarcasterPost({
               text: cleaned,
-              url: casts[0].cast_url || "https://warpcast.com/rizzle",
+              url: isPerPostFarcasterUrl(casts[0].cast_url) ? casts[0].cast_url! : LATEST_FARCASTER_URL,
               timeAgo: formatTimeAgo(casts[0].published_at),
             });
           }
         }
-
-        // If no Farcaster data, trigger scrape
-        if (!casts || casts.length === 0) {
-          await supabase.functions.invoke("fetch-farcaster-casts");
-          const { data: freshCasts } = await supabase
-            .from("farcaster_casts")
-            .select("cast_text, cast_url, published_at")
-            .order("published_at", { ascending: false })
-            .limit(1);
-          if (freshCasts && freshCasts.length > 0) {
-            const cleaned = cleanText(freshCasts[0].cast_text);
-            if (cleaned.length > 10) {
-              setFarcasterPost({
-                text: cleaned,
-                url: freshCasts[0].cast_url || "https://warpcast.com/rizzle",
-                timeAgo: formatTimeAgo(freshCasts[0].published_at),
-              });
-            }
-          }
-        }
-
-        // Twitter: get latest from DB
-        const { data: tweets } = await supabase
-          .from("twitter_tweets")
-          .select("tweet_text, tweet_url, published_at")
-          .order("published_at", { ascending: false })
-          .limit(1);
 
         if (tweets && tweets.length > 0) {
           const cleaned = cleanText(tweets[0].tweet_text);
           if (cleaned.length > 10) {
             setTwitterPost({
               text: cleaned,
-              url: tweets[0].tweet_url || "https://x.com/NFTland",
+              url: isPerPostXUrl(tweets[0].tweet_url) ? tweets[0].tweet_url! : LATEST_X_URL,
               timeAgo: formatTimeAgo(tweets[0].published_at),
             });
           }
         }
 
-        // If no Twitter data, trigger scrape
-        if (!tweets || tweets.length === 0) {
-          await supabase.functions.invoke("fetch-twitter-posts");
-          const { data: freshTweets } = await supabase
-            .from("twitter_tweets")
-            .select("tweet_text, tweet_url, published_at")
-            .order("published_at", { ascending: false })
-            .limit(1);
-          if (freshTweets && freshTweets.length > 0) {
-            const cleaned = cleanText(freshTweets[0].tweet_text);
-            if (cleaned.length > 10) {
-              setTwitterPost({
-                text: cleaned,
-                url: freshTweets[0].tweet_url || "https://x.com/NFTland",
-                timeAgo: formatTimeAgo(freshTweets[0].published_at),
-              });
-            }
-          }
+        if (!casts || casts.length === 0) {
+          setFarcasterPost({
+            text: "View the latest cast from @rizzle on Farcaster.",
+            url: LATEST_FARCASTER_URL,
+            timeAgo: "",
+          });
         }
 
-        // Fallback if twitter still empty
         if (!tweets || tweets.length === 0) {
           setTwitterPost({
-            text: "Follow @NFTland on X for the latest web3 takes, community updates, and project launches.",
-            url: "https://x.com/NFTland",
+            text: "View the latest post from @NFTland on X.",
+            url: LATEST_X_URL,
             timeAgo: "",
           });
         }
       } catch (err) {
         console.error("Failed to load activity posts:", err);
-        // Set fallbacks
-        if (!farcasterPost) {
-          setFarcasterPost({
-            text: "Follow @rizzle on Farcaster for the latest casts.",
-            url: "https://warpcast.com/rizzle",
-            timeAgo: "",
-          });
-        }
-        if (!twitterPost) {
-          setTwitterPost({
-            text: "Follow @NFTland on X for the latest web3 takes.",
-            url: "https://x.com/NFTland",
-            timeAgo: "",
-          });
-        }
+        setFarcasterPost({
+          text: "View the latest cast from @rizzle on Farcaster.",
+          url: LATEST_FARCASTER_URL,
+          timeAgo: "",
+        });
+        setTwitterPost({
+          text: "View the latest post from @NFTland on X.",
+          url: LATEST_X_URL,
+          timeAgo: "",
+        });
       }
     };
 
@@ -270,3 +238,4 @@ const ActivityFeed = () => {
 };
 
 export default ActivityFeed;
+
