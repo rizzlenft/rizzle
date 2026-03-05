@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, MessageCircle } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const FarcasterIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
@@ -14,54 +15,216 @@ const XIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const TwitterEmbed = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+interface PostData {
+  text: string;
+  url: string;
+  timeAgo: string;
+  imageUrl?: string;
+}
 
-  useEffect(() => {
-    const existing = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]');
-    if (!existing) {
-      const script = document.createElement("script");
-      script.src = "https://platform.twitter.com/widgets.js";
-      script.async = true;
-      script.charset = "utf-8";
-      document.head.appendChild(script);
-    } else {
-      (window as any).twttr?.widgets?.load(containerRef.current);
-    }
+const cleanText = (raw: string) =>
+  raw
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/https?:\/\/\S+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
-    const interval = setInterval(() => {
-      if ((window as any).twttr?.widgets) {
-        (window as any).twttr.widgets.load(containerRef.current);
-        clearInterval(interval);
-      }
-    }, 200);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div ref={containerRef} className="overflow-hidden rounded-xl p-2">
-      <blockquote className="twitter-tweet" data-theme="dark" data-conversation="none">
-        <a href="https://x.com/NFTland/status/2029592869363687564">Loading…</a>
-      </blockquote>
-    </div>
-  );
+const formatTimeAgo = (dateStr: string | null) => {
+  if (!dateStr) return "";
+  const diffMs = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  const hours = Math.floor(mins / 60);
+  const days = Math.floor(hours / 24);
+  if (mins < 60) return `${mins}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  if (days < 7) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 };
 
-const FarcasterEmbed = () => (
-  <div className="overflow-hidden rounded-xl p-2">
-    <iframe
-      src="https://warpcast.com/~/embed?url=https://warpcast.com/rizzle/0x70d0d410"
-      title="Rizzle's latest cast"
-      className="w-full border-0 rounded-xl"
-      style={{ height: "320px", colorScheme: "dark" }}
-      loading="lazy"
-      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-    />
+const PostCard = ({
+  post,
+  icon,
+  label,
+  handle,
+  handleColor,
+  moreUrl,
+  moreLabel,
+}: {
+  post: PostData | null;
+  icon: React.ReactNode;
+  label: string;
+  handle: string;
+  handleColor: string;
+  moreUrl: string;
+  moreLabel: string;
+}) => (
+  <div className="flex flex-col rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden">
+    <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3">
+      {icon}
+      <span className="text-sm font-medium text-foreground">{label}</span>
+      <span className={`text-xs ${handleColor}`}>{handle}</span>
+    </div>
+    <div className="flex-1 p-5">
+      {post ? (
+        <a
+          href={post.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group block"
+        >
+          <p className="text-sm leading-relaxed text-foreground/90 line-clamp-5 group-hover:text-foreground transition-colors">
+            {post.text}
+          </p>
+          {post.imageUrl && (
+            <div className="mt-3 overflow-hidden rounded-lg border border-border/30">
+              <img
+                src={post.imageUrl}
+                alt=""
+                className="w-full object-cover max-h-48 transition-transform group-hover:scale-[1.02]"
+                loading="lazy"
+              />
+            </div>
+          )}
+          <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+            {post.timeAgo && <span>{post.timeAgo}</span>}
+            <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+        </a>
+      ) : (
+        <div className="animate-pulse space-y-2">
+          <div className="h-4 w-3/4 rounded bg-muted/40" />
+          <div className="h-4 w-1/2 rounded bg-muted/40" />
+        </div>
+      )}
+    </div>
+    <div className="border-t border-border/40 px-5 py-3">
+      <a
+        href={moreUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:${handleColor}`}
+      >
+        {moreLabel}
+        <ExternalLink className="h-3.5 w-3.5" />
+      </a>
+    </div>
   </div>
 );
 
 const ActivityFeed = () => {
+  const [farcasterPost, setFarcasterPost] = useState<PostData | null>(null);
+  const [twitterPost, setTwitterPost] = useState<PostData | null>(null);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        // Farcaster: get latest from DB
+        const { data: casts } = await supabase
+          .from("farcaster_casts")
+          .select("cast_text, cast_url, published_at")
+          .order("published_at", { ascending: false })
+          .limit(1);
+
+        if (casts && casts.length > 0) {
+          const cleaned = cleanText(casts[0].cast_text);
+          if (cleaned.length > 10) {
+            setFarcasterPost({
+              text: cleaned,
+              url: casts[0].cast_url || "https://warpcast.com/rizzle",
+              timeAgo: formatTimeAgo(casts[0].published_at),
+            });
+          }
+        }
+
+        // If no Farcaster data, trigger scrape
+        if (!casts || casts.length === 0) {
+          await supabase.functions.invoke("fetch-farcaster-casts");
+          const { data: freshCasts } = await supabase
+            .from("farcaster_casts")
+            .select("cast_text, cast_url, published_at")
+            .order("published_at", { ascending: false })
+            .limit(1);
+          if (freshCasts && freshCasts.length > 0) {
+            const cleaned = cleanText(freshCasts[0].cast_text);
+            if (cleaned.length > 10) {
+              setFarcasterPost({
+                text: cleaned,
+                url: freshCasts[0].cast_url || "https://warpcast.com/rizzle",
+                timeAgo: formatTimeAgo(freshCasts[0].published_at),
+              });
+            }
+          }
+        }
+
+        // Twitter: get latest from DB
+        const { data: tweets } = await supabase
+          .from("twitter_tweets")
+          .select("tweet_text, tweet_url, published_at")
+          .order("published_at", { ascending: false })
+          .limit(1);
+
+        if (tweets && tweets.length > 0) {
+          const cleaned = cleanText(tweets[0].tweet_text);
+          if (cleaned.length > 10) {
+            setTwitterPost({
+              text: cleaned,
+              url: tweets[0].tweet_url || "https://x.com/NFTland",
+              timeAgo: formatTimeAgo(tweets[0].published_at),
+            });
+          }
+        }
+
+        // If no Twitter data, trigger scrape
+        if (!tweets || tweets.length === 0) {
+          await supabase.functions.invoke("fetch-twitter-posts");
+          const { data: freshTweets } = await supabase
+            .from("twitter_tweets")
+            .select("tweet_text, tweet_url, published_at")
+            .order("published_at", { ascending: false })
+            .limit(1);
+          if (freshTweets && freshTweets.length > 0) {
+            const cleaned = cleanText(freshTweets[0].tweet_text);
+            if (cleaned.length > 10) {
+              setTwitterPost({
+                text: cleaned,
+                url: freshTweets[0].tweet_url || "https://x.com/NFTland",
+                timeAgo: formatTimeAgo(freshTweets[0].published_at),
+              });
+            }
+          }
+        }
+
+        // Fallback if twitter still empty
+        if (!tweets || tweets.length === 0) {
+          setTwitterPost({
+            text: "Follow @NFTland on X for the latest web3 takes, community updates, and project launches.",
+            url: "https://x.com/NFTland",
+            timeAgo: "",
+          });
+        }
+      } catch (err) {
+        console.error("Failed to load activity posts:", err);
+        // Set fallbacks
+        if (!farcasterPost) {
+          setFarcasterPost({
+            text: "Follow @rizzle on Farcaster for the latest casts.",
+            url: "https://warpcast.com/rizzle",
+            timeAgo: "",
+          });
+        }
+        if (!twitterPost) {
+          setTwitterPost({
+            text: "Follow @NFTland on X for the latest web3 takes.",
+            url: "https://x.com/NFTland",
+            timeAgo: "",
+          });
+        }
+      }
+    };
+
+    loadPosts();
+  }, []);
+
   return (
     <section id="activity-feed" className="px-6 py-16">
       <div className="mx-auto max-w-5xl">
@@ -71,7 +234,6 @@ const ActivityFeed = () => {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5 }}
         >
-          {/* Section header */}
           <div className="mb-8 text-center">
             <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
               Latest Activity
@@ -81,53 +243,25 @@ const ActivityFeed = () => {
             </p>
           </div>
 
-          {/* Side-by-side feeds */}
           <div className="grid gap-6 md:grid-cols-2">
-            {/* Farcaster */}
-            <div className="flex flex-col rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden">
-              <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3">
-                <FarcasterIcon className="h-4 w-4 text-[#8A63D2]" />
-                <span className="text-sm font-medium text-foreground">Farcaster</span>
-                <span className="text-xs text-muted-foreground">@rizzle</span>
-              </div>
-              <div className="flex-1 min-h-[280px]">
-                <FarcasterEmbed />
-              </div>
-              <div className="border-t border-border/40 px-5 py-3">
-                <a
-                  href="https://warpcast.com/rizzle"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-[#8A63D2]"
-                >
-                  See more on Warpcast
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              </div>
-            </div>
-
-            {/* X / Twitter */}
-            <div className="flex flex-col rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden">
-              <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3">
-                <XIcon className="h-4 w-4 text-foreground" />
-                <span className="text-sm font-medium text-foreground">X</span>
-                <span className="text-xs text-muted-foreground">@NFTland</span>
-              </div>
-              <div className="flex-1 min-h-[280px]">
-                <TwitterEmbed />
-              </div>
-              <div className="border-t border-border/40 px-5 py-3">
-                <a
-                  href="https://x.com/NFTland"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  See more on X
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              </div>
-            </div>
+            <PostCard
+              post={farcasterPost}
+              icon={<FarcasterIcon className="h-4 w-4 text-[#8A63D2]" />}
+              label="Farcaster"
+              handle="@rizzle"
+              handleColor="text-[#8A63D2]"
+              moreUrl="https://warpcast.com/rizzle"
+              moreLabel="See more on Warpcast"
+            />
+            <PostCard
+              post={twitterPost}
+              icon={<XIcon className="h-4 w-4 text-foreground" />}
+              label="X"
+              handle="@NFTland"
+              handleColor="text-foreground"
+              moreUrl="https://x.com/NFTland"
+              moreLabel="See more on X"
+            />
           </div>
         </motion.div>
       </div>
