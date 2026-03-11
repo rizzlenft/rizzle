@@ -14,8 +14,7 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
     if (onTabChange) {
       onTabChange(tab);
     } else {
-      // Navigate to home with tab context
-      navigate("/");
+      navigate(tab === "art" ? "/?tab=art" : "/");
     }
   };
 
