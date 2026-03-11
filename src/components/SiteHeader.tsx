@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Zap } from "lucide-react";
 
-const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK";
+const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00";
 
 const SiteHeader = () => {
   return (
