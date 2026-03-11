@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, Mail, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
