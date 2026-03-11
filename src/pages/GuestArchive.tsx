@@ -55,6 +55,8 @@ const GuestArchive = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <TopNav activeTab="guests" />
+
       {/* Header with logos */}
       <header className="relative overflow-hidden border-b border-border/50">
         {/* Background effects */}
@@ -63,14 +65,6 @@ const GuestArchive = () => {
         <div className="pointer-events-none absolute right-1/4 top-0 h-48 w-48 rounded-full bg-accent/10 blur-[80px]" />
 
         <div className="relative z-10 mx-auto max-w-6xl px-6 py-12">
-          {/* Back link */}
-          <Link
-            to="/"
-            className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
 
           {/* Logos showcase */}
           <motion.div
