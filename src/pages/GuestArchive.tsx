@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { Search, ArrowLeft, Users } from "lucide-react";
+import { Search, Users } from "lucide-react";
+import TopNav from "@/components/TopNav";
 import { Input } from "@/components/ui/input";
 import wipLogo from "@/assets/wip-logo.gif";
 import marsLogo from "@/assets/mattandrizz.jpeg";
