@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          booking_date: string
+          client_email: string
+          client_name: string
+          created_at: string
+          end_time: string
+          id: string
+          meeting_link: string | null
+          start_time: string
+          status: string
+        }
+        Insert: {
+          booking_date: string
+          client_email: string
+          client_name: string
+          created_at?: string
+          end_time: string
+          id?: string
+          meeting_link?: string | null
+          start_time: string
+          status?: string
+        }
+        Update: {
+          booking_date?: string
+          client_email?: string
+          client_name?: string
+          created_at?: string
+          end_time?: string
+          id?: string
+          meeting_link?: string | null
+          start_time?: string
+          status?: string
+        }
+        Relationships: []
+      }
       farcaster_casts: {
         Row: {
           author_username: string
