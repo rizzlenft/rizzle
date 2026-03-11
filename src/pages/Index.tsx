@@ -1,9 +1,13 @@
+import { useState } from "react";
 import Hero from "@/components/Hero";
 import ContentTabs from "@/components/ContentTabs";
 import Socials from "@/components/Socials";
 import Footer from "@/components/Footer";
+import TopNav from "@/components/TopNav";
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState<"projects" | "art">("projects");
+
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
       {/* Ambient background gradients */}
@@ -19,9 +23,12 @@ const Index = () => {
       
       {/* Content */}
       <div className="relative z-10">
-        <Hero />
-        <ContentTabs />
-        <Socials />
+        <TopNav activeTab={activeTab} setActiveTab={setActiveTab} />
+        <main>
+          <Hero />
+          <ContentTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          <Socials />
+        </main>
         <Footer />
       </div>
     </div>
