@@ -1,15 +1,15 @@
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Briefcase, Sparkles, Users } from "lucide-react";
-import { Link } from "react-router-dom";
 
-const ContentTabs = () => {
-  const [activeTab, setActiveTab] = useState<"projects" | "art">("projects");
+interface ContentTabsProps {
+  activeTab: "projects" | "art";
+  setActiveTab: (tab: "projects" | "art") => void;
+}
 
+const ContentTabs = ({ activeTab }: ContentTabsProps) => {
   return (
-    <div className="relative px-6 py-8">
+    <section className="relative px-6 py-8" aria-label={activeTab === "projects" ? "Projects" : "CryptoArt"}>
       <div className="mx-auto max-w-6xl">
-        {/* Section header with inline toggle */}
+        {/* Dynamic title */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -17,54 +17,6 @@ const ContentTabs = () => {
           transition={{ duration: 0.6 }}
           className="mb-12 text-center"
         >
-          {/* Inline toggle */}
-          <div className="inline-flex items-center justify-center gap-1 sm:gap-2 rounded-full border border-border/50 bg-card/30 p-1 sm:p-1.5 backdrop-blur-sm mb-6">
-            <button
-              onClick={() => setActiveTab("projects")}
-              className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors rounded-full ${
-                activeTab === "projects"
-                  ? "text-background"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {activeTab === "projects" && (
-                <motion.div
-                  layoutId="activeTabBg"
-                  className="absolute inset-0 bg-primary rounded-full"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <Briefcase className="relative z-10 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="relative z-10">Projects</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("art")}
-              className={`relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors rounded-full ${
-                activeTab === "art"
-                  ? "text-background"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {activeTab === "art" && (
-                <motion.div
-                  layoutId="activeTabBg"
-                  className="absolute inset-0 bg-primary rounded-full"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <Sparkles className="relative z-10 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="relative z-10">CryptoArt</span>
-            </button>
-            <Link
-              to="/guests"
-              className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors rounded-full text-muted-foreground hover:text-foreground"
-            >
-              <Users className="relative z-10 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="relative z-10">Guests</span>
-            </Link>
-          </div>
-
-          {/* Dynamic title */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -87,7 +39,7 @@ const ContentTabs = () => {
         </motion.div>
       </div>
 
-      {/* Tab content - rendered without section wrapper */}
+      {/* Tab content */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
@@ -99,7 +51,7 @@ const ContentTabs = () => {
           {activeTab === "projects" ? <ProjectsContent /> : <CryptoArtContent />}
         </motion.div>
       </AnimatePresence>
-    </div>
+    </section>
   );
 };
 

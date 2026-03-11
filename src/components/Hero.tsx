@@ -38,17 +38,8 @@ const Hero = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-10 max-w-4xl text-center"
       >
-        {/* Tagline */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="mb-2 sm:-mb-24 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 font-mono text-sm text-primary"
-        >
-          <span className="text-lg">🏴‍☠️</span>
-          <span>web3 founder since 2019</span>
-          <span className="text-lg">🐸</span>
-        </motion.div>
+        {/* Spacer for removed tagline */}
+        <div className="mb-2 sm:-mb-24" />
         
         {/* Signature */}
         <motion.div
