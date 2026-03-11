@@ -2,6 +2,7 @@ import Hero from "@/components/Hero";
 import ContentTabs from "@/components/ContentTabs";
 import Socials from "@/components/Socials";
 import Footer from "@/components/Footer";
+import SiteHeader from "@/components/SiteHeader";
 
 const Index = () => {
   return (
