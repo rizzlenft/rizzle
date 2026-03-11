@@ -110,8 +110,8 @@ const Hero = () => {
             rel="noopener noreferrer"
             className="group text-center transition-all duration-300 hover:scale-105"
           >
-            <div className="font-display text-2xl sm:text-3xl font-bold text-primary text-glow-sm group-hover:text-glow-md">🎯</div>
-            <div className="text-sm font-medium text-primary group-hover:underline">Book a Consult</div>
+            <div className="font-display text-3xl font-bold text-primary text-glow-sm">◎</div>
+            <div className="text-sm text-muted-foreground group-hover:text-primary transition-colors">Book a Consult</div>
           </a>
         </motion.div>
 
