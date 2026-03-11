@@ -5,6 +5,10 @@ import { Link } from "react-router-dom";
 import Footer from "@/components/Footer";
 
 const BookSession = () => {
+  useEffect(() => {
+    document.title = "Booking Confirmed | Rizzle";
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
       {/* Ambient bg */}
