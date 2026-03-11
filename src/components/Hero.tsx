@@ -103,6 +103,16 @@ const Hero = () => {
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">6+</div>
             <div className="text-sm text-muted-foreground">Years in Web3</div>
           </div>
+          <div className="h-8 w-px bg-border" />
+          <a
+            href="https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group text-center transition-all duration-300 hover:scale-105"
+          >
+            <div className="font-display text-2xl sm:text-3xl font-bold text-primary text-glow-sm group-hover:text-glow-md">🎯</div>
+            <div className="text-sm font-medium text-primary group-hover:underline">Book a Consult</div>
+          </a>
         </motion.div>
 
         {/* Song A Day Mann feature */}
