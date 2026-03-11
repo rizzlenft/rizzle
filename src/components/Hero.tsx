@@ -7,10 +7,10 @@ import rizzlePfp from "@/assets/rizzlepfp.jpeg";
 const Hero = () => {
   const [showPlayer, setShowPlayer] = useState(false);
 
-  const handleLetsTalkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleConsultationClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    window.location.assign("https://x.com/NFTland");
+    window.open("https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00", "_blank", "noopener,noreferrer");
   };
 
 
@@ -84,7 +84,7 @@ const Hero = () => {
         >
           <span className="text-primary font-semibold">Web3 Founder & Builder</span> — Been in the game since before the hype. 
           Community strategy, product launches, growth — if it's onchain, I've probably shipped it. 
-          My biggest edge is getting projects from zero to traction.{" "}<a href="https://x.com/NFTland" onClick={handleLetsTalkClick} className="inline-flex items-center text-primary underline decoration-primary/40 underline-offset-4 transition-all duration-300 hover:decoration-primary">Let's talk</a>{" "}if you're building something real.
+          My biggest edge is getting projects from zero to traction.{" "}<a href="https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00" onClick={handleConsultationClick} className="inline-flex items-center text-primary underline decoration-primary/40 underline-offset-4 transition-all duration-300 hover:decoration-primary">Schedule a web3 consultation</a>{" "}with Rizzle to help build something real.
         </motion.p>
         
         {/* Stats row — includes "Latest Posts" as a clickable item */}
