@@ -19,6 +19,7 @@ const Index = () => {
       
       {/* Content */}
       <div className="relative z-10">
+        <SiteHeader />
         <Hero />
         <ContentTabs />
         <Socials />
