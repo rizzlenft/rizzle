@@ -33,7 +33,7 @@ const Index = () => {
       <div className="relative z-10">
         <TopNav activeTab={activeTab} onTabChange={setActiveTab} />
         <main>
-          <Hero />
+          {activeTab === "projects" && <Hero />}
           <ContentTabs activeTab={activeTab} setActiveTab={setActiveTab} />
           <Socials />
         </main>
