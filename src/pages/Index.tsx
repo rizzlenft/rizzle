@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Hero from "@/components/Hero";
 import ContentTabs from "@/components/ContentTabs";
 import Socials from "@/components/Socials";
@@ -6,7 +7,14 @@ import Footer from "@/components/Footer";
 import TopNav from "@/components/TopNav";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<"projects" | "art">("projects");
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get("tab") === "art" ? "art" : "projects";
+  const [activeTab, setActiveTab] = useState<"projects" | "art">(initialTab);
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "art") setActiveTab("art");
+  }, [searchParams]);
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
