@@ -7,11 +7,6 @@ import rizzlePfp from "@/assets/rizzlepfp.jpeg";
 const Hero = () => {
   const [showPlayer, setShowPlayer] = useState(false);
 
-  const handleConsultationClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    window.open("https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00", "_blank", "noopener,noreferrer");
-  };
 
 
   return (
