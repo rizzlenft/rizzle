@@ -89,7 +89,7 @@ const projects = [
   },
   {
     name: "OnChainChain",
-    description: "Whimsical high-end metaverse fashion pushing web3 interoperability. Wearable chains across multiple NFTs & platforms.",
+    description: "An early Art Blocks project with all metadata onchain on Ethereum mainnet. Whimsical high-end metaverse fashion pushing web3 interoperability.",
     emoji: "⛓️",
     link: "https://www.artblocks.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
     image: onchainchainImg,
