@@ -499,7 +499,7 @@ export const guestData = [
   // A
   "Aavegotchi", "Al Crego", "Al Morris", "Alegria", "Alex Salnikov", "Alimo", "AllyGrounds", 
   "AlottaMoney", "Amir", "Andrew Steinwold", "Animal Spawn", "AnonymousNobody", "Antara", 
-  "ArdonLukas", "Argent", "Arthr", "ArtorDai", "ArtSoFly", "AsyncArt", "AtBarbieLove", "Azeem",
+  "ArdonLukas", "Argent", "ArtRescueLabs", "Arthr", "ArtorDai", "ArtSoFly", "AsyncArt", "AtBarbieLove", "Azeem",
   // B
   "Bay Backner", "Benjy", "Benoit", "BetterGiving", "Bihoz", "Bitlectro", "Bitpixi", "Blockparty",
   "Bomani Digital", "Boomboxhead", "Bored Becky", "Bittrees", "Broadside", "Brookhawk", 
