@@ -39,7 +39,7 @@ const projects = [
   },
   {
     name: "Avastars",
-    description: "Generative PFP NFTs stored entirely onchain on Ethereum mainnet. Est. 2020. Trailblazing avatar art that actually meant something.",
+    description: "Fully onchain generative PFP NFTs on Ethereum mainnet. Est. 2020. A trailblazing project with over 4,000 ETH in secondary sales.",
     emoji: "👾",
     link: "https://opensea.io/collection/avastar",
     image: avastarsImg,
