@@ -82,7 +82,7 @@ const projects = [
   },
   {
     name: "Babacci",
-    description: "Babacci is a generative unique 3D collectible NFT. Download the model as a .glb file by opening it in a new window and pressing S, use it across the metaverse. Fully onchain.",
+    description: "An ambitious generative 3D NFT project of unique creatures called Babacci. Fully onchain on Base. Download the 3D file for use across the metaverse.",
     emoji: "🎨",
     link: "https://opensea.io/collection/babacci",
     image: babacciImg,
