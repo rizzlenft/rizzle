@@ -151,23 +151,14 @@ const GuestArchive = () => {
               </motion.a>
             </div>
 
-            {/* Title */}
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="mb-3 text-center font-display text-4xl font-bold text-foreground sm:text-5xl"
-            >
-              Rizzle Guest Archive
-            </motion.h1>
-
+            {/* Description - more prominent */}
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-              className="mb-2 text-center text-muted-foreground max-w-lg"
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="mb-2 text-center text-lg sm:text-xl text-foreground/80 max-w-lg font-medium"
             >
-              A directory of legendary guests and collaborators from
+              A directory of Rizzle's legendary guests and collaborators from
             </motion.p>
 
             <motion.div

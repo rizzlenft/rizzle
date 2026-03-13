@@ -89,7 +89,7 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
               />
             )}
             <Users className="relative z-10 h-3.5 w-3.5" />
-            <span className="relative z-10">Guests</span>
+            <span className="relative z-10">Network</span>
           </Link>
         </div>
       </div>
