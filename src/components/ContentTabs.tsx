@@ -141,7 +141,7 @@ const projects = [
   },
   {
     name: "nft42",
-    description: "Co-founded this pioneering NFT studio (2019-2022). Launched Avastars, TokenSmart, and Stealthtest. Collaborated with Gary Vee, Snoop Dogg, Nyan Cat, and other icons to build their first NFT collections.",
+    description: "Co-founded this groundbreaking NFT studio (2019-2022). Launched Avastars, TokenSmart, and Stealthtest. Collaborated with Gary Vee, Snoop Dogg, Nyan Cat, and other icons to build their first NFT collections.",
     emoji: "✨",
     link: "https://nft42.com",
     image: nft42Img,
