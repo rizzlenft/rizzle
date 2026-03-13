@@ -89,7 +89,7 @@ const projects = [
   },
   {
     name: "OnChainChain",
-    description: "Whimsical high-end metaverse fashion pushing web3 interoperability. Wearable chains across multiple NFTs & platforms.",
+    description: "An early Art Blocks project with all metadata onchain on Ethereum mainnet. Whimsical high-end metaverse fashion pushing web3 interoperability.",
     emoji: "⛓️",
     link: "https://www.artblocks.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
     image: onchainchainImg,
@@ -134,14 +134,14 @@ const projects = [
   },
   {
     name: "Avastars",
-    description: "Generative PFP NFTs stored entirely onchain. Est. 2020. Pioneering avatar art that actually meant something.",
+    description: "Generative PFP NFTs stored entirely onchain on Ethereum mainnet. Est. 2020. Trailblazing avatar art that actually meant something.",
     emoji: "👾",
     link: "https://opensea.io/collection/avastar",
     image: avastarsImg,
   },
   {
     name: "nft42",
-    description: "Co-founded this pioneering NFT studio (2019-2022). Launched Avastars, TokenSmart, and Stealthtest. Collaborated with Gary Vee, Snoop Dogg, Nyan Cat, and other icons to build their first NFT collections.",
+    description: "Co-founded this groundbreaking NFT studio (2019-2022). Launched Avastars, TokenSmart, and Stealthtest. Collaborated with Gary Vee, Snoop Dogg, Nyan Cat, and other icons to build their first NFT collections.",
     emoji: "✨",
     link: "https://nft42.com",
     image: nft42Img,

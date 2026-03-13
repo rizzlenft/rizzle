@@ -32,14 +32,14 @@ const projects = [
   },
   {
     name: "OnChainChain",
-    description: "Whimsical high-end metaverse fashion pushing web3 interoperability. Wearable chains across multiple NFTs & platforms.",
+    description: "An early Art Blocks project with all metadata onchain on Ethereum mainnet. Whimsical high-end metaverse fashion pushing web3 interoperability.",
     emoji: "⛓️",
     link: "https://www.artblocks.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
     image: onchainchainImg,
   },
   {
     name: "Avastars",
-    description: "Pioneering generative avatar NFT project. Onchain art that actually meant something.",
+    description: "Generative PFP NFTs stored entirely onchain on Ethereum mainnet. Est. 2020. Trailblazing avatar art that actually meant something.",
     emoji: "👾",
     link: "https://opensea.io/collection/avastar",
     image: avastarsImg,
