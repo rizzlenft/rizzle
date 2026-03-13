@@ -557,7 +557,7 @@ export const guestData = [
   // P
   "Paradoxx", "Patrick Amadon", "Patricio W.", "Patrizia", "Pepelangelo", "PfeffUnit",
   "Phygital Food Project", "Pixa Wizards", "Pods.Media", "Pointshark", "Pokgai", "Polygonal Mind",
-  "PoolTogether", "Post Mortem", "Proof of Beauty", "Punkscape",
+  "PoolTogether", "PoselabStudios", "Post Mortem", "Proof of Beauty", "Punkscape",
   // R
   "RARA", "RaraSocial", "Rare Apepe", "RareCandy", "RareGotchi", "Rare Scrilla", "Rarible",
   "Rebase Finance", "Rendar", "Reneil", "Richard F. Yates", "Richard Oglivy", "Robi C.",
