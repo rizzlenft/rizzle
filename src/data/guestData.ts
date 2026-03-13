@@ -552,7 +552,7 @@ export const guestData = [
   "NFT Plazas", "NFTconomy", "NFTfi", "Nifty Island", "Niftytime", "NineOverZero", "NonFunGerbils",
   "Numomo Art",
   // O
-  "Ogar", "Ol1y Art", "OlgaForce 3D", "Omega Runner", "OnChainChain", "1KX Network",
+  "0xQuan", "Ogar", "Ocular Delusion", "Ol1y Art", "OlgaForce 3D", "Omega Runner", "OnChainChain", "1KX Network",
   "105 Collective", "OneOf", "Oona", "OpenVoxels", "Origin Art Museum", "Osinachi", "Ottis",
   // P
   "Paradoxx", "Patrick Amadon", "Patricio W.", "Patrizia", "Pepelangelo", "PfeffUnit",
