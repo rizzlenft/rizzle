@@ -158,7 +158,7 @@ const GuestArchive = () => {
               transition={{ delay: 0.5, duration: 0.5 }}
               className="mb-3 text-center font-display text-4xl font-bold text-foreground sm:text-5xl"
             >
-              Guest Archive
+              Rizzle Guest Archive
             </motion.h1>
 
             <motion.p
