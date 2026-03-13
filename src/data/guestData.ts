@@ -499,7 +499,7 @@ export const guestData = [
   // A
   "Aavegotchi", "Al Crego", "Al Morris", "Alegria", "Alex Salnikov", "Alimo", "AllyGrounds", 
   "AlottaMoney", "Amir", "Andrew Steinwold", "Animal Spawn", "AnonymousNobody", "Antara", 
-  "ArdonLukas", "Argent", "Arthr", "ArtorDai", "ArtSoFly", "AsyncArt", "AtBarbieLove", "Azeem",
+  "ArdonLukas", "Argent", "ArtRescueLabs", "Arthr", "ArtorDai", "ArtSoFly", "AsyncArt", "AtBarbieLove", "Azeem",
   // B
   "Bay Backner", "Benjy", "Benoit", "BetterGiving", "Bihoz", "Bitlectro", "Bitpixi", "Blockparty",
   "Bomani Digital", "Boomboxhead", "Bored Becky", "Bittrees", "Broadside", "Brookhawk", 
@@ -552,12 +552,12 @@ export const guestData = [
   "NFT Plazas", "NFTconomy", "NFTfi", "Nifty Island", "Niftytime", "NineOverZero", "NonFunGerbils",
   "Numomo Art",
   // O
-  "Ogar", "Ol1y Art", "OlgaForce 3D", "Omega Runner", "OnChainChain", "1KX Network",
+  "0xQuan", "Ogar", "Ocular Delusion", "Ol1y Art", "OlgaForce 3D", "Omega Runner", "OnChainChain", "1KX Network",
   "105 Collective", "OneOf", "Oona", "OpenVoxels", "Origin Art Museum", "Osinachi", "Ottis",
   // P
   "Paradoxx", "Patrick Amadon", "Patricio W.", "Patrizia", "Pepelangelo", "PfeffUnit",
   "Phygital Food Project", "Pixa Wizards", "Pods.Media", "Pointshark", "Pokgai", "Polygonal Mind",
-  "PoolTogether", "Post Mortem", "Proof of Beauty", "Punkscape",
+  "PoolTogether", "PoselabStudios", "Post Mortem", "Proof of Beauty", "Punkscape",
   // R
   "RARA", "RaraSocial", "Rare Apepe", "RareCandy", "RareGotchi", "Rare Scrilla", "Rarible",
   "Rebase Finance", "Rendar", "Reneil", "Richard F. Yates", "Richard Oglivy", "Robi C.",
