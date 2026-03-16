@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, Play, Tv, Calendar } from "lucide-react";
+import { Users, Play, Calendar } from "lucide-react";
 
 interface NetworkStatsProps {
   totalGuests: number;
