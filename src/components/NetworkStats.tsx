@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, Play, Tv, Calendar } from "lucide-react";
+import { Users, Play, Calendar } from "lucide-react";
 
 interface NetworkStatsProps {
   totalGuests: number;
@@ -8,7 +8,7 @@ interface NetworkStatsProps {
 const NetworkStats = ({ totalGuests }: NetworkStatsProps) => {
   const stats = [
     { label: "Total Guests", value: `${totalGuests}+`, icon: Users, delay: 0.2 },
-    { label: "Total Episodes", value: "200+", icon: Play, delay: 0.3 },
+    { label: "Total Episodes", value: "400+", icon: Play, delay: 0.3 },
     { label: "Years Active", value: "8+", icon: Calendar, delay: 0.4 },
   ];
 
@@ -17,7 +17,7 @@ const NetworkStats = ({ totalGuests }: NetworkStatsProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8"
+      className="grid grid-cols-3 gap-4 sm:gap-6 mt-8 max-w-2xl mx-auto"
     >
       {stats.map((stat) => (
         <motion.div
