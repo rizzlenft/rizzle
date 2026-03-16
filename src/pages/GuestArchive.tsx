@@ -10,6 +10,7 @@ import { guestData, guestVideoLinks } from "@/data/guestData";
 import { useExtractedGuests, mergeGuestData } from "@/hooks/useExtractedGuests";
 import GuestChip from "@/components/GuestChip";
 import RandomEpisodeButton from "@/components/RandomEpisodeButton";
+import NetworkStats from "@/components/NetworkStats";
 
 const GuestArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -196,15 +197,7 @@ const GuestArchive = () => {
             </motion.div>
 
             {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
-              className="mt-6 flex items-center gap-2 text-sm text-muted-foreground"
-            >
-              <Users className="h-4 w-4 text-primary" />
-              <span>{allGuests.length}+ verified guests since 2020</span>
-            </motion.div>
+            <NetworkStats totalGuests={allGuests.length} />
           </motion.div>
         </div>
       </header>
