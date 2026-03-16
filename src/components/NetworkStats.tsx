@@ -17,7 +17,7 @@ const NetworkStats = ({ totalGuests }: NetworkStatsProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8"
+      className="grid grid-cols-3 gap-4 sm:gap-6 mt-8 max-w-2xl mx-auto"
     >
       {stats.map((stat) => (
         <motion.div
