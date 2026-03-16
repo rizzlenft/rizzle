@@ -9,8 +9,7 @@ const NetworkStats = ({ totalGuests }: NetworkStatsProps) => {
   const stats = [
     { label: "Total Guests", value: `${totalGuests}+`, icon: Users, delay: 0.2 },
     { label: "Total Episodes", value: "200+", icon: Play, delay: 0.3 },
-    { label: "Shows", value: "3", icon: Tv, delay: 0.4 },
-    { label: "Years Active", value: "5+", icon: Calendar, delay: 0.5 },
+    { label: "Years Active", value: "8+", icon: Calendar, delay: 0.4 },
   ];
 
   return (
