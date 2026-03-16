@@ -81,7 +81,7 @@ const Hero = () => {
           className="mt-6 flex flex-wrap items-center justify-center gap-8"
         >
           <div className="text-center">
-            <div className="font-display text-3xl font-bold text-primary text-glow-sm">8+</div>
+            <div className="font-display text-3xl font-bold text-primary text-glow-sm">10+</div>
             <div className="text-sm text-muted-foreground">Projects</div>
           </div>
           <div className="h-8 w-px bg-border" />
