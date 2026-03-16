@@ -197,7 +197,10 @@ const GuestArchive = () => {
             </motion.div>
 
             {/* Stats */}
-            <NetworkStats totalGuests={allGuests.length} />
+            <NetworkStats
+              totalGuests={allGuests.length}
+              extractedVideoIds={extractedGuests.map(g => g.video_id)}
+            />
           </motion.div>
         </div>
       </header>
