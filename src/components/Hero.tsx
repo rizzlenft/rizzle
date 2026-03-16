@@ -91,7 +91,7 @@ const Hero = () => {
           </div>
           <div className="h-8 w-px bg-border" />
           <div className="text-center">
-            <div className="font-display text-3xl font-bold text-primary text-glow-sm">6+</div>
+            <div className="font-display text-3xl font-bold text-primary text-glow-sm">8+</div>
             <div className="text-sm text-muted-foreground">Years in Web3</div>
           </div>
           <div className="h-8 w-px bg-border" />
