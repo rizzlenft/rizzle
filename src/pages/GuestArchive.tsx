@@ -10,6 +10,7 @@ import { guestData, guestVideoLinks } from "@/data/guestData";
 import { useExtractedGuests, mergeGuestData } from "@/hooks/useExtractedGuests";
 import GuestChip from "@/components/GuestChip";
 import RandomEpisodeButton from "@/components/RandomEpisodeButton";
+import NetworkStats from "@/components/NetworkStats";
 
 const GuestArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
