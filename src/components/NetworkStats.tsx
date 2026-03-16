@@ -1,14 +1,34 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Users, Play, Calendar } from "lucide-react";
+import { guestVideoLinks, guestSpotifyLinks } from "@/data/guestData";
 
 interface NetworkStatsProps {
   totalGuests: number;
+  extractedVideoIds?: string[];
 }
 
-const NetworkStats = ({ totalGuests }: NetworkStatsProps) => {
+const NetworkStats = ({ totalGuests, extractedVideoIds = [] }: NetworkStatsProps) => {
+  const totalEpisodes = useMemo(() => {
+    const ids = new Set<string>();
+    // Count unique video IDs from static data
+    for (const value of Object.values(guestVideoLinks)) {
+      if (Array.isArray(value)) {
+        value.forEach(id => ids.add(id));
+      } else {
+        ids.add(value);
+      }
+    }
+    // Add extracted video IDs from database
+    extractedVideoIds.forEach(id => ids.add(id));
+    // Add Spotify episodes
+    const spotifyCount = new Set(Object.values(guestSpotifyLinks)).size;
+    return ids.size + spotifyCount;
+  }, [extractedVideoIds]);
+
   const stats = [
     { label: "Total Guests", value: `${totalGuests}+`, icon: Users, delay: 0.2 },
-    { label: "Total Episodes", value: "400+", icon: Play, delay: 0.3 },
+    { label: "Total Episodes", value: `${totalEpisodes}+`, icon: Play, delay: 0.3 },
     { label: "Years Active", value: "8+", icon: Calendar, delay: 0.4 },
   ];
 
