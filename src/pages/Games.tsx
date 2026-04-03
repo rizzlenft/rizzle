@@ -233,7 +233,8 @@ const Games = () => {
           </motion.form>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
