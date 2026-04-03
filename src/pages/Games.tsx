@@ -99,7 +99,7 @@ const Games = () => {
             src={activeGame.path}
             title={activeGame.title}
             className="h-full w-full border-0"
-            allow="autoplay"
+            allow="autoplay; fullscreen" allowFullScreen
           />
         </div>
       )}
@@ -150,7 +150,7 @@ const Games = () => {
                     src={activeGame.path}
                     title={activeGame.title}
                     className="h-full w-full border-0"
-                    allow="autoplay"
+                    allow="autoplay; fullscreen" allowFullScreen
                   />
                 </motion.div>
               )}
