@@ -36,7 +36,7 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
         </Link>
 
         {/* Right — tab toggle */}
-        <div className="inline-flex items-center gap-0.5 sm:gap-1 rounded-full border border-border/50 bg-card/30 p-1 backdrop-blur-sm">
+        <div className="inline-flex items-center gap-0 sm:gap-1 rounded-full border border-border/50 bg-card/30 p-0.5 sm:p-1 backdrop-blur-sm">
           <button
             onClick={() => handleTabClick("projects")}
             className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
