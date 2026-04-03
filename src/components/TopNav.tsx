@@ -52,8 +52,8 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <Briefcase className="relative z-10 h-3.5 w-3.5" />
-            <span className="relative z-10">Projects</span>
+            <Briefcase className="relative z-10 h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            <span className="relative z-10 hidden xs:inline">Projects</span>
           </button>
           <button
             onClick={() => handleTabClick("art")}
