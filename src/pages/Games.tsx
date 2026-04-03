@@ -100,7 +100,6 @@ const Games = () => {
             title={activeGame.title}
             className="h-full w-full border-0"
             allow="autoplay"
-            sandbox="allow-scripts allow-same-origin"
           />
         </div>
       )}
