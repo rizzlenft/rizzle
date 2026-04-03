@@ -3,7 +3,7 @@ import { Briefcase, Sparkles, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 interface TopNavProps {
-  activeTab?: "projects" | "art" | "guests";
+  activeTab?: "projects" | "art" | "guests" | "games";
   onTabChange?: (tab: "projects" | "art") => void;
 }
 
