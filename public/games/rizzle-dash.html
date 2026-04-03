@@ -215,47 +215,59 @@ window.addEventListener('resize',function(){resizeCanvas();if(G&&G.running)genLe
 // AUDIO — Safari-compatible unlock
 // ============================================================
 var AC=null,_audioUnlocked=false;
+function syncAudioState(ac){
+  _audioUnlocked=!!(ac&&ac.state==='running');
+  return _audioUnlocked;
+}
 function getAC(){
-  if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(!AC){
+    try{
+      AC=new(window.AudioContext||window.webkitAudioContext)();
+      if(AC&&typeof AC.addEventListener==='function')AC.addEventListener('statechange',function(){syncAudioState(AC);});
+      syncAudioState(AC);
+    }catch(e){}
+  }
   return AC;
 }
-// Synchronous unlock: create+play a silent buffer in the same call stack as the gesture.
-// This is the ONLY pattern iOS Safari reliably accepts.
-function unlockAudio(){
-  if(_audioUnlocked)return;
-  var ac=getAC();if(!ac)return;
-  // 1. Resume synchronously (Safari allows this inside gesture)
-  if(ac.state==='suspended'){try{ac.resume();}catch(e){}}
-  // 2. Play a silent buffer — this is what actually unlocks output on iOS
+function primeAudio(ac){
+  if(!ac)return;
   try{
-    var buf=ac.createBuffer(1,1,ac.sampleRate||22050);
-    var src=ac.createBufferSource();
+    var g=ac.createGain(),buf=ac.createBuffer(1,1,Math.max(ac.sampleRate||22050,22050)),src=ac.createBufferSource();
+    g.gain.value=0.00001;
     src.buffer=buf;
-    src.connect(ac.destination);
+    src.connect(g);
+    g.connect(ac.destination);
+    src.onended=function(){syncAudioState(ac);try{src.disconnect();g.disconnect();}catch(e){}};
     src.start(0);
-    src.onended=function(){_audioUnlocked=true;};
   }catch(e){}
-  // Also try an oscillator at zero gain as a fallback
   try{
-    var o=ac.createOscillator(),g=ac.createGain();
-    o.connect(g);g.connect(ac.destination);
-    g.gain.value=0;
-    o.start(0);o.stop(ac.currentTime+0.001);
+    var o=ac.createOscillator(),g2=ac.createGain();
+    o.connect(g2);g2.connect(ac.destination);
+    g2.gain.setValueAtTime(0.00001,ac.currentTime);
+    o.start(ac.currentTime);
+    o.stop(ac.currentTime+0.02);
+    o.onended=function(){syncAudioState(ac);try{o.disconnect();g2.disconnect();}catch(e){}};
   }catch(e){}
-  _audioUnlocked=true;
+}
+function unlockAudio(){
+  var ac=getAC();if(!ac)return null;
+  if(syncAudioState(ac))return ac;
+  try{var p=ac.resume();if(p&&p.catch)p.catch(function(){});}catch(e){}
+  primeAudio(ac);
+  syncAudioState(ac);
+  return ac;
 }
 function resumeAC(cb){
-  var ac=getAC();
+  var ac=unlockAudio();
   if(!ac){if(cb)cb(null);return;}
-  unlockAudio();
-  if(ac.state==='running'){if(cb)cb(ac);return;}
+  if(syncAudioState(ac)){if(cb)cb(ac);return;}
   try{
     var p=ac.resume();
-    if(p&&p.then){p.then(function(){if(cb)cb(ac);}).catch(function(){if(cb)cb(null);});}
-    else{if(cb)cb(ac);}
+    if(p&&p.then){p.then(function(){primeAudio(ac);if(cb)cb(syncAudioState(ac)?ac:null);}).catch(function(){if(cb)cb(null);});}
+    else{primeAudio(ac);if(cb)cb(syncAudioState(ac)?ac:null);}
   }catch(e){if(cb)cb(null);}
 }
-function tone(freq,dur,type,vol,delay){var ac=getAC();if(!ac)return;try{var o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=type||'square';o.frequency.value=freq||440;var t=ac.currentTime+(delay||0);g.gain.setValueAtTime(vol||0.1,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.start(t);o.stop(t+dur+0.01);}catch(e){}}
+function tone(freq,dur,type,vol,delay){var ac=unlockAudio();if(!ac||ac.state!=='running')return;try{var o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=type||'square';o.frequency.value=freq||440;var t=ac.currentTime+(delay||0);g.gain.setValueAtTime(vol||0.1,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.start(t);o.stop(t+dur+0.01);}catch(e){}}
 function sfx(name){switch(name){case'jump':tone(260,.04,'square',.15);tone(380,.07,'square',.12,.04);break;case'djump':tone(440,.04,'square',.15);tone(660,.08,'square',.12,.04);break;case'coin':tone(800,.05,'sine',.18);tone(1200,.1,'sine',.13,.05);break;case'die':tone(180,.1,'sawtooth',.2);tone(130,.18,'sawtooth',.16,.1);[300,240,180,140].forEach(function(f,i){tone(f,.1,'sawtooth',.14,i*.08+.1);});break;case'clear':tone(440,.08,'sine',.16);tone(554,.08,'sine',.16,.09);tone(659,.08,'sine',.16,.18);tone(880,.2,'sine',.18,.27);break;case'spring':tone(550,.05,'square',.15);tone(880,.09,'square',.11,.06);break;}}
 var musicPlaying=false,musicTimer=null,curMusicIdx=0;
 var MUSIC=[
@@ -277,7 +289,11 @@ function playMusic(lvl){
 }
 function schedMusic(){
   if(!musicPlaying)return;
-  var ac=getAC();if(!ac)return;
+  var ac=unlockAudio();
+  if(!ac||ac.state!=='running'){
+    musicTimer=setTimeout(function(){if(musicPlaying)schedMusic();},250);
+    return;
+  }
   // Pass a slightly larger start offset on first call so notes do not get cut
   var ms=MUSIC[curMusicIdx](ac,0.12);
   musicTimer=setTimeout(function(){if(musicPlaying)schedMusic();},ms*1000+60);
@@ -1187,9 +1203,14 @@ function spawnDeath(x,y){for(var i=0;i<8;i++)particles.push({x:x,y:y,vx:(Math.ra
 // PHYSICS
 // ============================================================
 function doJump(){
-  resumeAC();
-  if(!G.running||P.dead||G.dying)return;
-  if(P.jumpsLeft>0){P.vy=-cfg.jump;if(P.jumpsLeft===1)sfx('djump');else sfx('jump');P.jumpsLeft--;}
+  if(!G.running||P.dead||G.dying){resumeAC();return;}
+  if(P.jumpsLeft>0){
+    var jumpSfx=P.jumpsLeft===1?'djump':'jump';
+    P.vy=-cfg.jump;
+    P.jumpsLeft--;
+    if(AC&&AC.state==='running')sfx(jumpSfx);
+    else resumeAC(function(ac){if(ac&&G.running&&!P.dead&&!G.dying)sfx(jumpSfx);});
+  }else resumeAC();
 }
 
 function updatePlayer(){
@@ -1557,7 +1578,7 @@ document.getElementById('btnPauseMenu').addEventListener('click',confirmMenu);
   function _ul(){unlockAudio();}
   // Listen on the document for ALL gesture event types
   ['touchstart','touchend','mousedown','mouseup','pointerdown','pointerup','click','keydown'].forEach(function(evt){
-    document.addEventListener(evt,_ul,{capture:true,passive:true});
+    document.addEventListener(evt,_ul,{capture:true});
   });
 })();
 
