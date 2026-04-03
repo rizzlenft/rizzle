@@ -1237,6 +1237,7 @@ function completeLevel(){
   var ul=getUnlocked();
   if(G.level<10&&ul.indexOf(G.level+1)<0){ul.push(G.level+1);saveUnlocked(ul);}
   saveBest(G.level,G.score);
+  try{window.parent.postMessage({type:'rizzle-score',game:'rizzle-dash',level:G.level,score:G.score,coins:coinCount,totalCoins:totalCoins,time:parseFloat(elapsed)},'*');}catch(e){}
   setTimeout(function(){openCastle(pct,elapsed);},600);
 }
 function openCastle(pct,elapsed){

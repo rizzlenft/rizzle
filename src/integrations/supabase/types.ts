@@ -80,6 +80,33 @@ export type Database = {
         }
         Relationships: []
       }
+      game_scores: {
+        Row: {
+          created_at: string
+          game_id: string
+          id: string
+          level: number
+          player_name: string
+          score: number
+        }
+        Insert: {
+          created_at?: string
+          game_id: string
+          id?: string
+          level?: number
+          player_name: string
+          score?: number
+        }
+        Update: {
+          created_at?: string
+          game_id?: string
+          id?: string
+          level?: number
+          player_name?: string
+          score?: number
+        }
+        Relationships: []
+      }
       guest_appearances: {
         Row: {
           confirmed: boolean
