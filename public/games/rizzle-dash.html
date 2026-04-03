@@ -212,12 +212,49 @@ resizeCanvas();
 window.addEventListener('resize',function(){resizeCanvas();if(G&&G.running)genLevel(G.level);});
 
 // ============================================================
-// AUDIO
+// AUDIO — Safari-compatible unlock
 // ============================================================
-var AC=null,audioPrimed=false;
-function getAC(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}return AC;}
-function primeAC(ac){if(!ac||audioPrimed)return;try{var now=ac.currentTime+0.01,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=440;g.gain.setValueAtTime(0.00001,now);g.gain.linearRampToValueAtTime(0.0001,now+0.02);g.gain.exponentialRampToValueAtTime(0.00001,now+0.08);o.connect(g);g.connect(ac.destination);o.start(now);o.stop(now+0.08);audioPrimed=true;}catch(e){}}
-function resumeAC(cb){var ac=getAC();if(!ac){if(cb)cb(null);return Promise.resolve(null);}if(ac.state==='running'){primeAC(ac);if(cb)cb(ac);return Promise.resolve(ac);}return ac.resume().then(function(){primeAC(ac);if(cb)cb(ac);return ac;}).catch(function(){if(cb)cb(null);return null;});}
+var AC=null,_audioUnlocked=false;
+function getAC(){
+  if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  return AC;
+}
+// Synchronous unlock: create+play a silent buffer in the same call stack as the gesture.
+// This is the ONLY pattern iOS Safari reliably accepts.
+function unlockAudio(){
+  if(_audioUnlocked)return;
+  var ac=getAC();if(!ac)return;
+  // 1. Resume synchronously (Safari allows this inside gesture)
+  if(ac.state==='suspended'){try{ac.resume();}catch(e){}}
+  // 2. Play a silent buffer — this is what actually unlocks output on iOS
+  try{
+    var buf=ac.createBuffer(1,1,ac.sampleRate||22050);
+    var src=ac.createBufferSource();
+    src.buffer=buf;
+    src.connect(ac.destination);
+    src.start(0);
+    src.onended=function(){_audioUnlocked=true;};
+  }catch(e){}
+  // Also try an oscillator at zero gain as a fallback
+  try{
+    var o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);
+    g.gain.value=0;
+    o.start(0);o.stop(ac.currentTime+0.001);
+  }catch(e){}
+  _audioUnlocked=true;
+}
+function resumeAC(cb){
+  var ac=getAC();
+  if(!ac){if(cb)cb(null);return;}
+  unlockAudio();
+  if(ac.state==='running'){if(cb)cb(ac);return;}
+  try{
+    var p=ac.resume();
+    if(p&&p.then){p.then(function(){if(cb)cb(ac);}).catch(function(){if(cb)cb(null);});}
+    else{if(cb)cb(ac);}
+  }catch(e){if(cb)cb(null);}
+}
 function tone(freq,dur,type,vol,delay){var ac=getAC();if(!ac)return;try{var o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=type||'square';o.frequency.value=freq||440;var t=ac.currentTime+(delay||0);g.gain.setValueAtTime(vol||0.1,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.start(t);o.stop(t+dur+0.01);}catch(e){}}
 function sfx(name){switch(name){case'jump':tone(260,.04,'square',.15);tone(380,.07,'square',.12,.04);break;case'djump':tone(440,.04,'square',.15);tone(660,.08,'square',.12,.04);break;case'coin':tone(800,.05,'sine',.18);tone(1200,.1,'sine',.13,.05);break;case'die':tone(180,.1,'sawtooth',.2);tone(130,.18,'sawtooth',.16,.1);[300,240,180,140].forEach(function(f,i){tone(f,.1,'sawtooth',.14,i*.08+.1);});break;case'clear':tone(440,.08,'sine',.16);tone(554,.08,'sine',.16,.09);tone(659,.08,'sine',.16,.18);tone(880,.2,'sine',.18,.27);break;case'spring':tone(550,.05,'square',.15);tone(880,.09,'square',.11,.06);break;}}
 var musicPlaying=false,musicTimer=null,curMusicIdx=0;
