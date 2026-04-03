@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { Gamepad2, Maximize2, Minimize2 } from "lucide-react";
 import TopNav from "@/components/TopNav";
 import Footer from "@/components/Footer";
+import GameLeaderboard from "@/components/GameLeaderboard";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface GameEntry {
   id: string;
@@ -27,12 +30,61 @@ const games: GameEntry[] = [
 const Games = () => {
   const [activeGame, setActiveGame] = useState<GameEntry | null>(games[0]);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showNamePrompt, setShowNamePrompt] = useState(false);
+  const [pendingScore, setPendingScore] = useState<{ level: number; score: number } | null>(null);
+  const [playerName, setPlayerName] = useState(() => localStorage.getItem("rd_player") || "");
+  const [submitting, setSubmitting] = useState(false);
+  const leaderboardRef = useRef<{ refresh: () => void } | null>(null);
+  const [leaderboardKey, setLeaderboardKey] = useState(0);
 
   const toggleFullscreen = () => setIsFullscreen((f) => !f);
 
+  const handleScoreMessage = useCallback((e: MessageEvent) => {
+    if (e.data?.type !== "rizzle-score") return;
+    const { level, score } = e.data;
+    setPendingScore({ level, score });
+    const saved = localStorage.getItem("rd_player");
+    if (saved) {
+      submitScore(saved, level, score);
+    } else {
+      setShowNamePrompt(true);
+    }
+  }, []);
+
+  const submitScore = async (name: string, level: number, score: number) => {
+    setSubmitting(true);
+    const { error } = await supabase.from("game_scores").insert({
+      player_name: name,
+      game_id: "rizzle-dash",
+      level,
+      score,
+    });
+    setSubmitting(false);
+    if (error) {
+      toast.error("Failed to save score");
+    } else {
+      toast.success(`Score ${score.toLocaleString()} saved!`);
+      setLeaderboardKey((k) => k + 1);
+    }
+    setShowNamePrompt(false);
+    setPendingScore(null);
+  };
+
+  const handleNameSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = playerName.trim();
+    if (!trimmed || !pendingScore) return;
+    localStorage.setItem("rd_player", trimmed);
+    submitScore(trimmed, pendingScore.level, pendingScore.score);
+  };
+
+  useEffect(() => {
+    window.addEventListener("message", handleScoreMessage);
+    return () => window.removeEventListener("message", handleScoreMessage);
+  }, [handleScoreMessage]);
+
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
-      {/* Ambient background gradients */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full bg-primary/8 blur-[180px]" />
         <div className="absolute -right-20 -top-20 h-[400px] w-[400px] rounded-full bg-accent/6 blur-[140px]" />
@@ -42,7 +94,6 @@ const Games = () => {
         <TopNav activeTab="games" />
 
         <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -57,41 +108,47 @@ const Games = () => {
             </p>
           </motion.div>
 
-          {/* Game viewport */}
-          {activeGame && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className={`relative mx-auto overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl ${
-                isFullscreen
-                  ? "fixed inset-0 z-[100] rounded-none border-0"
-                  : "aspect-video max-w-4xl"
-              }`}
-            >
-              {/* Controls bar */}
-              <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
-                <button
-                  onClick={toggleFullscreen}
-                  className="rounded-md bg-black/60 p-1.5 text-white/70 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-white"
-                  title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
-                >
-                  {isFullscreen ? (
-                    <Minimize2 className="h-4 w-4" />
-                  ) : (
-                    <Maximize2 className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
+          <div className="mx-auto max-w-4xl space-y-6">
+            {/* Game viewport */}
+            {activeGame && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className={`relative overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl ${
+                  isFullscreen
+                    ? "fixed inset-0 z-[100] rounded-none border-0"
+                    : "aspect-video"
+                }`}
+              >
+                <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
+                  <button
+                    onClick={toggleFullscreen}
+                    className="rounded-md bg-black/60 p-1.5 text-foreground/70 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-foreground"
+                    title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+                  >
+                    {isFullscreen ? (
+                      <Minimize2 className="h-4 w-4" />
+                    ) : (
+                      <Maximize2 className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
 
-              <iframe
-                src={activeGame.path}
-                title={activeGame.title}
-                className="h-full w-full border-0"
-                allow="autoplay"
-                sandbox="allow-scripts allow-same-origin"
-              />
-            </motion.div>
-          )}
+                <iframe
+                  src={activeGame.path}
+                  title={activeGame.title}
+                  className="h-full w-full border-0"
+                  allow="autoplay"
+                  sandbox="allow-scripts allow-same-origin"
+                />
+              </motion.div>
+            )}
+
+            {/* Leaderboard */}
+            {activeGame && (
+              <GameLeaderboard key={leaderboardKey} gameId={activeGame.id} />
+            )}
+          </div>
 
           {/* Game selector grid — ready for future games */}
           {games.length > 1 && (
@@ -122,6 +179,47 @@ const Games = () => {
 
         <Footer />
       </div>
+
+      {/* Name prompt modal */}
+      {showNamePrompt && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <motion.form
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            onSubmit={handleNameSubmit}
+            className="mx-4 w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-2xl"
+          >
+            <h2 className="text-lg font-bold text-foreground">🏆 New High Score!</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Enter your name for the leaderboard
+            </p>
+            <input
+              autoFocus
+              maxLength={20}
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              placeholder="Your name"
+              className="mt-4 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <div className="mt-4 flex gap-2">
+              <button
+                type="button"
+                onClick={() => { setShowNamePrompt(false); setPendingScore(null); }}
+                className="flex-1 rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground hover:bg-muted"
+              >
+                Skip
+              </button>
+              <button
+                type="submit"
+                disabled={!playerName.trim() || submitting}
+                className="flex-1 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+              >
+                {submitting ? "Saving…" : "Submit"}
+              </button>
+            </div>
+          </motion.form>
+        </div>
+      )}
     </div>
   );
 };
