@@ -212,62 +212,12 @@ resizeCanvas();
 window.addEventListener('resize',function(){resizeCanvas();if(G&&G.running)genLevel(G.level);});
 
 // ============================================================
-// AUDIO — Safari-compatible unlock
+// AUDIO
 // ============================================================
-var AC=null,_audioUnlocked=false;
-function syncAudioState(ac){
-  _audioUnlocked=!!(ac&&ac.state==='running');
-  return _audioUnlocked;
-}
-function getAC(){
-  if(!AC){
-    try{
-      AC=new(window.AudioContext||window.webkitAudioContext)();
-      if(AC&&typeof AC.addEventListener==='function')AC.addEventListener('statechange',function(){syncAudioState(AC);});
-      syncAudioState(AC);
-    }catch(e){}
-  }
-  return AC;
-}
-function primeAudio(ac){
-  if(!ac)return;
-  try{
-    var g=ac.createGain(),buf=ac.createBuffer(1,1,Math.max(ac.sampleRate||22050,22050)),src=ac.createBufferSource();
-    g.gain.value=0.00001;
-    src.buffer=buf;
-    src.connect(g);
-    g.connect(ac.destination);
-    src.onended=function(){syncAudioState(ac);try{src.disconnect();g.disconnect();}catch(e){}};
-    src.start(0);
-  }catch(e){}
-  try{
-    var o=ac.createOscillator(),g2=ac.createGain();
-    o.connect(g2);g2.connect(ac.destination);
-    g2.gain.setValueAtTime(0.00001,ac.currentTime);
-    o.start(ac.currentTime);
-    o.stop(ac.currentTime+0.02);
-    o.onended=function(){syncAudioState(ac);try{o.disconnect();g2.disconnect();}catch(e){}};
-  }catch(e){}
-}
-function unlockAudio(){
-  var ac=getAC();if(!ac)return null;
-  if(syncAudioState(ac))return ac;
-  try{var p=ac.resume();if(p&&p.catch)p.catch(function(){});}catch(e){}
-  primeAudio(ac);
-  syncAudioState(ac);
-  return ac;
-}
-function resumeAC(cb){
-  var ac=unlockAudio();
-  if(!ac){if(cb)cb(null);return;}
-  if(syncAudioState(ac)){if(cb)cb(ac);return;}
-  try{
-    var p=ac.resume();
-    if(p&&p.then){p.then(function(){primeAudio(ac);if(cb)cb(syncAudioState(ac)?ac:null);}).catch(function(){if(cb)cb(null);});}
-    else{primeAudio(ac);if(cb)cb(syncAudioState(ac)?ac:null);}
-  }catch(e){if(cb)cb(null);}
-}
-function tone(freq,dur,type,vol,delay){var ac=unlockAudio();if(!ac||ac.state!=='running')return;try{var o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=type||'square';o.frequency.value=freq||440;var t=ac.currentTime+(delay||0);g.gain.setValueAtTime(vol||0.1,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.start(t);o.stop(t+dur+0.01);}catch(e){}}
+var AC=null;
+function getAC(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}return AC;}
+function resumeAC(){var ac=getAC();if(ac&&ac.state==='suspended')ac.resume();}
+function tone(freq,dur,type,vol,delay){var ac=getAC();if(!ac)return;try{var o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=type||'square';o.frequency.value=freq||440;var t=ac.currentTime+(delay||0);g.gain.setValueAtTime(vol||0.1,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.start(t);o.stop(t+dur+0.01);}catch(e){}}
 function sfx(name){switch(name){case'jump':tone(260,.04,'square',.15);tone(380,.07,'square',.12,.04);break;case'djump':tone(440,.04,'square',.15);tone(660,.08,'square',.12,.04);break;case'coin':tone(800,.05,'sine',.18);tone(1200,.1,'sine',.13,.05);break;case'die':tone(180,.1,'sawtooth',.2);tone(130,.18,'sawtooth',.16,.1);[300,240,180,140].forEach(function(f,i){tone(f,.1,'sawtooth',.14,i*.08+.1);});break;case'clear':tone(440,.08,'sine',.16);tone(554,.08,'sine',.16,.09);tone(659,.08,'sine',.16,.18);tone(880,.2,'sine',.18,.27);break;case'spring':tone(550,.05,'square',.15);tone(880,.09,'square',.11,.06);break;}}
 var musicPlaying=false,musicTimer=null,curMusicIdx=0;
 var MUSIC=[
@@ -284,16 +234,18 @@ var MUSIC=[
 ];
 function playMusic(lvl){
   stopMusic();
+  var ac=getAC();if(!ac)return;
   curMusicIdx=(lvl-1)%MUSIC.length;musicPlaying=true;
-  resumeAC(function(ac){if(ac&&musicPlaying)schedMusic();});
+  // Resume AudioContext first, then start scheduling immediately
+  if(ac.state==='suspended'){
+    ac.resume().then(function(){if(musicPlaying)schedMusic();});
+  } else {
+    schedMusic();
+  }
 }
 function schedMusic(){
   if(!musicPlaying)return;
-  var ac=unlockAudio();
-  if(!ac||ac.state!=='running'){
-    musicTimer=setTimeout(function(){if(musicPlaying)schedMusic();},250);
-    return;
-  }
+  var ac=getAC();if(!ac)return;
   // Pass a slightly larger start offset on first call so notes do not get cut
   var ms=MUSIC[curMusicIdx](ac,0.12);
   musicTimer=setTimeout(function(){if(musicPlaying)schedMusic();},ms*1000+60);
@@ -1203,14 +1155,9 @@ function spawnDeath(x,y){for(var i=0;i<8;i++)particles.push({x:x,y:y,vx:(Math.ra
 // PHYSICS
 // ============================================================
 function doJump(){
-  if(!G.running||P.dead||G.dying){resumeAC();return;}
-  if(P.jumpsLeft>0){
-    var jumpSfx=P.jumpsLeft===1?'djump':'jump';
-    P.vy=-cfg.jump;
-    P.jumpsLeft--;
-    if(AC&&AC.state==='running')sfx(jumpSfx);
-    else resumeAC(function(ac){if(ac&&G.running&&!P.dead&&!G.dying)sfx(jumpSfx);});
-  }else resumeAC();
+  resumeAC();
+  if(!G.running||P.dead||G.dying)return;
+  if(P.jumpsLeft>0){P.vy=-cfg.jump;if(P.jumpsLeft===1)sfx('djump');else sfx('jump');P.jumpsLeft--;}
 }
 
 function updatePlayer(){
@@ -1571,15 +1518,20 @@ document.getElementById('btnCMenu').addEventListener('click',function(){var cc=d
 document.getElementById('btnPauseResume').addEventListener('click',togglePause);
 document.getElementById('btnPauseMenu').addEventListener('click',confirmMenu);
 
-// MOBILE AUDIO UNLOCK — aggressive, Safari-compatible
-// Key: call unlockAudio() synchronously inside every gesture type.
-// Do NOT use once:true — Safari may need multiple attempts.
+// iOS AUDIO UNLOCK
 (function(){
-  function _ul(){unlockAudio();}
-  // Listen on the document for ALL gesture event types
-  ['touchstart','touchend','mousedown','mouseup','pointerdown','pointerup','click','keydown'].forEach(function(evt){
-    document.addEventListener(evt,_ul,{capture:true});
-  });
+  function _ul(){
+    document.removeEventListener('touchstart',_ul,true);
+    document.removeEventListener('mousedown',_ul,true);
+    var ac=getAC();
+    if(!ac)return;
+    if(ac.state==='suspended'){ac.resume().then(function(){
+      try{var b=ac.createBuffer(1,1,ac.sampleRate),s=ac.createBufferSource();
+      s.buffer=b;s.connect(ac.destination);s.start(0);}catch(e){}
+    });}
+  }
+  document.addEventListener('touchstart',_ul,{capture:true,once:true,passive:true});
+  document.addEventListener('mousedown',_ul,{capture:true,once:true,passive:true});
 })();
 
 // INIT

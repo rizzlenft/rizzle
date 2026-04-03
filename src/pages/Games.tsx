@@ -84,76 +84,65 @@ const Games = () => {
   }, [handleScoreMessage]);
 
   return (
-    <>
-      {/* Fullscreen game overlay */}
-      {activeGame && isFullscreen && (
-        <div className="fixed inset-0 z-[200] bg-black">
-          <button
-            onClick={toggleFullscreen}
-            className="absolute right-3 top-3 z-10 rounded-md bg-black/60 p-2 text-white/70 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-white"
-            title="Exit fullscreen"
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div className="absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full bg-primary/8 blur-[180px]" />
+        <div className="absolute -right-20 -top-20 h-[400px] w-[400px] rounded-full bg-accent/6 blur-[140px]" />
+      </div>
+
+      <div className="relative z-10">
+        <TopNav activeTab="games" />
+
+        <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 text-center"
           >
-            <Minimize2 className="h-5 w-5" />
-          </button>
-          <iframe
-            src={activeGame.path}
-            title={activeGame.title}
-            className="h-full w-full border-0"
-            allow="autoplay; fullscreen" allowFullScreen
-          />
-        </div>
-      )}
+            <h1 className="flex items-center justify-center gap-3 text-3xl font-bold text-foreground sm:text-4xl">
+              <Gamepad2 className="h-8 w-8 text-primary" />
+              Arcade
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Silly games built for fun. More coming soon.
+            </p>
+          </motion.div>
 
-      <div className="relative min-h-screen bg-background overflow-hidden">
-        <div className="pointer-events-none fixed inset-0 z-0">
-          <div className="absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full bg-primary/8 blur-[180px]" />
-          <div className="absolute -right-20 -top-20 h-[400px] w-[400px] rounded-full bg-accent/6 blur-[140px]" />
-        </div>
-
-        <div className="relative z-10">
-          <TopNav activeTab="games" />
-
-          <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-8 text-center"
-            >
-              <h1 className="flex items-center justify-center gap-3 text-3xl font-bold text-foreground sm:text-4xl">
-                <Gamepad2 className="h-8 w-8 text-primary" />
-                Arcade
-              </h1>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Silly games built for fun. More coming soon.
-              </p>
-            </motion.div>
-
-            <div className="mx-auto max-w-4xl space-y-6">
-              {/* Game viewport */}
-              {activeGame && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="relative overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl aspect-[4/3] sm:aspect-video"
-                >
-                  <div className="absolute right-2 top-2 z-10">
-                    <button
-                      onClick={toggleFullscreen}
-                      className="rounded-md bg-black/60 p-1.5 text-foreground/70 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-foreground"
-                      title="Fullscreen"
-                    >
+          <div className="mx-auto max-w-4xl space-y-6">
+            {/* Game viewport */}
+            {activeGame && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className={`relative overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl ${
+                  isFullscreen
+                    ? "fixed inset-0 z-[100] rounded-none border-0"
+                    : "aspect-video"
+                }`}
+              >
+                <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
+                  <button
+                    onClick={toggleFullscreen}
+                    className="rounded-md bg-black/60 p-1.5 text-foreground/70 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-foreground"
+                    title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+                  >
+                    {isFullscreen ? (
+                      <Minimize2 className="h-4 w-4" />
+                    ) : (
                       <Maximize2 className="h-4 w-4" />
-                    </button>
-                  </div>
+                    )}
+                  </button>
+                </div>
 
-                  <iframe
-                    src={activeGame.path}
-                    title={activeGame.title}
-                    className="h-full w-full border-0"
-                    allow="autoplay; fullscreen" allowFullScreen
-                  />
-                </motion.div>
-              )}
+                <iframe
+                  src={activeGame.path}
+                  title={activeGame.title}
+                  className="h-full w-full border-0"
+                  allow="autoplay"
+                  sandbox="allow-scripts allow-same-origin"
+                />
+              </motion.div>
+            )}
 
             {/* Leaderboard */}
             {activeGame && (
@@ -231,8 +220,7 @@ const Games = () => {
           </motion.form>
         </div>
       )}
-      </div>
-    </>
+    </div>
   );
 };
 

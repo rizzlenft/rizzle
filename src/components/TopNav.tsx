@@ -36,10 +36,10 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
         </Link>
 
         {/* Right — tab toggle */}
-        <div className="inline-flex items-center gap-0 sm:gap-1 rounded-full border border-border/50 bg-card/30 p-0.5 sm:p-1 backdrop-blur-sm">
+        <div className="inline-flex items-center gap-0.5 sm:gap-1 rounded-full border border-border/50 bg-card/30 p-1 backdrop-blur-sm">
           <button
             onClick={() => handleTabClick("projects")}
-            className={`relative flex items-center gap-1 sm:gap-1.5 px-2 sm:px-4 py-1.5 text-[11px] sm:text-sm font-medium transition-colors rounded-full ${
+            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
               activeTab === "projects"
                 ? "text-background"
                 : "text-muted-foreground hover:text-foreground"
@@ -52,12 +52,12 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <Briefcase className="relative z-10 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            <span className="relative z-10 hidden xs:inline">Projects</span>
+            <Briefcase className="relative z-10 h-3.5 w-3.5" />
+            <span className="relative z-10">Projects</span>
           </button>
           <button
             onClick={() => handleTabClick("art")}
-            className={`relative flex items-center gap-1 sm:gap-1.5 px-2 sm:px-4 py-1.5 text-[11px] sm:text-sm font-medium transition-colors rounded-full ${
+            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
               activeTab === "art"
                 ? "text-background"
                 : "text-muted-foreground hover:text-foreground"
@@ -70,12 +70,12 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <Sparkles className="relative z-10 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            <span className="relative z-10 hidden xs:inline">CryptoArt</span>
+            <Sparkles className="relative z-10 h-3.5 w-3.5" />
+            <span className="relative z-10">CryptoArt</span>
           </button>
           <Link
             to="/guests"
-            className={`relative flex items-center gap-1 sm:gap-1.5 px-2 sm:px-4 py-1.5 text-[11px] sm:text-sm font-medium transition-colors rounded-full ${
+            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
               activeTab === "guests"
                 ? "text-background"
                 : "text-muted-foreground hover:text-foreground"
@@ -88,12 +88,12 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <Users className="relative z-10 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            <span className="relative z-10 hidden xs:inline">Network</span>
+            <Users className="relative z-10 h-3.5 w-3.5" />
+            <span className="relative z-10">Network</span>
           </Link>
           <Link
             to="/games"
-            className={`relative flex items-center gap-1 sm:gap-1.5 px-2 sm:px-4 py-1.5 text-[11px] sm:text-sm font-medium transition-colors rounded-full ${
+            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
               activeTab === "games"
                 ? "text-background"
                 : "text-muted-foreground hover:text-foreground"
@@ -106,8 +106,8 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <Gamepad2 className="relative z-10 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            <span className="relative z-10 hidden xs:inline">Games</span>
+            <Gamepad2 className="relative z-10 h-3.5 w-3.5" />
+            <span className="relative z-10">Games</span>
           </Link>
         </div>
       </div>
