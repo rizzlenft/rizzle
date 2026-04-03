@@ -75,7 +75,7 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
           </button>
           <Link
             to="/guests"
-            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
+            className={`relative flex items-center gap-1 sm:gap-1.5 px-2 sm:px-4 py-1.5 text-[11px] sm:text-sm font-medium transition-colors rounded-full ${
               activeTab === "guests"
                 ? "text-background"
                 : "text-muted-foreground hover:text-foreground"
