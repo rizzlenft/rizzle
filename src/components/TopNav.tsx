@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Briefcase, Sparkles, Users } from "lucide-react";
+import { Briefcase, Gamepad2, Sparkles, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 interface TopNavProps {
