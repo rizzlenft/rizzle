@@ -1550,19 +1550,14 @@ document.getElementById('btnCMenu').addEventListener('click',function(){var cc=d
 document.getElementById('btnPauseResume').addEventListener('click',togglePause);
 document.getElementById('btnPauseMenu').addEventListener('click',confirmMenu);
 
-// MOBILE AUDIO UNLOCK
+// MOBILE AUDIO UNLOCK — aggressive, Safari-compatible
+// Key: call unlockAudio() synchronously inside every gesture type.
+// Do NOT use once:true — Safari may need multiple attempts.
 (function(){
-  var unlockTargets=['btnPlay','btnLevels','btnBack','btnRetry','btnGoMenu','btnLcoMenu','btnWinPlay','btnWinLevels','btnCNext','btnCMenu','btnPauseResume','btnPauseMenu','btnPause','btnMenuIG','tapzone'];
-  function _ul(){resumeAC();}
-  ['pointerdown','touchstart','touchend','mousedown','click'].forEach(function(evt){
-    document.addEventListener(evt,_ul,{capture:true,once:true,passive:true});
-  });
-  unlockTargets.forEach(function(id){
-    var el=document.getElementById(id);
-    if(!el)return;
-    ['pointerdown','touchstart','touchend','mousedown'].forEach(function(evt){
-      el.addEventListener(evt,_ul,{passive:true});
-    });
+  function _ul(){unlockAudio();}
+  // Listen on the document for ALL gesture event types
+  ['touchstart','touchend','mousedown','mouseup','pointerdown','pointerup','click','keydown'].forEach(function(evt){
+    document.addEventListener(evt,_ul,{capture:true,passive:true});
   });
 })();
 
