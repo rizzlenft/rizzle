@@ -18,16 +18,32 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
     }
   };
 
+  const tabClass = (tab: string) =>
+    `relative flex items-center justify-center gap-1 sm:gap-1.5 px-2.5 xs:px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
+      activeTab === tab
+        ? "text-background"
+        : "text-muted-foreground hover:text-foreground"
+    }`;
+
+  const activeIndicator = (tab: string) =>
+    activeTab === tab ? (
+      <motion.div
+        layoutId="navTabBg"
+        className="absolute inset-0 bg-primary rounded-full"
+        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+      />
+    ) : null;
+
   return (
     <nav
       aria-label="Main navigation"
       className="sticky top-0 z-50 w-full border-b border-border/30 bg-background/80 backdrop-blur-md"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-2 sm:px-6">
-        {/* Left — tagline pill */}
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-2 py-2 sm:px-6">
+        {/* Left — tagline pill (hidden on very small screens) */}
         <Link
           to="/"
-          className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary hover:bg-primary/15 transition-colors"
+          className="hidden xs:flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary hover:bg-primary/15 transition-colors"
         >
           <span className="text-sm">🏴‍☠️</span>
           <span className="hidden sm:inline">web3 founder since 2019</span>
@@ -35,79 +51,27 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
           <span className="text-sm">🐸</span>
         </Link>
 
-        {/* Right — tab toggle */}
-        <div className="inline-flex items-center gap-0.5 sm:gap-1 rounded-full border border-border/50 bg-card/30 p-1 backdrop-blur-sm">
-          <button
-            onClick={() => handleTabClick("projects")}
-            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
-              activeTab === "projects"
-                ? "text-background"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {activeTab === "projects" && (
-              <motion.div
-                layoutId="navTabBg"
-                className="absolute inset-0 bg-primary rounded-full"
-                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-              />
-            )}
-            <Briefcase className="relative z-10 h-3.5 w-3.5" />
-            <span className="relative z-10">Projects</span>
+        {/* Right — tab toggle (centered on small screens) */}
+        <div className="inline-flex items-center gap-0.5 sm:gap-1 rounded-full border border-border/50 bg-card/30 p-1 backdrop-blur-sm mx-auto xs:mx-0 xs:ml-auto">
+          <button onClick={() => handleTabClick("projects")} className={tabClass("projects")}>
+            {activeIndicator("projects")}
+            <Briefcase className="relative z-10 h-4 w-4" />
+            <span className="relative z-10 hidden xs:inline">Projects</span>
           </button>
-          <button
-            onClick={() => handleTabClick("art")}
-            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
-              activeTab === "art"
-                ? "text-background"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {activeTab === "art" && (
-              <motion.div
-                layoutId="navTabBg"
-                className="absolute inset-0 bg-primary rounded-full"
-                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-              />
-            )}
-            <Sparkles className="relative z-10 h-3.5 w-3.5" />
-            <span className="relative z-10">CryptoArt</span>
+          <button onClick={() => handleTabClick("art")} className={tabClass("art")}>
+            {activeIndicator("art")}
+            <Sparkles className="relative z-10 h-4 w-4" />
+            <span className="relative z-10 hidden xs:inline">CryptoArt</span>
           </button>
-          <Link
-            to="/guests"
-            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
-              activeTab === "guests"
-                ? "text-background"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {activeTab === "guests" && (
-              <motion.div
-                layoutId="navTabBg"
-                className="absolute inset-0 bg-primary rounded-full"
-                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-              />
-            )}
-            <Users className="relative z-10 h-3.5 w-3.5" />
-            <span className="relative z-10">Network</span>
+          <Link to="/guests" className={tabClass("guests")}>
+            {activeIndicator("guests")}
+            <Users className="relative z-10 h-4 w-4" />
+            <span className="relative z-10 hidden xs:inline">Network</span>
           </Link>
-          <Link
-            to="/games"
-            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
-              activeTab === "games"
-                ? "text-background"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {activeTab === "games" && (
-              <motion.div
-                layoutId="navTabBg"
-                className="absolute inset-0 bg-primary rounded-full"
-                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-              />
-            )}
-            <Gamepad2 className="relative z-10 h-3.5 w-3.5" />
-            <span className="relative z-10">Games</span>
+          <Link to="/games" className={tabClass("games")}>
+            {activeIndicator("games")}
+            <Gamepad2 className="relative z-10 h-4 w-4" />
+            <span className="relative z-10 hidden xs:inline">Games</span>
           </Link>
         </div>
       </div>
