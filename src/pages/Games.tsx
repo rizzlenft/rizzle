@@ -134,7 +134,7 @@ const Games = () => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="relative overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl aspect-video"
+                  className="relative overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl aspect-[4/3] sm:aspect-video"
                 >
                   <div className="absolute right-2 top-2 z-10">
                     <button
