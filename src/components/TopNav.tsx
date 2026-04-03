@@ -91,6 +91,24 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
             <Users className="relative z-10 h-3.5 w-3.5" />
             <span className="relative z-10">Network</span>
           </Link>
+          <Link
+            to="/games"
+            className={`relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
+              activeTab === "games"
+                ? "text-background"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {activeTab === "games" && (
+              <motion.div
+                layoutId="navTabBg"
+                className="absolute inset-0 bg-primary rounded-full"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+            <Gamepad2 className="relative z-10 h-3.5 w-3.5" />
+            <span className="relative z-10">Games</span>
+          </Link>
         </div>
       </div>
     </nav>
