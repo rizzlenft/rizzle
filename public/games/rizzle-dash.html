@@ -1518,20 +1518,26 @@ document.getElementById('btnCMenu').addEventListener('click',function(){var cc=d
 document.getElementById('btnPauseResume').addEventListener('click',togglePause);
 document.getElementById('btnPauseMenu').addEventListener('click',confirmMenu);
 
-// iOS AUDIO UNLOCK
+// iOS AUDIO UNLOCK — keep retrying until AudioContext is running
 (function(){
   function _ul(){
-    document.removeEventListener('touchstart',_ul,true);
-    document.removeEventListener('mousedown',_ul,true);
     var ac=getAC();
     if(!ac)return;
-    if(ac.state==='suspended'){ac.resume().then(function(){
-      try{var b=ac.createBuffer(1,1,ac.sampleRate),s=ac.createBufferSource();
-      s.buffer=b;s.connect(ac.destination);s.start(0);}catch(e){}
-    });}
+    if(ac.state==='suspended'){
+      ac.resume().then(function(){
+        try{var b=ac.createBuffer(1,1,ac.sampleRate),s=ac.createBufferSource();
+        s.buffer=b;s.connect(ac.destination);s.start(0);}catch(e){}
+      });
+    }
+    if(ac.state==='running'){
+      document.removeEventListener('touchstart',_ul,true);
+      document.removeEventListener('mousedown',_ul,true);
+      document.removeEventListener('click',_ul,true);
+    }
   }
-  document.addEventListener('touchstart',_ul,{capture:true,once:true,passive:true});
-  document.addEventListener('mousedown',_ul,{capture:true,once:true,passive:true});
+  document.addEventListener('touchstart',_ul,{capture:true,passive:true});
+  document.addEventListener('mousedown',_ul,{capture:true,passive:true});
+  document.addEventListener('click',_ul,{capture:true,passive:true});
 })();
 
 // INIT
