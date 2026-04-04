@@ -207,6 +207,28 @@ const Games = () => {
           </motion.form>
         </div>
       )}
+
+      {/* Fullscreen portal — rendered outside overflow-hidden ancestors */}
+      {isFullscreen && activeGame && createPortal(
+        <div className="fixed inset-0 z-[9999] bg-black">
+          <div className="absolute right-2 top-2 z-10">
+            <button
+              onClick={toggleFullscreen}
+              className="rounded-md bg-black/60 p-1.5 text-white/70 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-white"
+              title="Exit fullscreen"
+            >
+              <Minimize2 className="h-5 w-5" />
+            </button>
+          </div>
+          <iframe
+            src={activeGame.path}
+            title={activeGame.title}
+            className="h-full w-full border-0"
+            allow="autoplay; fullscreen"
+          />
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
