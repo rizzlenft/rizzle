@@ -138,8 +138,7 @@ const Games = () => {
                   src={activeGame.path}
                   title={activeGame.title}
                   className="h-full w-full border-0"
-                  allow="autoplay"
-                  sandbox="allow-scripts allow-same-origin"
+                  allow="autoplay; fullscreen"
                 />
               </motion.div>
             )}
