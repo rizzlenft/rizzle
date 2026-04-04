@@ -237,19 +237,14 @@ function playMusic(lvl){
   stopMusic();
   var ac=getAC();if(!ac)return;
   curMusicIdx=(lvl-1)%MUSIC.length;musicPlaying=true;
-  // Resume AudioContext first, then start scheduling immediately
-  if(ac.state==='suspended'){
-    ac.resume().then(function(){if(musicPlaying)schedMusic();});
-  } else {
-    schedMusic();
-  }
+  resumeAC(function(ac){if(ac&&musicPlaying)schedMusic(true);});
 }
-function schedMusic(){
+function schedMusic(firstCall){
   if(!musicPlaying)return;
   var ac=getAC();if(!ac)return;
-  // Pass a slightly larger start offset on first call so notes do not get cut
-  var ms=MUSIC[curMusicIdx](ac,0.12);
-  musicTimer=setTimeout(function(){if(musicPlaying)schedMusic();},ms*1000+60);
+  if(ac.state!=='running'){resumeAC(function(ac){if(ac&&musicPlaying)schedMusic(firstCall);});return;}
+  var ms=MUSIC[curMusicIdx](ac,firstCall?0.18:0.12);
+  musicTimer=setTimeout(function(){if(musicPlaying)schedMusic(false);},ms*1000+60);
 }
 function stopMusic(){musicPlaying=false;if(musicTimer){clearTimeout(musicTimer);musicTimer=null;}}
 
