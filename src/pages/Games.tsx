@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { Gamepad2, Maximize2, Minimize2 } from "lucide-react";
 import TopNav from "@/components/TopNav";
