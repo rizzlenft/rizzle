@@ -1514,21 +1514,40 @@ document.getElementById('btnCMenu').addEventListener('click',function(){var cc=d
 document.getElementById('btnPauseResume').addEventListener('click',togglePause);
 document.getElementById('btnPauseMenu').addEventListener('click',confirmMenu);
 
-// iOS AUDIO UNLOCK — keep retrying until AudioContext is running
+// iOS AUDIO UNLOCK — silent <audio> element trick to bypass ringer/silent switch
+// Plus AudioContext resume on every user gesture until running
 (function(){
+  var silentAudio=null,unlocked=false;
+  // Tiny MP3 of silence (base64) — forces iOS audio session to "playback" mode
+  var silentSrc='data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqSAAAAAAAAAAAAAAAAAAAA//tQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tQZB8P8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
+  function playSilent(){
+    if(silentAudio)return;
+    try{
+      silentAudio=document.createElement('audio');
+      silentAudio.setAttribute('x-webkit-airplay','deny');
+      silentAudio.preload='auto';
+      silentAudio.loop=false;
+      silentAudio.src=silentSrc;
+      silentAudio.volume=0.01;
+      var p=silentAudio.play();
+      if(p&&typeof p.catch==='function')p.catch(function(){});
+    }catch(e){}
+  }
   function _done(){
     document.removeEventListener('touchstart',_ul,true);
+    document.removeEventListener('touchend',_ul,true);
     document.removeEventListener('mousedown',_ul,true);
     document.removeEventListener('click',_ul,true);
     document.removeEventListener('pointerdown',_ul,true);
+    unlocked=true;
   }
   function _ul(){
+    playSilent();
     resumeAC(function(ac){if(ac&&ac.state==='running')_done();});
   }
-  document.addEventListener('touchstart',_ul,{capture:true,passive:true});
-  document.addEventListener('mousedown',_ul,{capture:true,passive:true});
-  document.addEventListener('click',_ul,{capture:true,passive:true});
-  document.addEventListener('pointerdown',_ul,{capture:true,passive:true});
+  ['touchstart','touchend','mousedown','click','pointerdown'].forEach(function(evt){
+    document.addEventListener(evt,_ul,{capture:true,passive:true});
+  });
 })();
 
 // INIT
