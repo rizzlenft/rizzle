@@ -111,37 +111,24 @@ const Games = () => {
 
           <div className="mx-auto max-w-4xl space-y-6">
             {/* Game viewport */}
-            {activeGame && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className={`relative overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl ${
-                  isFullscreen
-                    ? "fixed inset-0 z-[100] rounded-none border-0"
-                    : "aspect-video"
-                }`}
-              >
+            {activeGame && !isFullscreen && (
+              <div className="relative overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl aspect-video">
                 <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
                   <button
                     onClick={toggleFullscreen}
                     className="rounded-md bg-black/60 p-1.5 text-foreground/70 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-foreground"
-                    title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+                    title="Fullscreen"
                   >
-                    {isFullscreen ? (
-                      <Minimize2 className="h-4 w-4" />
-                    ) : (
-                      <Maximize2 className="h-4 w-4" />
-                    )}
+                    <Maximize2 className="h-4 w-4" />
                   </button>
                 </div>
-
                 <iframe
                   src={activeGame.path}
                   title={activeGame.title}
                   className="h-full w-full border-0"
                   allow="autoplay; fullscreen"
                 />
-              </motion.div>
+              </div>
             )}
 
             {/* Leaderboard */}
