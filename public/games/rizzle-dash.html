@@ -214,10 +214,11 @@ window.addEventListener('resize',function(){resizeCanvas();if(G&&G.running)genLe
 // ============================================================
 // AUDIO
 // ============================================================
-var AC=null;
+var AC=null,audioPrimed=false;
 function getAC(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}return AC;}
-function resumeAC(){var ac=getAC();if(ac&&ac.state==='suspended')ac.resume();}
-function tone(freq,dur,type,vol,delay){var ac=getAC();if(!ac)return;try{var o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=type||'square';o.frequency.value=freq||440;var t=ac.currentTime+(delay||0);g.gain.setValueAtTime(vol||0.1,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.start(t);o.stop(t+dur+0.01);}catch(e){}}
+function primeAC(ac){if(!ac||audioPrimed)return;try{var o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type='sine';o.frequency.value=1;g.gain.value=0.00001;o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+0.01);audioPrimed=true;}catch(e){}}
+function resumeAC(cb){var ac=getAC();if(!ac){if(cb)cb(null);return Promise.resolve(null);}try{if(ac.state==='running'){primeAC(ac);if(cb)cb(ac);return Promise.resolve(ac);}var p=ac.resume();if(p&&typeof p.then==='function'){return p.then(function(){primeAC(ac);if(cb)cb(ac);return ac;}).catch(function(){if(cb)cb(ac);return ac;});}}catch(e){}if(ac.state==='running')primeAC(ac);if(cb)cb(ac);return Promise.resolve(ac);}
+function tone(freq,dur,type,vol,delay){var ac=getAC();if(!ac)return;resumeAC(function(ac){if(!ac)return;try{var o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=type||'square';o.frequency.value=freq||440;var t=Math.max(ac.currentTime+(delay||0),ac.currentTime+0.01);g.gain.setValueAtTime(vol||0.1,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.start(t);o.stop(t+dur+0.01);}catch(e){}});}
 function sfx(name){switch(name){case'jump':tone(260,.04,'square',.15);tone(380,.07,'square',.12,.04);break;case'djump':tone(440,.04,'square',.15);tone(660,.08,'square',.12,.04);break;case'coin':tone(800,.05,'sine',.18);tone(1200,.1,'sine',.13,.05);break;case'die':tone(180,.1,'sawtooth',.2);tone(130,.18,'sawtooth',.16,.1);[300,240,180,140].forEach(function(f,i){tone(f,.1,'sawtooth',.14,i*.08+.1);});break;case'clear':tone(440,.08,'sine',.16);tone(554,.08,'sine',.16,.09);tone(659,.08,'sine',.16,.18);tone(880,.2,'sine',.18,.27);break;case'spring':tone(550,.05,'square',.15);tone(880,.09,'square',.11,.06);break;}}
 var musicPlaying=false,musicTimer=null,curMusicIdx=0;
 var MUSIC=[
