@@ -112,7 +112,7 @@ const Games = () => {
           <div className="mx-auto max-w-4xl space-y-6">
             {/* Game viewport */}
             {activeGame && !isFullscreen && (
-              <div className="relative overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl aspect-video">
+              <div className="relative overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl" style={{ aspectRatio: '16 / 9' }}>
                 <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
                   <button
                     onClick={toggleFullscreen}
