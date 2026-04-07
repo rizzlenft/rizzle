@@ -1334,21 +1334,31 @@ function updateHUD(){
 // ============================================================
 // GAME LOOP
 // ============================================================
-var _lastTs=0,_drawBgFull=true;
+var _lastTs=0,_loopAccum=0,_drawBgFull=true;
+var FIXED_STEP=1000/60,MAX_CATCHUP_STEPS=5;
+function resetLoopClock(){_lastTs=0;_loopAccum=0;}
 function gameLoop(ts){
   if(!G.running)return;
   loopId=requestAnimationFrame(gameLoop);
-  if(G.paused)return;
-  // Physics + logic ALWAYS run every rAF frame - no skipping
-  frame++;
-  updatePlayer();
-  updateObjects();
-  // Drawing runs every frame, but expensive BG layers are throttled internally
-  _drawBgFull=(frame%2===0); // flag read by drawBg to skip meme layer on odd frames
+  if(G.paused){_lastTs=ts||0;_loopAccum=0;return;}
+  if(!_lastTs)_lastTs=ts;
+  var delta=Math.min(100,Math.max(0,ts-_lastTs));
+  _lastTs=ts;
+  _loopAccum+=delta;
+  var steps=0;
+  while(_loopAccum>=FIXED_STEP&&steps<MAX_CATCHUP_STEPS){
+    frame++;
+    updatePlayer();
+    updateObjects();
+    if(frame%3===0)updateHUD();
+    _loopAccum-=FIXED_STEP;
+    steps++;
+    if(!G.running||G.paused)break;
+  }
+  if(steps===MAX_CATCHUP_STEPS&&_loopAccum>FIXED_STEP)_loopAccum=FIXED_STEP;
+  _drawBgFull=(frame%2===0);
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawBg();drawWorld();drawPlayer();drawParticles();
-  if(frame%3===0)updateHUD();
-  _lastTs=ts;
 }
 function togglePause(){
   if(!G.running||G.dying)return;
@@ -1466,17 +1476,26 @@ function buildLS(){
 // ============================================================
 // GAME FLOW
 // ============================================================
+function showGameplayUI(){
+  ['hud','igbtns','pb','tapzone','hint','lvltoast','deathmsg'].forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    if(el.classList)el.classList.remove('hide');
+  });
+  document.getElementById('hud').style.display='';
+  document.getElementById('igbtns').style.display='';
+  document.getElementById('pb').style.display='';
+  document.getElementById('tapzone').style.display='block';
+  document.getElementById('hint').style.display='block';
+  document.getElementById('lvltoast').style.display='none';
+  document.getElementById('deathmsg').style.display='none';
+}
 function startGame(lvl){
   G.paused=false;var _ov=document.getElementById('pauseOverlay');if(_ov)_ov.style.display='none';resumeAC();
   G.level=lvl;if(lvl===1)G.score=0;G.startTime=Date.now();G.running=true;G.dying=false;
+  resetLoopClock();
   if(loopId){cancelAnimationFrame(loopId);loopId=null;}
   ALL_SCREENS.forEach(function(s){var el=document.getElementById(s);if(el)el.classList.add('hide');});
-  document.getElementById('hud').classList.remove('hide');document.getElementById('hud').style.display='';
-  document.getElementById('igbtns').classList.remove('hide');document.getElementById('igbtns').style.display='';
-  document.getElementById('pb').classList.remove('hide');document.getElementById('pb').style.display='';
-  document.getElementById('tapzone').style.display='block';
-  document.getElementById('hint').style.display='block';
-  document.getElementById('deathmsg').style.display='none';
+  showGameplayUI();
   // Show level name toast for 2.5s
   var toast=document.getElementById('lvltoast');
   toast.innerHTML='&#9654; LEVEL '+lvl+': '+LEVELS[lvl-1].name+' '+LEVELS[lvl-1].emoji;
@@ -1487,14 +1506,10 @@ function startGame(lvl){
 }
 function retryLevel(){
   G.paused=false;var _ov=document.getElementById('pauseOverlay');if(_ov)_ov.style.display='none';resumeAC();G.score=0;G.startTime=Date.now();G.running=true;G.dying=false;
+  resetLoopClock();
   if(loopId){cancelAnimationFrame(loopId);loopId=null;}
   ALL_SCREENS.forEach(function(s){var el=document.getElementById(s);if(el)el.classList.add('hide');});
-  document.getElementById('hud').classList.remove('hide');document.getElementById('hud').style.display='';
-  document.getElementById('igbtns').classList.remove('hide');document.getElementById('igbtns').style.display='';
-  document.getElementById('pb').classList.remove('hide');document.getElementById('pb').style.display='';
-  document.getElementById('tapzone').style.display='block';
-  document.getElementById('hint').style.display='block';
-  document.getElementById('deathmsg').style.display='none';
+  showGameplayUI();
   playMusic(G.level);genLevel(G.level);
   loopId=requestAnimationFrame(gameLoop);
 }
