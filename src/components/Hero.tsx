@@ -39,11 +39,11 @@ const Hero = () => {
         className="relative z-10 max-w-4xl text-center"
       >
         {/* Spacer for removed tagline */}
-        <div className="mb-2 sm:-mb-24" />
+        <div className="-mb-8 sm:-mb-24" />
         
         {/* Signature */}
         <motion.div
-          className="-mb-8 sm:-mb-28 pointer-events-none select-none"
+          className="-mb-4 sm:-mb-28 pointer-events-none select-none"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
@@ -78,23 +78,23 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7, duration: 0.6 }}
-          className="mt-6 flex flex-wrap items-center justify-center gap-8"
+          className="mt-6 grid grid-cols-2 gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-8"
         >
           <div className="text-center">
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">10+</div>
             <div className="text-sm text-muted-foreground">Projects</div>
           </div>
-          <div className="h-8 w-px bg-border" />
+          <div className="hidden sm:block h-8 w-px bg-border" />
           <div className="text-center">
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">19K</div>
             <div className="text-sm text-muted-foreground">Followers</div>
           </div>
-          <div className="h-8 w-px bg-border" />
+          <div className="hidden sm:block h-8 w-px bg-border" />
           <div className="text-center">
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">8+</div>
             <div className="text-sm text-muted-foreground">Years in Web3</div>
           </div>
-          <div className="h-8 w-px bg-border" />
+          <div className="hidden sm:block h-8 w-px bg-border" />
           <a
             href="https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00"
             target="_blank"
