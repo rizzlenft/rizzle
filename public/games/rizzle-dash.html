@@ -1511,18 +1511,25 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape')showTitle();
 });
 document.addEventListener('touchmove',function(e){if(G.running)e.preventDefault();},{passive:false});
-document.getElementById('btnPlay').addEventListener('click',function(){startGame(1);});
-document.getElementById('btnLevels').addEventListener('click',showLS);
-document.getElementById('btnBack').addEventListener('click',showTitle);
-document.getElementById('btnRetry').addEventListener('click',retryLevel);
-document.getElementById('btnGoMenu').addEventListener('click',showTitle);
-document.getElementById('btnLcoMenu').addEventListener('click',showTitle);
-document.getElementById('btnWinPlay').addEventListener('click',function(){startGame(1);});
-document.getElementById('btnWinLevels').addEventListener('click',showLS);
-document.getElementById('btnCNext').addEventListener('click',function(){var cc=document.getElementById('castleC');if(cc)cc._stop=true;if(G.level>=10)showWin();else nextLevel();});
-document.getElementById('btnCMenu').addEventListener('click',function(){var cc=document.getElementById('castleC');if(cc)cc._stop=true;showTitle();});
-document.getElementById('btnPauseResume').addEventListener('click',togglePause);
-document.getElementById('btnPauseMenu').addEventListener('click',confirmMenu);
+// Bind both click and touchend to all UI buttons for reliable mobile taps
+function bindBtn(id,fn){
+  var el=document.getElementById(id);if(!el)return;
+  el.addEventListener('click',fn);
+  el.addEventListener('touchend',function(e){e.preventDefault();fn();},{passive:false});
+}
+bindBtn('btnPlay',function(){startGame(1);});
+bindBtn('btnLevels',showLS);
+bindBtn('btnBack',showTitle);
+bindBtn('btnRetry',retryLevel);
+bindBtn('btnGoMenu',showTitle);
+bindBtn('btnLcoMenu',showTitle);
+bindBtn('btnWinPlay',function(){startGame(1);});
+bindBtn('btnWinLevels',showLS);
+bindBtn('btnCNext',function(){var cc=document.getElementById('castleC');if(cc)cc._stop=true;if(G.level>=10)showWin();else nextLevel();});
+bindBtn('btnCMenu',function(){var cc=document.getElementById('castleC');if(cc)cc._stop=true;showTitle();});
+bindBtn('btnPauseResume',togglePause);
+bindBtn('btnPauseMenu',confirmMenu);
+bindBtn('btnNext',nextLevel);
 
 // iOS AUDIO UNLOCK — keep a hidden silent audio loop alive and resume Web Audio on gestures
 (function(){
