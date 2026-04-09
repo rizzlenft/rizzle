@@ -1810,7 +1810,7 @@ function updateHUD(){
 // GAME LOOP
 // ============================================================
 var _lastTs=0,_drawBgFull=true;
-var FIXED_STEP=1000/120,MAX_CATCHUP_STEPS=8,_loopAccum=0;
+var FIXED_STEP=1000/60,MAX_CATCHUP_STEPS=4,_loopAccum=0;
 function resetLoopClock(){_loopAccum=0;_lastTs=0;}
 function gameLoop(ts){
   if(!G.running)return;
