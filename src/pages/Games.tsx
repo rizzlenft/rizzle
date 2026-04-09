@@ -32,7 +32,7 @@ const Games = () => {
   const [activeGame, setActiveGame] = useState<GameEntry | null>(games[0]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showNamePrompt, setShowNamePrompt] = useState(false);
-  const [pendingScore, setPendingScore] = useState<{ level: number; score: number } | null>(null);
+  const [pendingScore, setPendingScore] = useState<{ level: number; score: number; campaignTotal: number } | null>(null);
   const [playerName, setPlayerName] = useState(() => localStorage.getItem("rd_player") || "");
   const [submitting, setSubmitting] = useState(false);
   const leaderboardRef = useRef<{ refresh: () => void } | null>(null);
@@ -42,29 +42,29 @@ const Games = () => {
 
   const handleScoreMessage = useCallback((e: MessageEvent) => {
     if (e.data?.type !== "rizzle-score") return;
-    const { level, score } = e.data;
-    setPendingScore({ level, score });
+    const { level, levelScore, campaignTotal } = e.data;
+    setPendingScore({ level, score: levelScore, campaignTotal });
     const saved = localStorage.getItem("rd_player");
     if (saved) {
-      submitScore(saved, level, score);
+      submitScore(saved, level, levelScore, campaignTotal);
     } else {
       setShowNamePrompt(true);
     }
   }, []);
 
-  const submitScore = async (name: string, level: number, score: number) => {
+  const submitScore = async (name: string, level: number, score: number, campaignTotal: number) => {
     setSubmitting(true);
     const { error } = await supabase.from("game_scores").insert({
       player_name: name,
       game_id: "rizzle-dash",
       level,
-      score,
+      score: campaignTotal,
     });
     setSubmitting(false);
     if (error) {
       toast.error("Failed to save score");
     } else {
-      toast.success(`Score ${score.toLocaleString()} saved!`);
+      toast.success(`Level ${level} clear! Campaign total: ${campaignTotal.toLocaleString()}`);
       setLeaderboardKey((k) => k + 1);
     }
     setShowNamePrompt(false);
@@ -76,7 +76,7 @@ const Games = () => {
     const trimmed = playerName.trim();
     if (!trimmed || !pendingScore) return;
     localStorage.setItem("rd_player", trimmed);
-    submitScore(trimmed, pendingScore.level, pendingScore.score);
+    submitScore(trimmed, pendingScore.level, pendingScore.score, pendingScore.campaignTotal);
   };
 
   useEffect(() => {
