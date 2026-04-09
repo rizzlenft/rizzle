@@ -1664,17 +1664,16 @@ function updateObjects(){
   // Hazard/interaction check
   _hazardObjs.forEach(function(o){
     if(!col(P,o))return;
-    if(o.t==='goal'){completeLevel();return;}
-    if(o.t==='spring'&&!o.active){o.active=true;o.timer=0;P.vy=-(cfg.jump*1.6);P.jumpsLeft=2;sfx('spring');return;}
-    if(o.t==='enemy'&&o.alive){
-      if(P.vy>0&&P.y+P.h<o.y+o.h*.45+8){o.alive=false;P.vy=-8;G.score+=Math.floor(50*scoreMult());sfx('spring');spawnCoins(o.x+o.w/2,o.y,'#F90');updateHUD();return;}
-    }
-    var lethal=o.t==='spike'||(o.t==='laser'&&o.on)||o.t==='bubble'||(o.t==='missile'&&o.active)||(o.t==='enemy'&&o.alive);
     if(o.t==='spike')triggerDeath();
     else if(o.t==='laser'&&o.on)triggerDeath();
     else if(o.t==='bubble')triggerDeath();
     else if(o.t==='missile'&&o.active)triggerDeath();
-    else if(o.t==='enemy'&&o.alive)triggerDeath();
+    else if(o.t==='enemy'&&o.alive){
+      if(P.vy>0&&P.y+P.h<o.y+o.h*.45+8){o.alive=false;P.vy=-8;G.score+=Math.floor(50*scoreMult());sfx('spring');spawnCoins(o.x+o.w/2,o.y,'#F90');updateHUD();}
+      else triggerDeath();
+    }
+    else if(o.t==='spring'&&!o.active){o.active=true;o.timer=0;P.vy=-(cfg.jump*1.6);P.jumpsLeft=2;sfx('spring');}
+    else if(o.t==='goal')completeLevel();
   });
 }
 
