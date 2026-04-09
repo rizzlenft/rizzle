@@ -1578,8 +1578,11 @@ function dGoal(o,sx,sy){var t=frame*.045;ctx.fillStyle='#999';ctx.fillRect(sx+o.
 
 function drawPlayer(){
   if(P.dead)return;
-  var cxd=G.camDraw||Math.round(cam.x),px=Math.round(P.x-cxd),py=Math.round(P.y-cam.y),W=P.w,H=P.h;
-  P.trail.forEach(function(tr,i){var a=(i/P.trail.length)*.28,tw=W*(i/P.trail.length)*.6;ctx.fillStyle='rgba(0,210,170,'+a+')';ctx.fillRect(Math.round(tr.x-cxd+(W-tw)/2),Math.round(tr.y-cam.y+(H-tw)/2),tw,tw);});
+  var cxd=isFinite(G.camDraw)?G.camDraw:Math.round(cam.x);
+  if(!isFinite(cxd))cxd=0;
+  var camExactX=isFinite(cam.x)?Math.max(0,cam.x):cxd;
+  var px=Math.round(P.x-camExactX),py=Math.round(P.y-cam.y),W=P.w,H=P.h;
+  P.trail.forEach(function(tr,i){var a=(i/P.trail.length)*.28,tw=Math.max(1,Math.round(W*(i/P.trail.length)*.6));ctx.fillStyle='rgba(0,210,170,'+a+')';ctx.fillRect(Math.round(tr.x-camExactX+(W-tw)/2),Math.round(tr.y-cam.y+(H-tw)/2),tw,tw);});
   ctx.fillStyle='rgba(0,0,0,.22)';ctx.beginPath();canvasEllipse(ctx,px+W/2,py+H+2,W*.34,3,0,0,Math.PI*2);ctx.fill();
   ctx.save();ctx.translate(px+W/2,py+H/2);ctx.rotate((P.vy/22)*.2);
   ctx.beginPath();ctx.arc(0,0,W/2,0,Math.PI*2);ctx.clip();
