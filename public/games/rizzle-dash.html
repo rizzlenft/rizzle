@@ -1838,14 +1838,6 @@ function gameLoop(ts){
     steps++;
   }
   _drawBgFull=true;
-  // Interpolate camera for sub-step smoothness
-  if(!G.dying&&!P.dead){
-    var alpha=_loopAccum/FIXED_STEP;
-    var rawCam=G.camDraw||Math.round(cam.x);
-    if(G._prevCamDraw==null)G._prevCamDraw=rawCam;
-    G.camDraw=Math.round(G._prevCamDraw+(rawCam-G._prevCamDraw)*alpha);
-    if(steps>0)G._prevCamDraw=rawCam;
-  }
   ctx.clearRect(0,0,canvas.width,canvas.height);
   try{drawBg();}catch(e){
     if(cfg&&ctx&&canvas.width>0&&canvas.height>0){ctx.fillStyle=(cfg.bg&&cfg.bg[0])||'#0a0015';ctx.fillRect(0,0,canvas.width,canvas.height);}
