@@ -1616,13 +1616,15 @@ function doJump(){
   P.jumpBuf=14;
 }
 
+var RUN_SPEED_MULTIPLIER=1.62;
+
 function updatePlayer(){
   if(P.dead||G.dying)return;
   var k=G._k||1;
   P.px=P.x;P.py=P.y;
   if(P.invincible>0){P.invincible-=k;if(P.invincible<0)P.invincible=0;}
   if(P.airSaveCD>0){P.airSaveCD-=k;if(P.airSaveCD<0)P.airSaveCD=0;}
-  P.x+=(cfg.speed/60)*k;
+  P.x+=(cfg.speed/60)*k*RUN_SPEED_MULTIPLIER;
   P.vy=Math.min(P.vy+cfg.gravity*k,22);P.y+=P.vy*k;
   P.trail.push({x:P.x,y:P.y});if(P.trail.length>7)P.trail.shift();
   P.onGround=false;
