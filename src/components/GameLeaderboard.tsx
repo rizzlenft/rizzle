@@ -87,10 +87,14 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
 
   return (
     <div className="rounded-lg border border-border/50 bg-card/30 overflow-hidden">
-      <div className="flex items-center gap-2 border-b border-border/50 bg-card/50 px-4 py-3">
-        <Trophy className="h-4 w-4 text-primary" />
-        <h3 className="text-sm font-semibold text-foreground">Leaderboard</h3>
-        <span className="ml-auto text-[10px] text-muted-foreground uppercase tracking-wider">Campaign Total</span>
+      <div className="border-b border-border/50 bg-card/50 px-4 py-3">
+        <div className="flex items-center gap-2">
+          <Trophy className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-semibold text-foreground">Leaderboard</h3>
+        </div>
+        <p className="mt-1 text-[10px] text-muted-foreground leading-relaxed">
+          Ranked by best campaign total — the sum of your highest score on each level. Complete more levels with higher scores to climb the board!
+        </p>
       </div>
       <div className="divide-y divide-border/30">
         {entries.map((entry, i) => (
