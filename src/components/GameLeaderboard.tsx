@@ -4,7 +4,7 @@ import { Trophy, Medal, Award } from "lucide-react";
 
 interface LeaderboardEntry {
   player_name: string;
-  best_score: number;
+  campaign_total: number;
   highest_level: number;
 }
 
@@ -23,14 +23,12 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
   const [loading, setLoading] = useState(true);
 
   const fetchScores = async () => {
-    // Get all scores for this game, then aggregate client-side
-    // Best campaign total per player (highest score entry)
     const { data } = await supabase
       .from("game_scores")
       .select("player_name, level, score")
       .eq("game_id", gameId)
       .order("score", { ascending: false })
-      .limit(200);
+      .limit(500);
 
     if (!data) {
       setEntries([]);
@@ -38,27 +36,31 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
       return;
     }
 
-    // Group by player - take their best score and highest level reached
-    const playerMap = new Map<string, LeaderboardEntry>();
+    // For each player, find their best score on each level, then sum those
+    const playerLevels = new Map<string, Map<number, number>>();
     for (const row of data) {
-      const existing = playerMap.get(row.player_name);
-      if (!existing) {
-        playerMap.set(row.player_name, {
-          player_name: row.player_name,
-          best_score: row.score,
-          highest_level: row.level,
-        });
-      } else {
-        if (row.score > existing.best_score) existing.best_score = row.score;
-        if (row.level > existing.highest_level) existing.highest_level = row.level;
+      let levels = playerLevels.get(row.player_name);
+      if (!levels) {
+        levels = new Map();
+        playerLevels.set(row.player_name, levels);
       }
+      const current = levels.get(row.level) || 0;
+      if (row.score > current) levels.set(row.level, row.score);
     }
 
-    const sorted = Array.from(playerMap.values())
-      .sort((a, b) => b.best_score - a.best_score)
-      .slice(0, 20);
+    const sorted: LeaderboardEntry[] = [];
+    for (const [player_name, levels] of playerLevels) {
+      let campaign_total = 0;
+      let highest_level = 0;
+      for (const [level, score] of levels) {
+        campaign_total += score;
+        if (level > highest_level) highest_level = level;
+      }
+      sorted.push({ player_name, campaign_total, highest_level });
+    }
 
-    setEntries(sorted);
+    sorted.sort((a, b) => b.campaign_total - a.campaign_total);
+    setEntries(sorted.slice(0, 20));
     setLoading(false);
   };
 
@@ -93,7 +95,7 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
           <h3 className="text-sm font-semibold text-foreground">Leaderboard</h3>
         </div>
         <p className="mt-1 text-[10px] text-muted-foreground leading-relaxed">
-          Ranked by best campaign total — the sum of your highest score on each level. Complete more levels with higher scores to climb the board!
+          Your <strong>Campaign Total</strong> = the sum of your <em>best</em> score on each level. Only your highest score per level counts — replay levels to beat your personal best and climb the board!
         </p>
       </div>
       <div className="divide-y divide-border/30">
@@ -112,7 +114,7 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
             </span>
             <span className="text-xs text-muted-foreground">Lv{entry.highest_level}</span>
             <span className="font-mono text-sm font-semibold text-primary">
-              {entry.best_score.toLocaleString()}
+              {entry.campaign_total.toLocaleString()}
             </span>
           </div>
         ))}
