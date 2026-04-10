@@ -58,7 +58,7 @@ const Games = () => {
       player_name: name,
       game_id: "rizzle-dash",
       level,
-      score: campaignTotal,
+      score: score,
     });
     setSubmitting(false);
     if (error) {
