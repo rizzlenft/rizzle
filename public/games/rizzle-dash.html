@@ -1677,8 +1677,8 @@ function updatePlayer(){
   if(P.y>canvas.height+80)triggerDeath();
 }
 
-function updateObjects(){
-  var GY=Math.floor(canvas.height*.74),k=G._k||1;
+function updateObjectPositions(){
+  var k=G._k||1;
   _updateObjs.forEach(function(o){
     if(o.x!=null)o.px=o.x;if(o.y!=null)o.py=o.y;
     if(o.t==='plat'&&o.mv){var t=frame*o.ms+o.mp;o.x=o.ox+Math.sin(t)*o.mx;o.y=o.oy+Math.sin(t*1.3)*o.my;}
@@ -1688,12 +1688,13 @@ function updateObjects(){
     if(o.t==='bubble'){o.y+=o.vy*k;if(o.y<-40)o.y=canvas.height+16;}
     if(o.t==='missile'){if(!o.active&&cam.x+canvas.width>o.spawnX-240)o.active=true;if(o.active){o.x+=o.vx*k;if(o.x<cam.x-80)o.x=cam.x+canvas.width+80;}}
   });
+}
+
+function updateObjectInteractions(){
   if(P.dead||G.dying)return;
-  // Fast coin check — use motionCol for consistent pickup across frame rates
   _collectObjs.forEach(function(o){
     if(!o.collected&&motionCol(P,o)){o.collected=true;coinCount++;G.score+=Math.floor((o.val||10)*scoreMult());sfx('coin');spawnCoins(o.x+o.w/2,o.y+o.h/2,cfg.coin);updateHUD();}
   });
-  // Hazard/interaction check — use motionCol to prevent tunneling on mobile
   _hazardObjs.forEach(function(o){
     if(!motionCol(P,o))return;
     if(o.t==='spike')triggerDeath();
