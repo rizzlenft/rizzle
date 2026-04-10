@@ -114,7 +114,7 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
             </span>
             <span className="text-xs text-muted-foreground">Lv{entry.highest_level}</span>
             <span className="font-mono text-sm font-semibold text-primary">
-              {entry.campaign_total.toLocaleString()}
+              {(entry.campaign_total ?? 0).toLocaleString()}
             </span>
           </div>
         ))}
