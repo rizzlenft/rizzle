@@ -424,43 +424,43 @@ var LEVELS=[
    bg:['#1a0015','#330035','#550066','#880055','#ff00cc','#220033'],
    bgFn:'tunnel',gc:'#44004a',ga:'#FF00FF',pc:'#330040',pa:'#FF44FF',
    hazard:'#FFF200',hazard2:'#FF8800',hazardHi:'#FFFFFF',
-   coin:'#FF44FF',speed:328,gravity:.58,jump:14.4,safeH:131,
-   spikes:.18,pits:.10,movePlat:true,springs:true,eT:[],eF:0,lasers:false,missiles:true,missileRate:.028,missileVBase:-5.2,bubbles:false,len:9000,coins:28},
+   coin:'#FF44FF',speed:310,gravity:.56,jump:14.4,safeH:135,
+   spikes:.16,pits:.09,movePlat:true,springs:true,eT:[],eF:0,lasers:false,missiles:true,missileRate:.024,missileVBase:-4.8,bubbles:false,len:8500,coins:28},
   // 6: HAUNTED CASTLE — dark violet, bats, ghostly mist
   {name:"HAUNTED CASTLE",emoji:'&#127956;',
    bg:['#0a000a','#1a0020','#2a0040','#550080','#aa00ff','#100015'],
    bgFn:'castle',gc:'#300050',ga:'#CC00FF',pc:'#220040',pa:'#AA00EE',
    hazard:'#CCFF00',hazard2:'#00FFAA',hazardHi:'#EEFFCC',
-   coin:'#CC55FF',speed:270,gravity:.61,jump:14.2,safeH:129,
-   spikes:.18,pits:.11,movePlat:true,springs:false,eT:['fly','drop'],eF:.12,lasers:true,missiles:false,bubbles:false,len:9500,coins:30},
+   coin:'#CC55FF',speed:265,gravity:.58,jump:14.2,safeH:133,
+   spikes:.17,pits:.10,movePlat:true,springs:false,eT:['fly','drop'],eF:.11,lasers:true,missiles:false,bubbles:false,len:9000,coins:30},
   // 7: ICE TUNDRA — glacial blues, snow, aurora borealis
   {name:"ICE TUNDRA",emoji:'&#10052;',
    bg:['#000e20','#003366','#0055aa','#0088cc','#00eeff','#001133'],
    bgFn:'ice',gc:'#3a88bb',ga:'#BBDDFF',pc:'#2266aa',pa:'#99CCFF',
    hazard:'#FF5500',hazard2:'#FF0033',hazardHi:'#FFDDAA',
-   coin:'#EEFFFF',speed:290,gravity:.47,jump:14.6,safeH:177,
-   spikes:.20,pits:.13,movePlat:true,springs:true,eT:['walk'],eF:.11,lasers:false,missiles:true,bubbles:false,len:10000,coins:30},
+   coin:'#EEFFFF',speed:280,gravity:.47,jump:14.6,safeH:172,
+   spikes:.18,pits:.11,movePlat:true,springs:true,eT:['walk'],eF:.10,lasers:false,missiles:true,bubbles:false,len:9500,coins:30},
   // 8: ROBOT FACTORY — amber/industrial rust, gears, smoke
   {name:"ROBOT FACTORY",emoji:'&#129302;',
    bg:['#0f0900','#251800','#3a2200','#553300','#ff6600','#120a00'],
    bgFn:'factory',gc:'#332a10',ga:'#FF8800',pc:'#221c08',pa:'#FFAA00',
    hazard:'#00EEFF',hazard2:'#0088FF',hazardHi:'#CCFFFF',
-   coin:'#FF7700',speed:310,gravity:.63,jump:14.6,safeH:131,
-   spikes:.22,pits:.14,movePlat:true,springs:true,eT:['walk','fly'],eF:.13,lasers:true,missiles:true,bubbles:false,len:11000,coins:32},
+   coin:'#FF7700',speed:295,gravity:.60,jump:14.8,safeH:138,
+   spikes:.19,pits:.12,movePlat:true,springs:true,eT:['walk','fly'],eF:.12,lasers:true,missiles:true,bubbles:false,len:10500,coins:32},
   // 9: STORM CLOUDS — electric yellow, dark thunderheads
   {name:"STORM CLOUDS",emoji:'&#9928;',
    bg:['#030318','#0a0a40','#111155','#ffff0022','#5500aa','#050520'],
    bgFn:'storm',gc:'#121248',ga:'#FFFF00',pc:'#0c0c38',pa:'#EEEE00',
    hazard:'#FF00CC',hazard2:'#FF6600',hazardHi:'#FFFFAA',
-   coin:'#FFFF55',speed:345,gravity:.65,jump:15.0,safeH:135,
-   spikes:.25,pits:.16,movePlat:true,springs:true,eT:['fly','drop'],eF:.14,lasers:true,missiles:true,bubbles:false,len:12000,coins:36},
+   coin:'#FFFF55',speed:320,gravity:.62,jump:15.0,safeH:140,
+   spikes:.21,pits:.13,movePlat:true,springs:true,eT:['fly','drop'],eF:.13,lasers:true,missiles:true,bubbles:false,len:11500,coins:36},
   // 10: CRYPTO HEAVEN — golden paradise, rainbows, celestial
   {name:"CRYPTO HEAVEN",emoji:'&#127775;',
    bg:['#221000','#441500','#662200','#883300','#ffaa00','#ffd700'],
    bgFn:'heaven',gc:'#C8A000',ga:'#FFE500',pc:'#886600',pa:'#FFD000',
    hazard:'#2244FF',hazard2:'#6611FF',hazardHi:'#AAC8FF',
-   coin:'#FFD700',speed:385,gravity:.68,jump:15.5,safeH:137,
-   spikes:.30,pits:.18,movePlat:true,springs:true,eT:['walk','fly','drop'],eF:.16,lasers:true,missiles:true,bubbles:false,len:13000,coins:45}
+   coin:'#FFD700',speed:350,gravity:.64,jump:15.5,safeH:145,
+   spikes:.23,pits:.14,movePlat:true,springs:true,eT:['walk','fly','drop'],eF:.15,lasers:true,missiles:true,bubbles:false,len:12500,coins:45}
 ];
 
 // ============================================================
@@ -666,19 +666,23 @@ function scoreMult(){return 1+(G.level-1)*0.14;}
 // ============================================================
 // WORLD GEN
 // ============================================================
+var _spikeCD=0; // spike cooldown to prevent impossible consecutive spike walls
 function genLevel(lvl,keepScoreAnchor){
   resizeCanvas();
-  world=[];particles=[];coinCount=0;lvlDone=false;frame=0;
+  world=[];particles=[];coinCount=0;lvlDone=false;frame=0;_spikeCD=0;
   _skyGrad=null; // invalidate sky cache on new level
   cfg=LEVELS[lvl-1];
   var H=canvas.height,GY=Math.floor(H*.74);
+  // Scale pit gap cooldown with speed so faster levels give enough reaction time
+  var speedFactor=Math.max(1,cfg.speed/210);
+  var pitGapBase=Math.floor(230*speedFactor),pitGapRand=Math.floor(150*speedFactor);
   var x=0,gapCD=220;
   while(x<cfg.len){
     var doPit=(gapCD<=0)&&x>500&&x<cfg.len-600&&Math.random()<cfg.pits;
     if(doPit){
       var pitW=55+Math.random()*60;
       world.push({t:'pitvis',x:x,w:pitW,yTop:GY});
-      x+=pitW;gapCD=230+Math.random()*150;
+      x+=pitW;gapCD=pitGapBase+Math.random()*pitGapRand;
     }
     else{var sw=40*(2+Math.floor(Math.random()*5));world.push({t:'gnd',x:x,y:GY,w:sw,h:60,c:cfg.gc,a:cfg.ga});placeContent(x,GY,sw);x+=sw;gapCD=Math.max(0,gapCD-sw);}
   }
@@ -712,7 +716,9 @@ function indexTerrainChunks(){
 }
 
 function placeContent(x,GY,sw){
-  if(x>550&&Math.random()<cfg.spikes){var n=1+Math.floor(Math.random()*3),sx=x+18+Math.random()*(sw-n*20-22);for(var i=0;i<n;i++)world.push({t:'spike',x:sx+i*20,y:GY-18,w:18,h:18});}
+  // Spike cooldown: after placing spikes, skip at least one ground segment to ensure a jumpable gap
+  if(_spikeCD>0){_spikeCD-=sw;}
+  if(x>550&&_spikeCD<=0&&Math.random()<cfg.spikes){var n=1+Math.floor(Math.random()*3),sx=x+18+Math.random()*(sw-n*20-22);for(var i=0;i<n;i++)world.push({t:'spike',x:sx+i*20,y:GY-18,w:18,h:18});_spikeCD=120+Math.random()*80;}
   if(cfg.lasers&&x>700&&Math.random()<.08)world.push({t:'laser',x:x+sw/2,y:GY-85,w:7,h:85,timer:0,period:90+Math.floor(Math.random()*65),on:true});
   if(cfg.bubbles&&x>350&&Math.random()<.07)world.push({t:'bubble',x:x+20+Math.random()*(sw-40),y:GY+20,w:18,h:18,vy:-.65-.25*Math.random()});
   if(cfg.springs&&x>350&&Math.random()<.07)world.push({t:'spring',x:x+18+Math.random()*(sw-36),y:GY-17,w:17,h:17,timer:0,active:false});
