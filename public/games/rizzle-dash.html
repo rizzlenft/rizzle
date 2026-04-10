@@ -1862,8 +1862,9 @@ function gameLoop(ts){
   while(_loopAccum>=FIXED_STEP&&steps<MAX_CATCHUP_STEPS){
     G._k=1;
     frame++;
-     updateObjects();
+     updateObjectPositions();
      updatePlayer();
+     updateObjectInteractions();
     _loopAccum-=FIXED_STEP;
     steps++;
   }
