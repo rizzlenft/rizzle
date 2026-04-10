@@ -1650,10 +1650,17 @@ function updatePlayer(){
   P.trail.push({x:P.x,y:P.y,px:P.px,py:P.py});if(P.trail.length>7)P.trail.shift();
   P.onGround=false;
   _solidObjs.forEach(function(o){
+    // broad-phase: skip if not overlapping (including motion sweep)
     if(!motionCol(P,o))return;
+    // narrow-phase: current AABB overlap check
+    if(!(P.x<o.x+o.w&&P.x+P.w>o.x&&P.y<o.y+o.h&&P.y+P.h>o.y))return;
     var ov=Math.min(P.y+P.h,o.y+o.h)-Math.max(P.y,o.y);
     var oh=Math.min(P.x+P.w,o.x+o.w)-Math.max(P.x,o.x);
-    if(ov<oh){if(P.vy>=0&&P.y+P.h-P.vy<=o.y+10){P.y=o.y-P.h;P.vy=0;P.onGround=true;P.jumpsLeft=2;P.coyote=10;}else if(P.vy<0){P.y=o.y+o.h;P.vy=0;}}
+    if(ov<oh){
+      // Use saved previous Y (P.py) for reliable landing detection
+      if(P.vy>=0&&P.py+P.h<=o.y+6){P.y=o.y-P.h;P.vy=0;P.onGround=true;P.jumpsLeft=2;P.coyote=10;}
+      else if(P.vy<0&&P.py>=o.y+o.h-6){P.y=o.y+o.h;P.vy=0;}
+    }
   });
   if(P.onGround){P.coyote=10;}else if(P.coyote>0){P.coyote-=k;if(P.coyote<0)P.coyote=0;}
   if(P.jumpBuf>0){
@@ -1670,8 +1677,8 @@ function updatePlayer(){
   if(P.y>canvas.height+80)triggerDeath();
 }
 
-function updateObjects(){
-  var GY=Math.floor(canvas.height*.74),k=G._k||1;
+function updateObjectPositions(){
+  var k=G._k||1;
   _updateObjs.forEach(function(o){
     if(o.x!=null)o.px=o.x;if(o.y!=null)o.py=o.y;
     if(o.t==='plat'&&o.mv){var t=frame*o.ms+o.mp;o.x=o.ox+Math.sin(t)*o.mx;o.y=o.oy+Math.sin(t*1.3)*o.my;}
@@ -1681,12 +1688,13 @@ function updateObjects(){
     if(o.t==='bubble'){o.y+=o.vy*k;if(o.y<-40)o.y=canvas.height+16;}
     if(o.t==='missile'){if(!o.active&&cam.x+canvas.width>o.spawnX-240)o.active=true;if(o.active){o.x+=o.vx*k;if(o.x<cam.x-80)o.x=cam.x+canvas.width+80;}}
   });
+}
+
+function updateObjectInteractions(){
   if(P.dead||G.dying)return;
-  // Fast coin check — use motionCol for consistent pickup across frame rates
   _collectObjs.forEach(function(o){
     if(!o.collected&&motionCol(P,o)){o.collected=true;coinCount++;G.score+=Math.floor((o.val||10)*scoreMult());sfx('coin');spawnCoins(o.x+o.w/2,o.y+o.h/2,cfg.coin);updateHUD();}
   });
-  // Hazard/interaction check — use motionCol to prevent tunneling on mobile
   _hazardObjs.forEach(function(o){
     if(!motionCol(P,o))return;
     if(o.t==='spike')triggerDeath();
@@ -1854,8 +1862,9 @@ function gameLoop(ts){
   while(_loopAccum>=FIXED_STEP&&steps<MAX_CATCHUP_STEPS){
     G._k=1;
     frame++;
-    updatePlayer();
-    updateObjects();
+     updateObjectPositions();
+     updatePlayer();
+     updateObjectInteractions();
     _loopAccum-=FIXED_STEP;
     steps++;
   }
