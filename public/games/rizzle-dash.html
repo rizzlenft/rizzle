@@ -1676,13 +1676,13 @@ function updateObjects(){
     if(o.t==='missile'){if(!o.active&&cam.x+canvas.width>o.spawnX-240)o.active=true;if(o.active){o.x+=o.vx*k;if(o.x<cam.x-80)o.x=cam.x+canvas.width+80;}}
   });
   if(P.dead||G.dying)return;
-  // Fast coin check (most common)
+  // Fast coin check — use motionCol for consistent pickup across frame rates
   _collectObjs.forEach(function(o){
-    if(!o.collected&&col(P,o)){o.collected=true;coinCount++;G.score+=Math.floor((o.val||10)*scoreMult());sfx('coin');spawnCoins(o.x+o.w/2,o.y+o.h/2,cfg.coin);updateHUD();}
+    if(!o.collected&&motionCol(P,o)){o.collected=true;coinCount++;G.score+=Math.floor((o.val||10)*scoreMult());sfx('coin');spawnCoins(o.x+o.w/2,o.y+o.h/2,cfg.coin);updateHUD();}
   });
-  // Hazard/interaction check
+  // Hazard/interaction check — use motionCol to prevent tunneling on mobile
   _hazardObjs.forEach(function(o){
-    if(!col(P,o))return;
+    if(!motionCol(P,o))return;
     if(o.t==='spike')triggerDeath();
     else if(o.t==='laser'&&o.on)triggerDeath();
     else if(o.t==='bubble')triggerDeath();
