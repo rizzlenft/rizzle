@@ -666,19 +666,23 @@ function scoreMult(){return 1+(G.level-1)*0.14;}
 // ============================================================
 // WORLD GEN
 // ============================================================
+var _spikeCD=0; // spike cooldown to prevent impossible consecutive spike walls
 function genLevel(lvl,keepScoreAnchor){
   resizeCanvas();
-  world=[];particles=[];coinCount=0;lvlDone=false;frame=0;
+  world=[];particles=[];coinCount=0;lvlDone=false;frame=0;_spikeCD=0;
   _skyGrad=null; // invalidate sky cache on new level
   cfg=LEVELS[lvl-1];
   var H=canvas.height,GY=Math.floor(H*.74);
+  // Scale pit gap cooldown with speed so faster levels give enough reaction time
+  var speedFactor=Math.max(1,cfg.speed/210);
+  var pitGapBase=Math.floor(230*speedFactor),pitGapRand=Math.floor(150*speedFactor);
   var x=0,gapCD=220;
   while(x<cfg.len){
     var doPit=(gapCD<=0)&&x>500&&x<cfg.len-600&&Math.random()<cfg.pits;
     if(doPit){
       var pitW=55+Math.random()*60;
       world.push({t:'pitvis',x:x,w:pitW,yTop:GY});
-      x+=pitW;gapCD=230+Math.random()*150;
+      x+=pitW;gapCD=pitGapBase+Math.random()*pitGapRand;
     }
     else{var sw=40*(2+Math.floor(Math.random()*5));world.push({t:'gnd',x:x,y:GY,w:sw,h:60,c:cfg.gc,a:cfg.ga});placeContent(x,GY,sw);x+=sw;gapCD=Math.max(0,gapCD-sw);}
   }
