@@ -1650,10 +1650,17 @@ function updatePlayer(){
   P.trail.push({x:P.x,y:P.y,px:P.px,py:P.py});if(P.trail.length>7)P.trail.shift();
   P.onGround=false;
   _solidObjs.forEach(function(o){
+    // broad-phase: skip if not overlapping (including motion sweep)
     if(!motionCol(P,o))return;
+    // narrow-phase: current AABB overlap check
+    if(!(P.x<o.x+o.w&&P.x+P.w>o.x&&P.y<o.y+o.h&&P.y+P.h>o.y))return;
     var ov=Math.min(P.y+P.h,o.y+o.h)-Math.max(P.y,o.y);
     var oh=Math.min(P.x+P.w,o.x+o.w)-Math.max(P.x,o.x);
-    if(ov<oh){if(P.vy>=0&&P.y+P.h-P.vy<=o.y+10){P.y=o.y-P.h;P.vy=0;P.onGround=true;P.jumpsLeft=2;P.coyote=10;}else if(P.vy<0){P.y=o.y+o.h;P.vy=0;}}
+    if(ov<oh){
+      // Use saved previous Y (P.py) for reliable landing detection
+      if(P.vy>=0&&P.py+P.h<=o.y+6){P.y=o.y-P.h;P.vy=0;P.onGround=true;P.jumpsLeft=2;P.coyote=10;}
+      else if(P.vy<0&&P.py>=o.y+o.h-6){P.y=o.y+o.h;P.vy=0;}
+    }
   });
   if(P.onGround){P.coyote=10;}else if(P.coyote>0){P.coyote-=k;if(P.coyote<0)P.coyote=0;}
   if(P.jumpBuf>0){
