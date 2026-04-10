@@ -2005,9 +2005,9 @@ function startGame(lvl,chain){
   document.getElementById('hud').classList.remove('hide');document.getElementById('hud').style.display='';
   document.getElementById('igbtns').classList.remove('hide');document.getElementById('igbtns').style.display='';
   document.getElementById('pb').classList.remove('hide');document.getElementById('pb').style.display='';
-  document.getElementById('tapzone').style.display='block';
-  document.getElementById('hint').style.display='block';
-  document.getElementById('deathmsg').style.display='none';
+  document.getElementById('tapzone').classList.remove('hide');document.getElementById('tapzone').style.display='block';
+  document.getElementById('hint').classList.remove('hide');document.getElementById('hint').style.display='block';
+  document.getElementById('deathmsg').classList.remove('hide');document.getElementById('deathmsg').style.display='none';
   // Show level name toast for 2.5s
   var toast=document.getElementById('lvltoast');
   toast.innerHTML='&#9654; LEVEL '+lvl+': '+LEVELS[lvl-1].name+' '+LEVELS[lvl-1].emoji;
@@ -2023,9 +2023,9 @@ function retryLevel(){
   document.getElementById('hud').classList.remove('hide');document.getElementById('hud').style.display='';
   document.getElementById('igbtns').classList.remove('hide');document.getElementById('igbtns').style.display='';
   document.getElementById('pb').classList.remove('hide');document.getElementById('pb').style.display='';
-  document.getElementById('tapzone').style.display='block';
-  document.getElementById('hint').style.display='block';
-  document.getElementById('deathmsg').style.display='none';
+  document.getElementById('tapzone').classList.remove('hide');document.getElementById('tapzone').style.display='block';
+  document.getElementById('hint').classList.remove('hide');document.getElementById('hint').style.display='block';
+  document.getElementById('deathmsg').classList.remove('hide');document.getElementById('deathmsg').style.display='none';
   resetLoopClock();genLevel(G.level);playMusic(G.level);
   loopId=requestAnimationFrame(gameLoop);
 }

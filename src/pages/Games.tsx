@@ -167,9 +167,9 @@ const Games = () => {
         <Footer />
       </div>
 
-      {/* Name prompt modal */}
+      {/* Name prompt modal — z-index above fullscreen portal */}
       {showNamePrompt && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <motion.form
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
