@@ -716,7 +716,9 @@ function indexTerrainChunks(){
 }
 
 function placeContent(x,GY,sw){
-  if(x>550&&Math.random()<cfg.spikes){var n=1+Math.floor(Math.random()*3),sx=x+18+Math.random()*(sw-n*20-22);for(var i=0;i<n;i++)world.push({t:'spike',x:sx+i*20,y:GY-18,w:18,h:18});}
+  // Spike cooldown: after placing spikes, skip at least one ground segment to ensure a jumpable gap
+  if(_spikeCD>0){_spikeCD-=sw;}
+  if(x>550&&_spikeCD<=0&&Math.random()<cfg.spikes){var n=1+Math.floor(Math.random()*3),sx=x+18+Math.random()*(sw-n*20-22);for(var i=0;i<n;i++)world.push({t:'spike',x:sx+i*20,y:GY-18,w:18,h:18});_spikeCD=120+Math.random()*80;}
   if(cfg.lasers&&x>700&&Math.random()<.08)world.push({t:'laser',x:x+sw/2,y:GY-85,w:7,h:85,timer:0,period:90+Math.floor(Math.random()*65),on:true});
   if(cfg.bubbles&&x>350&&Math.random()<.07)world.push({t:'bubble',x:x+20+Math.random()*(sw-40),y:GY+20,w:18,h:18,vy:-.65-.25*Math.random()});
   if(cfg.springs&&x>350&&Math.random()<.07)world.push({t:'spring',x:x+18+Math.random()*(sw-36),y:GY-17,w:17,h:17,timer:0,active:false});
