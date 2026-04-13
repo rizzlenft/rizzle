@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="x-ogp-key" content="d5fe5c12-ca4a-4f54-bebf-ecac8a3dbd7e" id="ogp-key-meta" />
+<script src="https://sdk.play.fun"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>RIZZLE DASH</title>
 <style>
@@ -88,6 +89,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Co
 </style>
 </head>
 <body>
+<script>
+const sdk = new OpenGameSDK({ ui: { usePointsWidget: true } });
+sdk.init({ gameId: 'd987eb05-65bf-42e7-b40c-fc6d12568060' }).then(() => {
+  console.log('play.fun SDK ready');
+});
+</script>
 <div id="rotprompt" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:18px;text-align:center;padding:20px"><div style="font-size:64px;animation:rotanim 1.5s ease-in-out infinite alternate">&#8635;</div><div style="font-weight:900;font-size:24px;margin:12px 0 8px">ROTATE YOUR PHONE</div><div style="color:#aaa;font-size:15px">Rizzle Dash plays best<br>in landscape mode &#127918;</div></div>
 <div id="gc">
 <canvas id="c" width="800" height="600"></canvas>
