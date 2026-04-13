@@ -446,7 +446,7 @@ var LEVELS=[
    bgFn:'factory',gc:'#332a10',ga:'#FF8800',pc:'#221c08',pa:'#FFAA00',
    hazard:'#00EEFF',hazard2:'#0088FF',hazardHi:'#CCFFFF',
    coin:'#FF7700',speed:295,gravity:.60,jump:14.8,safeH:138,
-   spikes:.19,pits:.12,movePlat:true,springs:true,eT:['walk','fly'],eF:.12,lasers:true,missiles:true,bubbles:false,len:10500,coins:32},
+   spikes:.19,pits:.12,movePlat:true,springs:true,eT:['walk','fly'],eF:.12,lasers:true,missiles:true,missileRate:.035,missileVBase:-5.5,bubbles:false,len:10500,coins:32},
   // 9: STORM CLOUDS — electric yellow, dark thunderheads
   {name:"STORM CLOUDS",emoji:'&#9928;',
    bg:['#030318','#0a0a40','#111155','#ffff0022','#5500aa','#050520'],
@@ -1686,7 +1686,7 @@ function updateObjectPositions(){
     if(o.t==='laser'){o.timer+=k;if(o.timer>=o.period){o.timer=0;o.on=!o.on;}}
     if(o.t==='spring'&&o.active){o.timer+=k;if(o.timer>12){o.active=false;o.timer=0;}}
     if(o.t==='bubble'){o.y+=o.vy*k;if(o.y<-40)o.y=canvas.height+16;}
-    if(o.t==='missile'){if(!o.active&&cam.x+canvas.width>o.spawnX-240)o.active=true;if(o.active){o.x+=o.vx*k;if(o.x<cam.x-80)o.x=cam.x+canvas.width+80;}}
+    if(o.t==='missile'){if(!o.active&&cam.x+canvas.width>o.spawnX-240){o.active=true;o.x=cam.x+canvas.width+60;}if(o.active){o.x+=o.vx*k;if(o.x<cam.x-80)o.x=cam.x+canvas.width+80;}}
   });
 }
 
