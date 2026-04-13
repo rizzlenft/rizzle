@@ -1713,12 +1713,22 @@ function updateObjectInteractions(){
 }
 
 function col(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;}
+// Tight hitbox collision: insets both player and object boxes before AABB test
+// Player inset: 4px horizontal, 3px vertical (slightly smaller than visual sprite)
+// Hazard insets per type keep hitboxes forgiving but honest
+var _hitInsets={spike:{x:3,y:4},laser:{x:1,y:2},bubble:{x:3,y:3},missile:{x:3,y:2},enemy:{x:3,y:3},spring:{x:0,y:0},goal:{x:0,y:0},coin:{x:0,y:0}};
 function motionCol(a,b){
+  var pi=4,piy=3; // player inset x, y
+  var hi=_hitInsets[b.t]||{x:0,y:0};
+  // Current-frame tight AABB (no sweep expansion — prevents ghost hits from motion blur)
+  var ax1=a.x+pi, ay1=a.y+piy, ax2=a.x+a.w-pi, ay2=a.y+a.h-piy;
+  var bx1=b.x+hi.x, by1=b.y+hi.y, bx2=b.x+b.w-hi.x, by2=b.y+b.h-hi.y;
+  if(ax1<bx2&&ax2>bx1&&ay1<by2&&ay2>by1)return true;
+  // Also check previous frame position to prevent tunneling at high speed
   var apx=a.px!=null?a.px:a.x, apy=a.py!=null?a.py:a.y;
-  var bpx=b.px!=null?b.px:b.x, bpy=b.py!=null?b.py:b.y;
-  var ax1=Math.min(apx,a.x), ay1=Math.min(apy,a.y), ax2=Math.max(apx+a.w,a.x+a.w), ay2=Math.max(apy+a.h,a.y+a.h);
-  var bx1=Math.min(bpx,b.x), by1=Math.min(bpy,b.y), bx2=Math.max(bpx+b.w,b.x+b.w), by2=Math.max(bpy+b.h,b.y+b.h);
-  return ax1<bx2&&ax2>bx1&&ay1<by2&&ay2>by1;
+  var sx1=Math.min(apx+pi,a.x+pi), sy1=Math.min(apy+piy,a.y+piy);
+  var sx2=Math.max(apx+a.w-pi,a.x+a.w-pi), sy2=Math.max(apy+a.h-piy,a.y+a.h-piy);
+  return sx1<bx2&&sx2>bx1&&sy1<by2&&sy2>by1;
 }
 
 function triggerDeath(){
