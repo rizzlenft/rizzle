@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Anyone can submit scores" ON public.game_scores;
