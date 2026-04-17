@@ -1,0 +1,1 @@
+CREATE POLICY "Anyone can submit scores" ON public.game_scores FOR INSERT TO anon, authenticated WITH CHECK (true);
