@@ -67,6 +67,7 @@ import metalympicsImg from "@/assets/metalympics-new.jpeg";
 import rizzlefestImg from "@/assets/rizzlefest.gif";
 import babacciImg from "@/assets/babacci-new.jpeg";
 import nft42Img from "@/assets/nft42.png";
+import rizzleMiniappsImg from "@/assets/rizzle-miniapps.jpg";
 
 const projects = [
   {
@@ -79,6 +80,15 @@ const projects = [
     featured: true,
     image: wipMeetupImg,
     showLivePreview: true,
+  },
+  {
+    name: "Rizzle Miniapps",
+    description: "A growing suite of Farcaster miniapps: The WIP Meetup miniapp, Meme Studio, and the WIPcoin Portal. Built natively for the Farcaster ecosystem.",
+    emoji: "📱",
+    link: "https://farcaster.xyz/miniapps/yDcoJ9X6iJ2G/the-wip-meetup-miniapp",
+    secondaryLink: "https://farcaster.xyz/miniapps/L6eTiFxvy99r/meme-studio",
+    secondaryLinkLabel: "🎨 Meme Studio",
+    image: rizzleMiniappsImg,
   },
   {
     name: "Babacci",
