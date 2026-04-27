@@ -2,6 +2,12 @@ import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import WipLivePreview from "./WipLivePreview";
 
+interface MiniLink {
+  label: string;
+  href: string;
+  emoji?: string;
+}
+
 interface ProjectCardProps {
   name: string;
   description: string;
@@ -12,9 +18,10 @@ interface ProjectCardProps {
   featured?: boolean;
   image?: string;
   showLivePreview?: boolean;
+  miniappLinks?: MiniLink[];
 }
 
-const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryLinkLabel, featured, image, showLivePreview }: ProjectCardProps) => {
+const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryLinkLabel, featured, image, showLivePreview, miniappLinks }: ProjectCardProps) => {
   const content = (
     <motion.div
       whileHover={{ scale: 1.02, y: -4 }}
@@ -72,6 +79,25 @@ const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryL
         <p className="text-sm leading-relaxed text-muted-foreground">
           {description}
         </p>
+
+        {miniappLinks && miniappLinks.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {miniappLinks.map((m) => (
+              <a
+                key={m.href}
+                href={m.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-medium text-foreground/90 backdrop-blur-sm transition-all hover:border-primary/60 hover:bg-primary/10 hover:text-primary"
+              >
+                {m.emoji && <span>{m.emoji}</span>}
+                <span>{m.label}</span>
+                <ExternalLink className="h-3 w-3 opacity-70" />
+              </a>
+            ))}
+          </div>
+        )}
 
       </div>
     </motion.div>
