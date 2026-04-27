@@ -83,12 +83,14 @@ const projects = [
   },
   {
     name: "Rizzle Miniapps",
-    description: "A growing suite of Farcaster miniapps: The WIP Meetup miniapp, Meme Studio, and the WIPcoin Portal. Built natively for the Farcaster ecosystem.",
+    description: "A growing suite of Farcaster miniapps built natively for the Farcaster ecosystem.",
     emoji: "📱",
-    link: "https://farcaster.xyz/miniapps/yDcoJ9X6iJ2G/the-wip-meetup-miniapp",
-    secondaryLink: "https://farcaster.xyz/miniapps/L6eTiFxvy99r/meme-studio",
-    secondaryLinkLabel: "🎨 Meme Studio",
     image: rizzleMiniappsImg,
+    miniappLinks: [
+      { label: "WIP Meetup", emoji: "🎙️", href: "https://farcaster.xyz/miniapps/yDcoJ9X6iJ2G/the-wip-meetup-miniapp" },
+      { label: "Meme Studio", emoji: "🎨", href: "https://farcaster.xyz/miniapps/L6eTiFxvy99r/meme-studio" },
+      { label: "WIPcoin Portal", emoji: "🪙", href: "https://farcaster.xyz/miniapps/eOxi0VR7PqQk/wipcoin-portal" },
+    ],
   },
   {
     name: "Babacci",
