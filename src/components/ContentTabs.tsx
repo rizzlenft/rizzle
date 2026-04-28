@@ -83,14 +83,26 @@ const projects = [
     showLivePreview: true,
   },
   {
-    name: "Rizzle Miniapps",
+    name: "MiniApps",
     description: "A growing suite of Farcaster miniapps built natively for the Farcaster ecosystem.",
     emoji: "📱",
     image: rizzleMiniappsImg,
+    imagePosition: "center 30%",
     miniappLinks: [
       { label: "WIP Meetup", emoji: "🎙️", href: "https://farcaster.xyz/miniapps/yDcoJ9X6iJ2G/the-wip-meetup-miniapp" },
       { label: "Meme Studio", emoji: "🎨", href: "https://farcaster.xyz/miniapps/L6eTiFxvy99r/meme-studio" },
       { label: "WIPcoin Portal", emoji: "🪙", href: "https://farcaster.xyz/miniapps/eOxi0VR7PqQk/wipcoin-portal" },
+    ],
+  },
+  {
+    name: "Web Development",
+    description: "Custom websites and web apps built with modern stacks. From personal hubs to community platforms.",
+    emoji: "💻",
+    image: rizzleWebDevImg,
+    imagePosition: "center 35%",
+    miniappLinks: [
+      { label: "rizzle.io", emoji: "🔥", href: "https://rizzle.io" },
+      { label: "thewipmeetup.com", emoji: "🎙️", href: "https://thewipmeetup.com" },
     ],
   },
   {
