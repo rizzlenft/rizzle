@@ -132,6 +132,7 @@ const projects = [
     emoji: "🎧",
     link: "https://www.youtube.com/playlist?list=PLaEMvzi1A8c9xU0pw1CZJOTAsrwfydGNK",
     image: marsPodcastImg,
+    imagePosition: "center 25%",
   },
   {
     name: "Fly Frogs",
