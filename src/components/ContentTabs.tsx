@@ -68,6 +68,7 @@ import rizzlefestImg from "@/assets/rizzlefest.gif";
 import babacciImg from "@/assets/babacci-new.jpeg";
 import nft42Img from "@/assets/nft42.png";
 import rizzleMiniappsImg from "@/assets/rizzle-miniapps.jpg";
+import rizzleWebDevImg from "@/assets/rizzle-web-development.jpg";
 
 const projects = [
   {
