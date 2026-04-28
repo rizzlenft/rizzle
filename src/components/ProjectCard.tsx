@@ -19,9 +19,10 @@ interface ProjectCardProps {
   image?: string;
   showLivePreview?: boolean;
   miniappLinks?: MiniLink[];
+  imagePosition?: string;
 }
 
-const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryLinkLabel, featured, image, showLivePreview, miniappLinks }: ProjectCardProps) => {
+const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryLinkLabel, featured, image, showLivePreview, miniappLinks, imagePosition }: ProjectCardProps) => {
   const content = (
     <motion.div
       whileHover={{ scale: 1.02, y: -4 }}
@@ -36,6 +37,7 @@ const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryL
           <img
             src={image}
             alt={name}
+            style={imagePosition ? { objectPosition: imagePosition } : undefined}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
