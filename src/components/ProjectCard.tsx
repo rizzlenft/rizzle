@@ -19,9 +19,10 @@ interface ProjectCardProps {
   image?: string;
   showLivePreview?: boolean;
   miniappLinks?: MiniLink[];
+  imagePosition?: string;
 }
 
-const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryLinkLabel, featured, image, showLivePreview, miniappLinks }: ProjectCardProps) => {
+const ProjectCard = ({ name, description, emoji, link, secondaryLink, secondaryLinkLabel, featured, image, showLivePreview, miniappLinks, imagePosition }: ProjectCardProps) => {
   const content = (
     <motion.div
       whileHover={{ scale: 1.02, y: -4 }}
