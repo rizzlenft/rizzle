@@ -75,12 +75,12 @@ const projects = [
     name: "The WIP Meetup",
     description: "Every Thursday at 3pm ET — community gatherings exploring web3, metaverse, and digital culture. Free gifts, WIPcoin, and controlled chaos.",
     emoji: "🎙️",
-    link: "https://thewipmeetup.com/",
-    secondaryLink: "https://thewipmeetup.com/",
-    secondaryLinkLabel: "🌐 Website",
     featured: true,
     image: wipMeetupImg,
     showLivePreview: true,
+    links: [
+      { label: "Website", emoji: "🌐", href: "https://thewipmeetup.com/" },
+    ],
   },
   {
     name: "MiniApps",
@@ -88,7 +88,7 @@ const projects = [
     emoji: "📱",
     image: rizzleMiniappsImg,
     imagePosition: "center 30%",
-    miniappLinks: [
+    links: [
       { label: "WIP Meetup", emoji: "🎙️", href: "https://farcaster.xyz/miniapps/yDcoJ9X6iJ2G/the-wip-meetup-miniapp" },
       { label: "Meme Studio", emoji: "🎨", href: "https://farcaster.xyz/miniapps/L6eTiFxvy99r/meme-studio" },
       { label: "WIPcoin Portal", emoji: "🪙", href: "https://farcaster.xyz/miniapps/eOxi0VR7PqQk/wipcoin-portal" },
@@ -100,7 +100,7 @@ const projects = [
     emoji: "💻",
     image: rizzleWebDevImg,
     imagePosition: "center 35%",
-    miniappLinks: [
+    links: [
       { label: "rizzle.io", emoji: "🔥", href: "https://rizzle.io" },
       { label: "thewipmeetup.com", emoji: "🎙️", href: "https://thewipmeetup.com" },
     ],
@@ -109,70 +109,88 @@ const projects = [
     name: "Babacci",
     description: "An ambitious generative 3D NFT project of unique creatures called Babacci. Fully onchain on Base. Download the 3D file for use across the metaverse.",
     emoji: "🎨",
-    link: "https://opensea.io/collection/babacci",
     image: babacciImg,
+    links: [
+      { label: "OpenSea", emoji: "⛵", href: "https://opensea.io/collection/babacci" },
+    ],
   },
   {
     name: "OnChainChain",
     description: "A 2,000-edition generative Art Blocks project with all metadata onchain on Ethereum mainnet. Download the 3D file to wear on your avatar across the metaverse.",
     emoji: "⛓️",
-    link: "https://www.artblocks.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
     image: onchainchainImg,
+    links: [
+      { label: "Art Blocks", emoji: "🎨", href: "https://www.artblocks.io/collection/onchainchain-by-rizzle-sebi-miguelgarest" },
+    ],
   },
   {
     name: "Rizzlefest",
     description: "A legendary, recurrent web3 camping retreat bringing the community together IRL for adventure, connection, and unforgettable vibes in the great outdoors.",
     emoji: "🏕️",
-    link: "https://twitter.com/hashtag/rizzlefest",
     image: rizzlefestImg,
+    links: [
+      { label: "#rizzlefest", emoji: "🐦", href: "https://twitter.com/hashtag/rizzlefest" },
+    ],
   },
   {
     name: "The Matthew & Rizzle Show",
     description: "One of web3's earliest podcasts (2019-2026). Iconic guests, real talk, and five years of cutting through the noise. Now concluded.",
     emoji: "🎧",
-    link: "https://www.youtube.com/playlist?list=PLaEMvzi1A8c9xU0pw1CZJOTAsrwfydGNK",
     image: marsPodcastImg,
     imagePosition: "center 25%",
+    links: [
+      { label: "YouTube", emoji: "📺", href: "https://www.youtube.com/playlist?list=PLaEMvzi1A8c9xU0pw1CZJOTAsrwfydGNK" },
+    ],
   },
   {
     name: "Fly Frogs",
     description: "Joined forces with Josh & Molly's 2021 NFT project post-launch. Sold through 10k NFTs and built the foundation of the Fly Frogs brand.",
     emoji: "🐸",
-    link: "https://flyfrogs.xyz/",
-    secondaryLink: "https://opensea.io/collection/fly-frogs",
     image: flyfrog3dImg,
+    links: [
+      { label: "Website", emoji: "🌐", href: "https://flyfrogs.xyz/" },
+      { label: "OpenSea", emoji: "⛵", href: "https://opensea.io/collection/fly-frogs" },
+    ],
   },
   {
     name: "TokenSmart",
     description: "One of the largest early web3 communities (2019-2021). Home of the TokenSmart Podcast (now on Spotify), plus daily/weekly community events featuring top builders and creators, growing to over 20,000 Discord members.",
     emoji: "🧠",
-    link: "https://twitter.com/nftsmart",
-    secondaryLink: "https://creators.spotify.com/pod/profile/tokensmart",
-    secondaryLinkLabel: "🎧 Podcast",
     image: tokensmartImg,
+    links: [
+      { label: "Twitter", emoji: "🐦", href: "https://twitter.com/nftsmart" },
+      { label: "Podcast", emoji: "🎧", href: "https://creators.spotify.com/pod/profile/tokensmart" },
+    ],
   },
   {
     name: "Metalympics",
     description: "In 2020, the Metalympics was a 3-month metaverse event attracting 20+ web3 sponsors, hundreds of competitors, and became one of the largest cutting-edge web3 events to date.",
     emoji: "🏆",
-    link: "https://twitter.com/metalympics",
     image: metalympicsImg,
+    links: [
+      { label: "Twitter", emoji: "🐦", href: "https://twitter.com/metalympics" },
+    ],
   },
   {
     name: "Avastars",
     description: "Fully onchain generative PFP NFTs on Ethereum mainnet. Est. 2020. A trailblazing project with over 4,000 ETH in secondary sales.",
     emoji: "👾",
-    link: "https://opensea.io/collection/avastar",
     image: avastarsImg,
+    links: [
+      { label: "OpenSea", emoji: "⛵", href: "https://opensea.io/collection/avastar" },
+    ],
   },
   {
     name: "nft42",
     description: "Co-founded this groundbreaking NFT studio (2019-2022). Launched Avastars, TokenSmart, and Stealthtest. Collaborated with Gary Vee, Snoop Dogg, Nyan Cat, and other icons to build their first NFT collections.",
     emoji: "✨",
-    link: "https://nft42.com",
     image: nft42Img,
+    links: [
+      { label: "Website", emoji: "🌐", href: "https://nft42.com" },
+    ],
   },
 ];
+
 
 const containerVariants = {
   hidden: { opacity: 0 },
