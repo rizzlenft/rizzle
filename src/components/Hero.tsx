@@ -41,25 +41,27 @@ const Hero = () => {
         {/* Spacer for removed tagline */}
         <div className="-mb-8 sm:-mb-24" />
         
-        {/* Signature */}
-        <motion.div
-          className="-mb-4 sm:-mb-28 pointer-events-none select-none"
+        {/* Signature — wrapped as H1 for SEO without disturbing visual layout */}
+        <motion.h1
+          className="-mb-4 sm:-mb-28 pointer-events-none select-none m-0"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
         >
-          <img 
-            src={rizzleSig} 
-            alt="Rizzle" 
+          <span className="sr-only">Rizzle — Web3 Founder & Builder Since 2019</span>
+          <img
+            src={rizzleSig}
+            alt=""
+            aria-hidden="true"
             className="mx-auto h-[12rem] w-auto sm:h-[26rem] md:h-[34rem] lg:h-[42rem] invert"
-            style={{ 
+            style={{
               imageRendering: 'auto',
               WebkitFontSmoothing: 'antialiased'
             }}
             loading="eager"
             decoding="sync"
           />
-        </motion.div>
+        </motion.h1>
         
         {/* Bio */}
         <motion.p
@@ -73,12 +75,12 @@ const Hero = () => {
           My biggest edge is getting projects from zero to traction.
         </motion.p>
         
-        {/* Stats row — includes "Latest Posts" as a clickable item */}
+        {/* Stats row — 3 stats on mobile (consult promoted to its own CTA below) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7, duration: 0.6 }}
-          className="mt-6 grid grid-cols-2 gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-8"
+          className="mt-6 grid grid-cols-3 gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-8"
         >
           <div className="text-center">
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">10+</div>
@@ -99,12 +101,26 @@ const Hero = () => {
             href="https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00"
             target="_blank"
             rel="noopener noreferrer"
-            className="group text-center transition-all duration-300 hover:scale-105"
+            className="hidden sm:block group text-center transition-all duration-300 hover:scale-105"
           >
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">◎</div>
             <div className="text-sm text-muted-foreground group-hover:text-primary transition-colors">Book a Consult</div>
           </a>
         </motion.div>
+
+        {/* Mobile-only Book a Consult CTA — full width, clear it's an action */}
+        <motion.a
+          href="https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00"
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.75, duration: 0.6 }}
+          className="mt-5 sm:hidden mx-auto inline-flex items-center justify-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-2.5 font-mono text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-primary-foreground"
+        >
+          <span className="text-base leading-none">◎</span>
+          Book a Consult
+        </motion.a>
 
         {/* Song A Day Mann feature */}
         <motion.div

@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import GameLeaderboard from "@/components/GameLeaderboard";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useSeo } from "@/hooks/useSeo";
 
 interface GameEntry {
   id: string;
@@ -37,6 +38,13 @@ const Games = () => {
   const [submitting, setSubmitting] = useState(false);
   const leaderboardRef = useRef<{ refresh: () => void } | null>(null);
   const [leaderboardKey, setLeaderboardKey] = useState(0);
+
+  useSeo({
+    title: "Arcade | Rizzle Dash & More Web3 Mini-Games",
+    description:
+      "Play Rizzle Dash — a fast-paced endless runner with 10 levels and a leaderboard. More silly games coming soon.",
+    canonical: "https://rizzle.io/games",
+  });
 
   const toggleFullscreen = () => setIsFullscreen((f) => !f);
 
