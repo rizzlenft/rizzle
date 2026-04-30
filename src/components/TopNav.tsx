@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Briefcase, Gamepad2, Sparkles, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { track } from "@/lib/analytics";
 
 interface TopNavProps {
   activeTab?: "projects" | "art" | "guests" | "games";
@@ -11,6 +12,7 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
   const navigate = useNavigate();
 
   const handleTabClick = (tab: "projects" | "art") => {
+    track("tab_switched", { tab });
     if (onTabChange) {
       onTabChange(tab);
     } else {

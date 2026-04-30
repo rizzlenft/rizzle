@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Zap } from "lucide-react";
+import { track } from "@/lib/analytics";
 
 const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00";
 
@@ -19,6 +20,7 @@ const SiteHeader = () => {
         href={STRIPE_PAYMENT_LINK}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => track("consult_cta_clicked", { location: "site_header" })}
         className="group inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-2 font-mono text-sm font-semibold text-primary transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:box-glow animate-[song-pulse_3s_ease-in-out_infinite]"
       >
         <Zap className="h-4 w-4 transition-transform group-hover:scale-110" />
