@@ -61,7 +61,7 @@ import wipMeetupImg from "@/assets/wip-logo.webp";
 import marsPodcastImg from "@/assets/mattandrizz.webp";
 import avastarsImg from "@/assets/avastars.avif";
 import onchainchainImg from "@/assets/onchainchain.webp";
-import flyfrog3dImg from "@/assets/flyfrog3d.jpg";
+import flyfrog3dImg from "@/assets/flyfrog.webp";
 import tokensmartImg from "@/assets/tokensmart.webp";
 import metalympicsImg from "@/assets/metalympics-new.webp";
 import rizzlefestImg from "@/assets/rizzlefest.webp";
