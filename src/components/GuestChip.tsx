@@ -14,7 +14,7 @@ import {
   isSpotifyOnlyGuest,
   guestSpotifyLinks,
 } from "@/data/guestData";
-import tokensmartThumbnail from "@/assets/tokensmart-thumbnail-hq.png";
+import tokensmartThumbnail from "@/assets/tokensmart-thumbnail.webp";
 
 interface GuestChipProps {
   guest: string;

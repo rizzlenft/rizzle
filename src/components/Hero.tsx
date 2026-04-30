@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Music, Play, X } from "lucide-react";
 import rizzleSig from "@/assets/rizzle-sig-v2.png";
-import rizzlePfp from "@/assets/rizzlepfp.jpeg";
+import rizzlePfp from "@/assets/rizzlepfp.webp";
 
 const Hero = () => {
   const [showPlayer, setShowPlayer] = useState(false);

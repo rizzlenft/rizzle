@@ -44,6 +44,8 @@ const ProjectCard = ({
           <img
             src={image}
             alt={name}
+            loading="lazy"
+            decoding="async"
             style={imagePosition ? { objectPosition: imagePosition } : undefined}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />

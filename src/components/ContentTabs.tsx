@@ -57,18 +57,18 @@ const ContentTabs = ({ activeTab }: ContentTabsProps) => {
 
 // Inline Projects content (without section wrapper and header)
 import ProjectCard from "./ProjectCard";
-import wipMeetupImg from "@/assets/wip-logo.gif";
-import marsPodcastImg from "@/assets/mattandrizz.jpeg";
+import wipMeetupImg from "@/assets/wip-logo.webp";
+import marsPodcastImg from "@/assets/mattandrizz.webp";
 import avastarsImg from "@/assets/avastars.avif";
-import onchainchainImg from "@/assets/onchainchain.png";
+import onchainchainImg from "@/assets/onchainchain.webp";
 import flyfrog3dImg from "@/assets/flyfrog.jpg";
-import tokensmartImg from "@/assets/tokensmart.png";
-import metalympicsImg from "@/assets/metalympics-new.jpeg";
-import rizzlefestImg from "@/assets/rizzlefest.gif";
-import babacciImg from "@/assets/babacci-new.jpeg";
-import nft42Img from "@/assets/nft42.png";
-import rizzleMiniappsImg from "@/assets/rizzle-miniapps.jpg";
-import rizzleWebDevImg from "@/assets/rizzle-web-development.jpg";
+import tokensmartImg from "@/assets/tokensmart.webp";
+import metalympicsImg from "@/assets/metalympics-new.webp";
+import rizzlefestImg from "@/assets/rizzlefest.webp";
+import babacciImg from "@/assets/babacci-new.webp";
+import nft42Img from "@/assets/nft42.webp";
+import rizzleMiniappsImg from "@/assets/rizzle-miniapps.webp";
+import rizzleWebDevImg from "@/assets/rizzle-web-development.webp";
 
 const projects = [
   {
@@ -237,13 +237,13 @@ const ProjectsContent = () => {
 
 // Inline CryptoArt content (without section wrapper and header)
 import { ExternalLink, Palette, Heart } from "lucide-react";
-import truthMagazineImg from "@/assets/truth-magazine.png";
-import manifoldArtImg from "@/assets/manifold-art.png";
-import zerooneArtImg from "@/assets/zeroone-art.png";
-import openseaRizzleImg from "@/assets/opensea-rizzle.avif";
+import truthMagazineImg from "@/assets/truth-magazine.webp";
+import manifoldArtImg from "@/assets/manifold-art.webp";
+import zerooneArtImg from "@/assets/zeroone-art.webp";
+import openseaRizzleImg from "@/assets/opensea-vault.webp";
 import openseaVaultImg from "@/assets/opensea-vault.webp";
-import zerooneCollectedImg from "@/assets/zeroone-collected.png";
-import objktArtImg from "@/assets/objkt-art.gif";
+import zerooneCollectedImg from "@/assets/zeroone-collected.webp";
+import objktArtImg from "@/assets/objkt-art.webp";
 // Platform logo components
 const OpenSeaLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 90 90" className={className} fill="currentColor">
