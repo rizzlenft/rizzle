@@ -1,6 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import WipLivePreview from "./WipLivePreview";
+import { track } from "@/lib/analytics";
 
 interface ProjectLink {
   label: string;
@@ -82,6 +83,13 @@ const ProjectCard = ({
                 href={m.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  track("project_link_clicked", {
+                    project: name,
+                    link_label: m.label,
+                    href: m.href,
+                  })
+                }
                 className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-medium text-foreground/90 backdrop-blur-sm transition-all hover:border-primary/60 hover:bg-primary/10 hover:text-primary"
               >
                 {m.emoji && <span>{m.emoji}</span>}

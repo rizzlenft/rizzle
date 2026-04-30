@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import crowdsurfingGif from "@/assets/crowdsurfing-rizzle.webp";
+import { track } from "@/lib/analytics";
 
 const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00";
 
@@ -106,6 +107,13 @@ const Socials = () => {
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => {
+                if (social.name === "Hire a Rizzle") {
+                  track("consult_cta_clicked", { location: "socials" });
+                } else {
+                  track("social_link_clicked", { network: social.name });
+                }
+              }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Play, Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { track } from "@/lib/analytics";
 
 import { useEpisodeNavigation } from "@/hooks/useEpisodeNavigation";
 import GuestPreviewModal from "./GuestPreviewModal";
@@ -84,6 +85,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   };
 
   const handleChipClick = () => {
+    track("guest_chip_clicked", { guest, episode_count: episodeCount });
     // Mobile thumbnails are disabled; always open the correct YouTube link.
     openVideo();
   };
