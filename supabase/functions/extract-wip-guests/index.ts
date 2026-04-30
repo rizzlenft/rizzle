@@ -5,102 +5,97 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+const WIP_CHANNEL_URL = 'https://www.youtube.com/@theWIPmeetup';
+// How many recent episodes to scan each run. Cron runs weekly so 5 gives a healthy buffer.
+const MAX_EPISODES_TO_PROCESS = 5;
+
+interface RssVideo {
+  videoId: string;
+  title: string;
+  publishedAt: string | null;
+}
+
+async function fetchRecentWipVideos(limit: number): Promise<RssVideo[]> {
+  // Resolve channel ID from the channel page
+  const pageResponse = await fetch(WIP_CHANNEL_URL, {
+    headers: {
+      'User-Agent':
+        'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+    },
+  });
+
+  if (!pageResponse.ok) {
+    throw new Error(`Failed to fetch channel page: ${pageResponse.status}`);
   }
 
-  try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  const pageHtml = await pageResponse.text();
+  let channelId =
+    pageHtml.match(/channel_id=([^"&]+)/)?.[1] ??
+    pageHtml.match(/"externalId":"([^"]+)"/)?.[1] ??
+    null;
 
-    // Get the latest video from cache
-    const { data: cached } = await supabase
-      .from('wip_video_cache')
-      .select('*')
-      .eq('id', 'latest')
-      .maybeSingle();
+  if (!channelId) {
+    throw new Error('Could not extract channel ID from WIP channel page');
+  }
 
-    if (!cached) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'No cached video found' }),
-        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+  const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+  const rssResponse = await fetch(rssUrl);
+  if (!rssResponse.ok) {
+    throw new Error(`Failed to fetch RSS feed: ${rssResponse.status}`);
+  }
+
+  const xml = await rssResponse.text();
+  const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)];
+
+  const videos: RssVideo[] = [];
+  for (const entry of entries.slice(0, limit)) {
+    const entryXml = entry[1];
+    const videoId = entryXml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
+    const title =
+      entryXml.match(/<media:title>([^<]+)<\/media:title>/)?.[1] ?? 'WIP Meetup';
+    const published =
+      entryXml.match(/<published>([^<]+)<\/published>/)?.[1] ?? null;
+    if (videoId) {
+      videos.push({ videoId, title, publishedAt: published });
     }
+  }
 
-    const videoId = cached.video_id;
-    const videoTitle = cached.title;
+  return videos;
+}
 
-    // Check if we already extracted guests for this video
-    const { data: existing } = await supabase
-      .from('guest_appearances')
-      .select('guest_name')
-      .eq('video_id', videoId);
+async function extractGuestsForVideo(
+  video: RssVideo,
+  firecrawlApiKey: string,
+  lovableApiKey: string,
+): Promise<{ guests: string[]; markdownLength: number }> {
+  const youtubeUrl = `https://www.youtube.com/watch?v=${video.videoId}`;
+  console.log(`Scraping ${youtubeUrl}`);
 
-    if (existing && existing.length > 0) {
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: 'Guests already extracted for this video',
-          videoId,
-          guests: existing.map(g => g.guest_name)
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+  const scrapeResponse = await fetch('https://api.firecrawl.dev/v1/scrape', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${firecrawlApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      url: youtubeUrl,
+      formats: ['markdown'],
+      waitFor: 3000,
+    }),
+  });
 
-    // Scrape the YouTube video page to get the description
-    const firecrawlApiKey = Deno.env.get('FIRECRAWL_API_KEY');
-    if (!firecrawlApiKey) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Firecrawl API key not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+  const scrapeData = await scrapeResponse.json();
+  if (!scrapeResponse.ok) {
+    console.error(`Firecrawl error for ${video.videoId}:`, scrapeData);
+    return { guests: [], markdownLength: 0 };
+  }
 
-    const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
-    console.log(`Scraping YouTube video: ${youtubeUrl}`);
+  const markdown: string = scrapeData.data?.markdown || scrapeData.markdown || '';
 
-    const scrapeResponse = await fetch('https://api.firecrawl.dev/v1/scrape', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${firecrawlApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        url: youtubeUrl,
-        formats: ['markdown'],
-        waitFor: 3000,
-      }),
-    });
-
-    const scrapeData = await scrapeResponse.json();
-
-    if (!scrapeResponse.ok) {
-      console.error('Firecrawl error:', scrapeData);
-      return new Response(
-        JSON.stringify({ success: false, error: 'Failed to scrape video page' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const markdown = scrapeData.data?.markdown || scrapeData.markdown || '';
-    console.log(`Scraped content length: ${markdown.length} chars`);
-
-    // Use AI to extract guest names from the description
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
-    if (!lovableApiKey) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Lovable API key not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const aiPrompt = `You are analyzing a YouTube video page for a weekly Web3/NFT meetup called "WIP Meetup". 
+  const aiPrompt = `You are analyzing a YouTube video page for a weekly Web3/NFT meetup called "WIP Meetup".
 Your task is to extract the names of guests who appeared on this episode.
 
-The video title is: "${videoTitle}"
+The video title is: "${video.title}"
 
 Here is the scraped content from the video page:
 ${markdown.substring(0, 8000)}
@@ -115,106 +110,199 @@ Instructions:
 
 Return ONLY valid JSON, no explanation. Example: ["Guest Name 1", "Guest Name 2"]`;
 
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+  const aiResponse = await fetch(
+    'https://ai.gateway.lovable.dev/v1/chat/completions',
+    {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${lovableApiKey}`,
+        Authorization: `Bearer ${lovableApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'user', content: aiPrompt }
-        ],
+        messages: [{ role: 'user', content: aiPrompt }],
         temperature: 0.1,
       }),
-    });
+    },
+  );
 
-    if (!aiResponse.ok) {
-      const aiError = await aiResponse.text();
-      console.error('AI API error:', aiError);
+  if (!aiResponse.ok) {
+    console.error(
+      `AI API error for ${video.videoId}:`,
+      await aiResponse.text(),
+    );
+    return { guests: [], markdownLength: markdown.length };
+  }
+
+  const aiData = await aiResponse.json();
+  const aiContent: string = aiData.choices?.[0]?.message?.content || '[]';
+
+  let guestNames: string[] = [];
+  try {
+    const cleaned = aiContent
+      .replace(/```json?\n?/g, '')
+      .replace(/```\n?/g, '')
+      .trim();
+    const parsed = JSON.parse(cleaned);
+    if (Array.isArray(parsed)) {
+      guestNames = parsed.filter(
+        (n): n is string => typeof n === 'string' && n.trim().length > 0,
+      );
+    }
+  } catch (err) {
+    console.error(`Failed to parse AI response for ${video.videoId}:`, err);
+  }
+
+  return { guests: guestNames, markdownLength: markdown.length };
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+    );
+
+    const firecrawlApiKey = Deno.env.get('FIRECRAWL_API_KEY');
+    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+
+    if (!firecrawlApiKey || !lovableApiKey) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Failed to extract guests with AI' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ success: false, error: 'API keys not configured' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
       );
     }
 
-    const aiData = await aiResponse.json();
-    const aiContent = aiData.choices?.[0]?.message?.content || '[]';
-    
-    console.log('AI response:', aiContent);
-
-    // Parse the guest names from AI response
-    let guestNames: string[] = [];
+    // Optional override: ?limit=N (1..10) for manual backfills
+    let limit = MAX_EPISODES_TO_PROCESS;
     try {
-      // Clean up the response - remove markdown code blocks if present
-      const cleanedContent = aiContent.replace(/```json?\n?/g, '').replace(/```\n?/g, '').trim();
-      guestNames = JSON.parse(cleanedContent);
-      
-      if (!Array.isArray(guestNames)) {
-        guestNames = [];
+      const url = new URL(req.url);
+      const param = url.searchParams.get('limit');
+      if (param) {
+        const n = parseInt(param, 10);
+        if (!Number.isNaN(n)) limit = Math.min(Math.max(n, 1), 10);
       }
-    } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Failed to parse guest names from AI response',
-          rawResponse: aiContent
-        }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    } catch {
+      // ignore
     }
 
-    if (guestNames.length === 0) {
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: 'No guests found in video description. The description may not be updated yet.',
-          videoId,
-          guests: []
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    const recentVideos = await fetchRecentWipVideos(limit);
+    console.log(`Found ${recentVideos.length} recent WIP videos`);
 
-    // Insert guest appearances into the database
-    const insertData = guestNames.map(name => ({
-      guest_name: name,
-      video_id: videoId,
-      video_title: videoTitle,
-      confirmed: false,
-    }));
-
-    const { error: insertError } = await supabase
+    // Find which already have extracted guests
+    const videoIds = recentVideos.map((v) => v.videoId);
+    const { data: existingRows } = await supabase
       .from('guest_appearances')
-      .upsert(insertData, { onConflict: 'guest_name,video_id' });
+      .select('video_id')
+      .in('video_id', videoIds);
 
-    if (insertError) {
-      console.error('Insert error:', insertError);
-      return new Response(
-        JSON.stringify({ success: false, error: 'Failed to save guest appearances' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    const alreadyExtracted = new Set(
+      (existingRows ?? []).map((r: { video_id: string }) => r.video_id),
+    );
+
+    const results: Array<{
+      videoId: string;
+      title: string;
+      status: 'skipped' | 'extracted' | 'no-guests' | 'error';
+      guests?: string[];
+      error?: string;
+    }> = [];
+
+    for (const video of recentVideos) {
+      if (alreadyExtracted.has(video.videoId)) {
+        results.push({
+          videoId: video.videoId,
+          title: video.title,
+          status: 'skipped',
+        });
+        continue;
+      }
+
+      try {
+        const { guests } = await extractGuestsForVideo(
+          video,
+          firecrawlApiKey,
+          lovableApiKey,
+        );
+
+        if (guests.length === 0) {
+          results.push({
+            videoId: video.videoId,
+            title: video.title,
+            status: 'no-guests',
+          });
+          continue;
+        }
+
+        const insertData = guests.map((name) => ({
+          guest_name: name,
+          video_id: video.videoId,
+          video_title: video.title,
+          confirmed: false,
+        }));
+
+        const { error: insertError } = await supabase
+          .from('guest_appearances')
+          .upsert(insertData, { onConflict: 'guest_name,video_id' });
+
+        if (insertError) {
+          console.error(`Insert error for ${video.videoId}:`, insertError);
+          results.push({
+            videoId: video.videoId,
+            title: video.title,
+            status: 'error',
+            error: 'insert failed',
+          });
+          continue;
+        }
+
+        console.log(
+          `Saved ${guests.length} guests for ${video.videoId} (${video.title})`,
+        );
+        results.push({
+          videoId: video.videoId,
+          title: video.title,
+          status: 'extracted',
+          guests,
+        });
+      } catch (err) {
+        console.error(`Error processing ${video.videoId}:`, err);
+        results.push({
+          videoId: video.videoId,
+          title: video.title,
+          status: 'error',
+          error: 'processing failed',
+        });
+      }
     }
 
-    console.log(`Saved ${guestNames.length} guest appearances for video ${videoId}`);
+    const summary = {
+      total: results.length,
+      extracted: results.filter((r) => r.status === 'extracted').length,
+      skipped: results.filter((r) => r.status === 'skipped').length,
+      noGuests: results.filter((r) => r.status === 'no-guests').length,
+      errors: results.filter((r) => r.status === 'error').length,
+    };
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: `Extracted ${guestNames.length} guests`,
-        videoId,
-        videoTitle,
-        guests: guestNames
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ success: true, summary, results }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
   } catch (error) {
     console.error('Error:', error);
     return new Response(
       JSON.stringify({ success: false, error: 'An unexpected error occurred' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
     );
   }
 });
