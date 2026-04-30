@@ -60,16 +60,16 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
             <Briefcase className="relative z-10 h-4 w-4" />
             <span className="relative z-10 hidden xs:inline">Projects</span>
           </button>
-          <button onClick={() => handleTabClick("art")} className={tabClass("art")}>
-            {activeIndicator("art")}
-            <Sparkles className="relative z-10 h-4 w-4" />
-            <span className="relative z-10 hidden xs:inline">CryptoArt</span>
-          </button>
           <Link to="/guests" className={tabClass("guests")}>
             {activeIndicator("guests")}
             <Users className="relative z-10 h-4 w-4" />
             <span className="relative z-10 hidden xs:inline">Network</span>
           </Link>
+          <button onClick={() => handleTabClick("art")} className={tabClass("art")}>
+            {activeIndicator("art")}
+            <Sparkles className="relative z-10 h-4 w-4" />
+            <span className="relative z-10 hidden xs:inline">CryptoArt</span>
+          </button>
           <Link to="/games" className={tabClass("games")}>
             {activeIndicator("games")}
             <Gamepad2 className="relative z-10 h-4 w-4" />
