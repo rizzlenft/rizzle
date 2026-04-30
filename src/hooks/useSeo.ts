@@ -4,15 +4,16 @@ interface SeoOptions {
   title?: string;
   description?: string;
   canonical?: string;
+  /** Absolute URL to the OG/Twitter share image (1200x630). */
+  image?: string;
+  /** Optional JSON-LD object (or array of objects) injected as <script type="application/ld+json"> with id `route-jsonld`. Replaces previous route's injection. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 /**
  * Lightweight per-route SEO hook — sets <title>, meta description,
- * canonical, and updates OG/Twitter title+description without adding
- * a dependency like react-helmet-async.
- *
- * Safe: only mutates existing tags or appends when missing. Tags are not
- * removed on unmount because the next route's call will overwrite them.
+ * canonical, OG/Twitter image, and an optional route-scoped JSON-LD
+ * block. No external dependencies.
  */
 const upsertMeta = (selector: string, attr: string, attrValue: string, content: string) => {
   let el = document.head.querySelector<HTMLMetaElement>(selector);
@@ -34,7 +35,21 @@ const upsertCanonical = (href: string) => {
   el.setAttribute("href", href);
 };
 
-export const useSeo = ({ title, description, canonical }: SeoOptions) => {
+const ROUTE_JSONLD_ID = "route-jsonld";
+
+const upsertRouteJsonLd = (data: SeoOptions["jsonLd"]) => {
+  // Always remove the prior route-scoped block so stale schema doesn't linger.
+  const existing = document.getElementById(ROUTE_JSONLD_ID);
+  if (existing) existing.remove();
+  if (!data) return;
+  const script = document.createElement("script");
+  script.type = "application/ld+json";
+  script.id = ROUTE_JSONLD_ID;
+  script.text = JSON.stringify(data);
+  document.head.appendChild(script);
+};
+
+export const useSeo = ({ title, description, canonical, image, jsonLd }: SeoOptions) => {
   useEffect(() => {
     if (title) {
       document.title = title;
@@ -50,5 +65,11 @@ export const useSeo = ({ title, description, canonical }: SeoOptions) => {
       upsertCanonical(canonical);
       upsertMeta('meta[property="og:url"]', "property", "og:url", canonical);
     }
-  }, [title, description, canonical]);
+    if (image) {
+      upsertMeta('meta[property="og:image"]', "property", "og:image", image);
+      upsertMeta('meta[name="twitter:image"]', "name", "twitter:image", image);
+      upsertMeta('meta[property="fc:frame:image"]', "property", "fc:frame:image", image);
+    }
+    upsertRouteJsonLd(jsonLd);
+  }, [title, description, canonical, image, jsonLd]);
 };
