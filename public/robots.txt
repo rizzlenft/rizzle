@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rizzle.lovable.app/sitemap.xml
+Sitemap: https://rizzle.io/sitemap.xml
