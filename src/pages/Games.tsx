@@ -8,6 +8,7 @@ import GameLeaderboard from "@/components/GameLeaderboard";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSeo } from "@/hooks/useSeo";
+import { track } from "@/lib/analytics";
 
 interface GameEntry {
   id: string;
@@ -165,7 +166,12 @@ const Games = () => {
               {games.map((game) => (
                 <button
                   key={game.id}
-                  onClick={() => game.status === "playable" && setActiveGame(game)}
+                  onClick={() => {
+                    if (game.status === "playable") {
+                      track("game_started", { game_id: game.id, title: game.title });
+                      setActiveGame(game);
+                    }
+                  }}
                   className={`group rounded-lg border p-4 text-left transition-all ${
                     activeGame?.id === game.id
                       ? "border-primary bg-primary/10"
