@@ -19,12 +19,34 @@ const Index = () => {
           description:
             "Rizzle's cryptoart — AI experiments on Manifold and ZeroOne, plus a curated collection on OpenSea, ZeroOne, and Objkt (Tezos).",
           canonical: "https://rizzle.io/?tab=art",
+          image: "https://rizzle.io/og/og-home.jpg",
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "@id": "https://rizzle.io/?tab=art#page",
+            url: "https://rizzle.io/?tab=art",
+            name: "CryptoArt by Rizzle",
+            description:
+              "Created & collected digital art across Manifold, ZeroOne, OpenSea, and Objkt.",
+            isPartOf: { "@id": "https://rizzle.io/#website" },
+            about: { "@id": "https://rizzle.io/#person" },
+          },
         }
       : {
           title: "Rizzle | Web3 Founder & Builder Since 2019",
           description:
             "Rizzle (NFTland) — Web3 founder & builder since 2019. Creator of The WIP Meetup, Avastars, Matt & Rizz Show. Strategy, launches & growth for onchain projects.",
           canonical: "https://rizzle.io/",
+          image: "https://rizzle.io/og/og-home.jpg",
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "ProfilePage",
+            "@id": "https://rizzle.io/#profilepage",
+            url: "https://rizzle.io/",
+            name: "Rizzle — Web3 Founder & Builder",
+            mainEntity: { "@id": "https://rizzle.io/#person" },
+            isPartOf: { "@id": "https://rizzle.io/#website" },
+          },
         },
   );
 

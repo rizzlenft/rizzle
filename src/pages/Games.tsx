@@ -44,6 +44,20 @@ const Games = () => {
     description:
       "Play Rizzle Dash — a fast-paced endless runner with 10 levels and a leaderboard. More silly games coming soon.",
     canonical: "https://rizzle.io/games",
+    image: "https://rizzle.io/og/og-games.jpg",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      name: "Rizzle Dash",
+      url: "https://rizzle.io/games",
+      gamePlatform: ["Web Browser", "Mobile Web"],
+      applicationCategory: "Game",
+      operatingSystem: "Any",
+      author: { "@id": "https://rizzle.io/#person" },
+      description:
+        "A fast-paced endless runner with 10 levels, castle sequences, and a pumping soundtrack.",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
   });
 
   const toggleFullscreen = () => setIsFullscreen((f) => !f);

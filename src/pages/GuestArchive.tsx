@@ -22,6 +22,41 @@ const GuestArchive = () => {
     description:
       "Searchable directory of legendary web3 guests and collaborators from The WIP Meetup, The Matthew & Rizzle Show, and the TokenSmart Podcast.",
     canonical: "https://rizzle.io/guests",
+    image: "https://rizzle.io/og/og-guests.jpg",
+    jsonLd: [
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "@id": "https://rizzle.io/guests#page",
+        url: "https://rizzle.io/guests",
+        name: "Rizzle's Network",
+        description:
+          "A searchable directory of legendary web3 guests and collaborators across Rizzle's shows.",
+        isPartOf: { "@id": "https://rizzle.io/#website" },
+        about: { "@id": "https://rizzle.io/#person" },
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "PodcastSeries",
+        name: "The WIP Meetup",
+        url: "https://thewipmeetup.com/",
+        author: { "@id": "https://rizzle.io/#person" },
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "PodcastSeries",
+        name: "The Matthew & Rizzle Show",
+        url: "https://www.youtube.com/playlist?list=PLaEMvzi1A8c9xU0pw1CZJOTAsrwfydGNK",
+        author: { "@id": "https://rizzle.io/#person" },
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "PodcastSeries",
+        name: "TokenSmart Podcast",
+        url: "https://open.spotify.com/show/6JH4a7vdHnravKJdWPua21",
+        author: { "@id": "https://rizzle.io/#person" },
+      },
+    ],
   });
 
   // Scroll to top when component mounts
