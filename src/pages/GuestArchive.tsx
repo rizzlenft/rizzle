@@ -83,7 +83,7 @@ const GuestArchive = () => {
             className="flex flex-col items-center"
           >
             {/* Triple logo display */}
-            <div className="mb-8 flex items-center justify-center gap-4 sm:gap-8">
+            <div className="mb-8 flex items-center justify-center gap-3 sm:gap-8">
               <motion.a
                 href="https://thewipmeetup.com/"
                 target="_blank"
