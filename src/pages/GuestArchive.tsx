@@ -11,10 +11,18 @@ import { useExtractedGuests, mergeGuestData } from "@/hooks/useExtractedGuests";
 import GuestChip from "@/components/GuestChip";
 import RandomEpisodeButton from "@/components/RandomEpisodeButton";
 import NetworkStats from "@/components/NetworkStats";
+import { useSeo } from "@/hooks/useSeo";
 
 const GuestArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { data: extractedGuests = [] } = useExtractedGuests();
+
+  useSeo({
+    title: "Network | Rizzle's Guest Archive — WIP Meetup, Matt & Rizz, TokenSmart",
+    description:
+      "Searchable directory of legendary web3 guests and collaborators from The WIP Meetup, The Matthew & Rizzle Show, and the TokenSmart Podcast.",
+    canonical: "https://rizzle.io/guests",
+  });
 
   // Scroll to top when component mounts
   useEffect(() => {

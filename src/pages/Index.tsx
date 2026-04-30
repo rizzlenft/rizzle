@@ -5,11 +5,28 @@ import ContentTabs from "@/components/ContentTabs";
 import Socials from "@/components/Socials";
 import Footer from "@/components/Footer";
 import TopNav from "@/components/TopNav";
+import { useSeo } from "@/hooks/useSeo";
 
 const Index = () => {
   const [searchParams] = useSearchParams();
   const initialTab = searchParams.get("tab") === "art" ? "art" : "projects";
   const [activeTab, setActiveTab] = useState<"projects" | "art">(initialTab);
+
+  useSeo(
+    activeTab === "art"
+      ? {
+          title: "CryptoArt by Rizzle | Created & Collected Digital Art",
+          description:
+            "Rizzle's cryptoart — AI experiments on Manifold and ZeroOne, plus a curated collection on OpenSea, ZeroOne, and Objkt (Tezos).",
+          canonical: "https://rizzle.io/?tab=art",
+        }
+      : {
+          title: "Rizzle | Web3 Founder & Builder Since 2019",
+          description:
+            "Rizzle (NFTland) — Web3 founder & builder since 2019. Creator of The WIP Meetup, Avastars, Matt & Rizz Show. Strategy, launches & growth for onchain projects.",
+          canonical: "https://rizzle.io/",
+        },
+  );
 
   useEffect(() => {
     const tab = searchParams.get("tab");
