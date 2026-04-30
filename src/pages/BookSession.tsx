@@ -1,13 +1,15 @@
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, Mail, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import Footer from "@/components/Footer";
+import { useSeo } from "@/hooks/useSeo";
 
 const BookSession = () => {
-  useEffect(() => {
-    document.title = "Booking Confirmed | Rizzle";
-  }, []);
+  useSeo({
+    title: "Booking Confirmed | Rizzle",
+    description: "Your Web3 consultation with Rizzle is confirmed. Check your email for next steps.",
+    canonical: "https://rizzle.io/book-session",
+  });
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">

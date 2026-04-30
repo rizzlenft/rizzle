@@ -39,6 +39,13 @@ const Games = () => {
   const leaderboardRef = useRef<{ refresh: () => void } | null>(null);
   const [leaderboardKey, setLeaderboardKey] = useState(0);
 
+  useSeo({
+    title: "Arcade | Rizzle Dash & More Web3 Mini-Games",
+    description:
+      "Play Rizzle Dash — a fast-paced endless runner with 10 levels and a leaderboard. More silly games coming soon.",
+    canonical: "https://rizzle.io/games",
+  });
+
   const toggleFullscreen = () => setIsFullscreen((f) => !f);
 
   const handleScoreMessage = useCallback((e: MessageEvent) => {
