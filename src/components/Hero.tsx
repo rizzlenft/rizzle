@@ -41,25 +41,27 @@ const Hero = () => {
         {/* Spacer for removed tagline */}
         <div className="-mb-8 sm:-mb-24" />
         
-        {/* Signature */}
-        <motion.div
-          className="-mb-4 sm:-mb-28 pointer-events-none select-none"
+        {/* Signature — wrapped as H1 for SEO without disturbing visual layout */}
+        <motion.h1
+          className="-mb-4 sm:-mb-28 pointer-events-none select-none m-0"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
         >
-          <img 
-            src={rizzleSig} 
-            alt="Rizzle" 
+          <span className="sr-only">Rizzle — Web3 Founder & Builder Since 2019</span>
+          <img
+            src={rizzleSig}
+            alt=""
+            aria-hidden="true"
             className="mx-auto h-[12rem] w-auto sm:h-[26rem] md:h-[34rem] lg:h-[42rem] invert"
-            style={{ 
+            style={{
               imageRendering: 'auto',
               WebkitFontSmoothing: 'antialiased'
             }}
             loading="eager"
             decoding="sync"
           />
-        </motion.div>
+        </motion.h1>
         
         {/* Bio */}
         <motion.p
