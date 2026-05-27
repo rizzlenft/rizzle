@@ -10,7 +10,8 @@ const BookSession = () => {
     description: "Your Web3 consultation with Rizzle is confirmed. Check your email for next steps.",
     canonical: "https://rizzle.io/book-session",
     image: "https://rizzle.io/og/og-book.jpg",
-    // No JSON-LD for the private thank-you page (noindex worthy, but at least no schema noise).
+    // Private post-purchase page — keep it out of search results.
+    noindex: true,
   });
 
   return (
