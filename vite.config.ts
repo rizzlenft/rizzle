@@ -27,13 +27,13 @@ export default defineConfig(({ mode }) => ({
           "react-vendor": ["react", "react-dom", "react-router-dom"],
           "framer-motion": ["framer-motion"],
           "analytics": ["posthog-js"],
+          // Only list radix packages still imported by surviving components.
+          // The removed entries (react-toast, react-tabs, react-popover,
+          // react-dropdown-menu) all corresponded to shadcn UI files that
+          // were never used by the app.
           "radix-ui": [
             "@radix-ui/react-dialog",
             "@radix-ui/react-tooltip",
-            "@radix-ui/react-toast",
-            "@radix-ui/react-tabs",
-            "@radix-ui/react-popover",
-            "@radix-ui/react-dropdown-menu",
             "@radix-ui/react-slot",
           ],
           "supabase": ["@supabase/supabase-js"],

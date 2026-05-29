@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Play, Copy, Check } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { track } from "@/lib/analytics";
 
 import { useEpisodeNavigation } from "@/hooks/useEpisodeNavigation";
@@ -24,20 +25,11 @@ interface GuestChipProps {
 const GuestChip = ({ guest }: GuestChipProps) => {
   const [copied, setCopied] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const { toast } = useToast();
-  
-  // Use direct viewport check for reliable mobile detection
-  const [isMobileViewport, setIsMobileViewport] = useState(() => 
-    typeof window !== "undefined" ? window.innerWidth < 768 : false
-  );
-  
-  useEffect(() => {
-    const checkViewport = () => {
-      setIsMobileViewport(window.innerWidth < 768);
-    };
-    window.addEventListener("resize", checkViewport);
-    return () => window.removeEventListener("resize", checkViewport);
-  }, []);
+
+  // Shared mobile-viewport hook (matches sm/md tailwind breakpoint of 768px).
+  // Previously this component reimplemented the same listener inline; the
+  // hook is the single source of truth.
+  const isMobileViewport = useIsMobile();
 
   const videoIds = getAllGuestVideoIds(guest);
   const episodeCount = getGuestEpisodeCount(guest);
@@ -96,17 +88,10 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      toast({
-        title: "Link copied!",
-        description: `YouTube link for ${guest} copied to clipboard`,
-      });
+      toast.success("Link copied!", { description: `YouTube link for ${guest} copied to clipboard` });
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      toast({
-        title: "Failed to copy",
-        description: "Please try again",
-        variant: "destructive",
-      });
+      toast.error("Failed to copy", { description: "Please try again" });
     }
   };
 

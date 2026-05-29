@@ -1,14 +1,17 @@
-import { useTheme } from "next-themes";
 import { Toaster as Sonner, toast } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
+// The site is hardcoded to a dark theme everywhere (see index.html
+// theme-color and tailwind dark-mode styles), so Sonner just inherits
+// that. The previous version pulled `useTheme()` from next-themes, but
+// there was no ThemeProvider mounted, so it always fell back to "system".
+// Dropping next-themes both shrinks the bundle and makes the dark
+// styling deterministic.
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
-
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme="dark"
       className="toaster group"
       toastOptions={{
         classNames: {
