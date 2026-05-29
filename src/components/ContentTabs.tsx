@@ -70,6 +70,7 @@ import babacciImg from "@/assets/babacci-new.webp";
 import nft42Img from "@/assets/nft42.webp";
 import rizzleMiniappsImg from "@/assets/rizzle-miniapps.webp";
 import rizzleWebDevImg from "@/assets/rizzle-web-development.webp";
+import trinityLabsImg from "@/assets/trinity-labs.webp";
 
 const projects = [
   {
@@ -79,9 +80,6 @@ const projects = [
     featured: true,
     image: wipMeetupImg,
     showLivePreview: true,
-    previewActions: [
-      { label: "Trinity Labs", emoji: "⚗️", href: TRINITY_LABS_URL },
-    ],
     links: [
       { label: "Website", emoji: "🌐", href: "https://thewipmeetup.com/" },
     ],
@@ -107,6 +105,15 @@ const projects = [
       { label: "rizzle.io", emoji: "🔥", href: "https://rizzle.io" },
       { label: "thewipmeetup.com", emoji: "🎙️", href: "https://thewipmeetup.com" },
     ],
+  },
+  {
+    name: "Trinity Labs",
+    description:
+      "Multi-pool token liquidity on Base. Launch with built-in curves across USDC, ETH, and Clanker — automated arbitrage and deflationary burns on every sell.",
+    emoji: "⚗️",
+    image: trinityLabsImg,
+    imagePosition: "center 40%",
+    links: [{ label: "Website", emoji: "🌐", href: TRINITY_LABS_URL }],
   },
   {
     name: "Babacci",
