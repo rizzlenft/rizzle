@@ -8,6 +8,8 @@ interface SeoOptions {
   image?: string;
   /** Optional JSON-LD object (or array of objects) injected as <script type="application/ld+json"> with id `route-jsonld`. Replaces previous route's injection. */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** When true, sets <meta name="robots" content="noindex, nofollow"> for this route. Use for private/post-purchase pages that should not appear in search results. */
+  noindex?: boolean;
 }
 
 /**
@@ -49,7 +51,9 @@ const upsertRouteJsonLd = (data: SeoOptions["jsonLd"]) => {
   document.head.appendChild(script);
 };
 
-export const useSeo = ({ title, description, canonical, image, jsonLd }: SeoOptions) => {
+const DEFAULT_ROBOTS = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
+
+export const useSeo = ({ title, description, canonical, image, jsonLd, noindex }: SeoOptions) => {
   useEffect(() => {
     if (title) {
       document.title = title;
@@ -70,6 +74,10 @@ export const useSeo = ({ title, description, canonical, image, jsonLd }: SeoOpti
       upsertMeta('meta[name="twitter:image"]', "name", "twitter:image", image);
       upsertMeta('meta[property="fc:frame:image"]', "property", "fc:frame:image", image);
     }
+    // Always reset the robots tag to the site default first, then override with
+    // noindex on private routes. This way navigating back to a public route
+    // restores indexable behavior.
+    upsertMeta('meta[name="robots"]', "name", "robots", noindex ? "noindex, nofollow" : DEFAULT_ROBOTS);
     upsertRouteJsonLd(jsonLd);
-  }, [title, description, canonical, image, jsonLd]);
+  }, [title, description, canonical, image, jsonLd, noindex]);
 };

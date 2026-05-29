@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Local environment files. The currently tracked .env contains only the
+# Supabase publishable (anon) key, which is safe to be public — but this
+# rule prevents accidentally committing any real secret added later.
+.env
+.env.local
+.env.*.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
