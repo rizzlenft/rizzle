@@ -116,12 +116,25 @@ Deno.serve(async (req) => {
 });
 
 function parseCastsFromMarkdown(markdown: string): Array<{ text: string; url: string; hash: string }> {
-  const castUrlRegex = /https?:\/\/(?:warpcast\.com|farcaster\.xyz)\/rizzle\/0x[a-f0-9]+/gi;
-  const matchedUrls = [...new Set((markdown.match(castUrlRegex) ?? []).map(normalizeCastUrl))];
+  // Match cast URLs in either format we see in the wild:
+  //   - path style:  https://farcaster.xyz/rizzle/0xabcd1234         (legacy, used by old DEFAULT_FARCASTER_URL)
+  //   - query style: https://farcaster.xyz/rizzle?castHash=0xabcd... (what r.jina.ai's render of warpcast.com returns today)
+  // Both resolve to the same cast on Farcaster's site, so we accept either.
+  const castUrlRegex = /https?:\/\/(?:warpcast\.com|farcaster\.xyz)\/rizzle(?:\/|\?castHash=)0x[a-f0-9]+/gi;
 
-  const enriched = matchedUrls
-    .map((url) => {
-      const index = markdown.indexOf(url);
+  // We need both the raw URL (to locate it inside the markdown for snippet
+  // extraction) and the normalized URL (for storage + dedup). Keep them paired.
+  const rawMatches = markdown.match(castUrlRegex) ?? [];
+  const seen = new Map<string, string>(); // normalized -> first raw occurrence
+  for (const raw of rawMatches) {
+    const normalized = normalizeCastUrl(raw);
+    if (!seen.has(normalized)) seen.set(normalized, raw);
+  }
+
+  const enriched = [...seen.entries()]
+    .map(([normalizedUrl, rawUrl]) => {
+      const index = markdown.indexOf(rawUrl);
+      if (index === -1) return null;
       const snippet = markdown.slice(Math.max(0, index - 220), Math.min(markdown.length, index + 220));
       const text = cleanPostText(snippet);
       const ageMinutes = parseAgeMinutes(snippet);
@@ -130,8 +143,8 @@ function parseCastsFromMarkdown(markdown: string): Array<{ text: string; url: st
 
       return {
         text: text.slice(0, 500),
-        url,
-        hash: simpleHash(`${url}:${text}`),
+        url: normalizedUrl,
+        hash: simpleHash(`${normalizedUrl}:${text}`),
         ageMinutes,
         index,
       };
@@ -172,7 +185,23 @@ function cleanPostText(raw: string): string {
 }
 
 function normalizeCastUrl(url: string): string {
-  return url.replace(/[),.;!?]+$/, "").split("?")[0].split("#")[0];
+  // Strip trailing punctuation that markdown links sometimes carry.
+  let normalized = url.replace(/[),.;!?]+$/, "").split("#")[0];
+
+  // Convert query-style cast URLs (?castHash=0xFULLHASH) to the legacy path
+  // style (/0xFULLHASH). Both forms are valid links on farcaster.xyz; keeping
+  // them in one shape means duplicate detection works and the downstream
+  // parser (which uses indexOf to locate snippets in the markdown) doesn't
+  // need to look for two URL formats.
+  const queryStyleMatch = normalized.match(
+    /^(https?:\/\/(?:warpcast\.com|farcaster\.xyz)\/rizzle)\?castHash=(0x[a-f0-9]+)(?:&.*)?$/i,
+  );
+  if (queryStyleMatch) {
+    return `${queryStyleMatch[1]}/${queryStyleMatch[2]}`;
+  }
+
+  // Otherwise this is already a path-style URL — strip any remaining query.
+  return normalized.split("?")[0];
 }
 
 function parseAgeMinutes(text: string): number {
