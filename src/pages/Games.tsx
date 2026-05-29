@@ -17,6 +17,7 @@ interface GameEntry {
   emoji: string;
   path: string;
   status: "playable" | "coming-soon";
+  leaderboardMode?: "campaign" | "high-score";
 }
 
 const games: GameEntry[] = [
@@ -27,6 +28,16 @@ const games: GameEntry[] = [
     emoji: "🏃‍♂️",
     path: "/games/rizzle-dash.html",
     status: "playable",
+    leaderboardMode: "campaign",
+  },
+  {
+    id: "whack-a-mole",
+    title: "Web3 Whack-a-Mole",
+    description: "Bonk the scammers, save the chain. 30-second arcade rounds with golden bonks, flying rugs, and skull traps.",
+    emoji: "🐀",
+    path: "/games/whack-a-mole/index.html",
+    status: "playable",
+    leaderboardMode: "high-score",
   },
 ];
 
@@ -41,9 +52,9 @@ const Games = () => {
   const [leaderboardKey, setLeaderboardKey] = useState(0);
 
   useSeo({
-    title: "Arcade | Rizzle Dash & More Web3 Mini-Games",
+    title: "Arcade | Rizzle Dash, Whack-a-Mole & Web3 Mini-Games",
     description:
-      "Play Rizzle Dash — a fast-paced endless runner with 10 levels and a leaderboard. More silly games coming soon.",
+      "Play Rizzle Dash and Web3 Whack-a-Mole — silly arcade games with leaderboards. More coming soon.",
     canonical: "https://rizzle.io/games",
     // No game-specific OG image — falls back to the default og-home.jpg set
     // in index.html. The old og-games.jpg promised "EARN REWARDS ONCHAIN"
@@ -173,14 +184,17 @@ const Games = () => {
 
             {/* Leaderboard */}
             {activeGame && (
-              <GameLeaderboard key={leaderboardKey} gameId={activeGame.id} />
+              <GameLeaderboard
+                key={leaderboardKey}
+                gameId={activeGame.id}
+                mode={activeGame.leaderboardMode ?? "campaign"}
+              />
             )}
           </div>
 
-          {/* Game selector grid — ready for future games */}
-          {games.length > 1 && (
-            <div className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3">
-              {games.map((game) => (
+          {/* Game selector */}
+          <div className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3">
+            {games.map((game) => (
                 <button
                   key={game.id}
                   onClick={() => {
@@ -205,8 +219,7 @@ const Games = () => {
                   )}
                 </button>
               ))}
-            </div>
-          )}
+          </div>
         </main>
 
         <Footer />
