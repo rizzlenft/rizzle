@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Shuffle, ExternalLink, Copy, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { getRandomEpisode, getYouTubeThumbnail } from "@/data/guestData";
 
 const RandomEpisodeButton = () => {
@@ -13,7 +13,6 @@ const RandomEpisodeButton = () => {
   } | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { toast } = useToast();
 
   const handleRandomClick = () => {
     setIsSpinning(true);
@@ -31,17 +30,10 @@ const RandomEpisodeButton = () => {
     try {
       await navigator.clipboard.writeText(randomResult.url);
       setCopied(true);
-      toast({
-        title: "Link copied!",
-        description: `YouTube link copied to clipboard`,
-      });
+      toast.success("Link copied!", { description: "YouTube link copied to clipboard" });
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      toast({
-        title: "Failed to copy",
-        description: "Please try again",
-        variant: "destructive",
-      });
+      toast.error("Failed to copy", { description: "Please try again" });
     }
   };
 
