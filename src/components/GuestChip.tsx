@@ -15,6 +15,7 @@ import {
   isSpotifyOnlyGuest,
   guestSpotifyLinks,
 } from "@/data/guestData";
+import { useGuestLinks } from "@/contexts/GuestLinksContext";
 import tokensmartThumbnail from "@/assets/tokensmart-thumbnail.webp";
 
 interface GuestChipProps {
@@ -39,9 +40,13 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     return () => window.removeEventListener("resize", checkViewport);
   }, []);
 
-  const videoIds = getAllGuestVideoIds(guest);
-  const episodeCount = getGuestEpisodeCount(guest);
-  const url = getGuestVideoUrl(guest);
+  // Pull the merged static+DB link map from context. When this chip renders
+  // outside the GuestArchive provider, the context default falls back to the
+  // static guestVideoLinks map (same as the pre-context behavior).
+  const links = useGuestLinks();
+  const videoIds = getAllGuestVideoIds(guest, links);
+  const episodeCount = getGuestEpisodeCount(guest, links);
+  const url = getGuestVideoUrl(guest, links);
 
   const {
     currentIndex,
@@ -116,7 +121,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
         data-guest-chip
         whileHover={{ scale: 1.05 }}
         className={`group relative inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all cursor-pointer ${
-          hasDirectLink(guest)
+          hasDirectLink(guest, links)
             ? "border-primary/30 hover:border-primary"
             : "border-border/50 hover:border-primary/50"
         }`}

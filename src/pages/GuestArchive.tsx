@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, Users } from "lucide-react";
+import { Search } from "lucide-react";
 import TopNav from "@/components/TopNav";
 import { Input } from "@/components/ui/input";
 import wipLogo from "@/assets/wip-logo.webp";
@@ -12,6 +12,7 @@ import GuestChip from "@/components/GuestChip";
 import RandomEpisodeButton from "@/components/RandomEpisodeButton";
 import NetworkStats from "@/components/NetworkStats";
 import { useSeo } from "@/hooks/useSeo";
+import { GuestLinksProvider } from "@/contexts/GuestLinksContext";
 
 const GuestArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -64,13 +65,19 @@ const GuestArchive = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Merge static guest list with dynamically extracted guests
+  // Merge static guest list with dynamically extracted guests. The merged
+  // map is also threaded through GuestLinksProvider below so each GuestChip
+  // can resolve its own URL/video-id without re-doing the merge.
+  const mergedLinks = useMemo(
+    () => mergeGuestData(guestVideoLinks, extractedGuests),
+    [extractedGuests],
+  );
+
   const allGuests = useMemo(() => {
-    const mergedLinks = mergeGuestData(guestVideoLinks, extractedGuests);
     // Combine static guest names with any new names from database
     const allNames = new Set([...guestData, ...Object.keys(mergedLinks)]);
     return Array.from(allNames).sort((a, b) => a.localeCompare(b));
-  }, [extractedGuests]);
+  }, [mergedLinks]);
 
   const filteredGuests = useMemo(() => {
     if (!searchQuery.trim()) return allGuests;
@@ -98,8 +105,12 @@ const GuestArchive = () => {
   });
 
   return (
+    <GuestLinksProvider links={mergedLinks}>
     <div className="min-h-screen bg-background">
       <TopNav activeTab="guests" />
+      {/* Visually hidden primary heading. Search engines and assistive tech expect
+          one clear page title; the visual identity comes from the logo trio above. */}
+      <h1 className="sr-only">Rizzle's Network — Web3 Guest Archive</h1>
 
       {/* Header with logos */}
       <header className="relative overflow-hidden border-b border-border/50">
@@ -311,6 +322,7 @@ const GuestArchive = () => {
         )}
       </main>
     </div>
+    </GuestLinksProvider>
   );
 };
 
