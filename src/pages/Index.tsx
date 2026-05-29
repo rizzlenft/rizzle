@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useSearchParams } from "react-router-dom";
 import Hero from "@/components/Hero";
 import ContentTabs from "@/components/ContentTabs";
-import Socials from "@/components/Socials";
 import Footer from "@/components/Footer";
 import TopNav from "@/components/TopNav";
 import { useSeo } from "@/hooks/useSeo";
+
+const Socials = lazy(() => import("@/components/Socials"));
 
 const Index = () => {
   const [searchParams] = useSearchParams();
@@ -71,10 +72,12 @@ const Index = () => {
       {/* Content */}
       <div className="relative z-10">
         <TopNav activeTab={activeTab} onTabChange={setActiveTab} />
-        <main>
+        <main id="main-content">
           {activeTab === "projects" && <Hero />}
           <ContentTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-          <Socials />
+          <Suspense fallback={null}>
+            <Socials />
+          </Suspense>
         </main>
         <Footer />
       </div>

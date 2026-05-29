@@ -10,6 +10,9 @@ interface SwipeGestureOptions {
 
 // Trigger haptic feedback on supported devices
 const triggerHaptic = (duration: number = 10) => {
+  if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
   if (typeof navigator !== "undefined" && "vibrate" in navigator) {
     navigator.vibrate(duration);
   }

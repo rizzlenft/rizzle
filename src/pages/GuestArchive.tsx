@@ -23,6 +23,14 @@ const GuestArchive = () => {
     () => [
       {
         "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://rizzle.io/" },
+          { "@type": "ListItem", position: 2, name: "Network", item: "https://rizzle.io/guests" },
+        ],
+      },
+      {
+        "@context": "https://schema.org",
         "@type": "CollectionPage",
         "@id": "https://rizzle.io/guests#page",
         url: "https://rizzle.io/guests",
@@ -260,7 +268,7 @@ const GuestArchive = () => {
       </header>
 
       {/* Search and guest list */}
-      <main className="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+      <main id="main-content" className="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
         {guestsFetchFailed && (
           <p className="mb-6 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-center text-sm text-yellow-200/90" role="status">
             Live guest updates are temporarily unavailable — showing saved directory.

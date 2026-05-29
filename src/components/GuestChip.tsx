@@ -145,9 +145,11 @@ const GuestChip = ({ guest }: GuestChipProps) => {
         )}
 
         <button
+          type="button"
           onClick={handleCopy}
-          className="ml-1 p-0.5 rounded hover:bg-primary/20 transition-colors"
-          title="Copy YouTube link"
+          className="ml-1 flex min-h-[44px] min-w-[44px] items-center justify-center rounded hover:bg-primary/20 transition-colors sm:min-h-0 sm:min-w-0 sm:p-0.5"
+          aria-label={`Copy link for ${guest}`}
+          title="Copy link"
         >
           {copied ? (
             <Check className="h-3 w-3 text-primary" />

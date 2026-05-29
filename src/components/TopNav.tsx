@@ -21,7 +21,7 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
   };
 
   const tabClass = (tab: string) =>
-    `relative flex items-center justify-center gap-1 sm:gap-1.5 px-2.5 xs:px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full ${
+    `relative flex items-center justify-center gap-1 sm:gap-1.5 px-2.5 xs:px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
       activeTab === tab
         ? "text-background"
         : "text-muted-foreground hover:text-foreground"
@@ -55,22 +55,32 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
 
         {/* Right — tab toggle (centered on small screens) */}
         <div className="inline-flex items-center gap-0.5 sm:gap-1 rounded-full border border-border/50 bg-card/30 p-1 backdrop-blur-sm mx-auto xs:mx-0 xs:ml-auto">
-          <button onClick={() => handleTabClick("projects")} className={tabClass("projects")}>
+          <button
+            type="button"
+            onClick={() => handleTabClick("projects")}
+            className={tabClass("projects")}
+            aria-current={activeTab === "projects" ? "page" : undefined}
+          >
             {activeIndicator("projects")}
             <Briefcase className="relative z-10 h-4 w-4" />
             <span className="relative z-10 hidden xs:inline">Projects</span>
           </button>
-          <Link to="/guests" className={tabClass("guests")}>
+          <Link to="/guests" className={tabClass("guests")} aria-current={activeTab === "guests" ? "page" : undefined}>
             {activeIndicator("guests")}
             <Users className="relative z-10 h-4 w-4" />
             <span className="relative z-10 hidden xs:inline">Network</span>
           </Link>
-          <button onClick={() => handleTabClick("art")} className={tabClass("art")}>
+          <button
+            type="button"
+            onClick={() => handleTabClick("art")}
+            className={tabClass("art")}
+            aria-current={activeTab === "art" ? "page" : undefined}
+          >
             {activeIndicator("art")}
             <Sparkles className="relative z-10 h-4 w-4" />
             <span className="relative z-10 hidden xs:inline">CryptoArt</span>
           </button>
-          <Link to="/games" className={tabClass("games")}>
+          <Link to="/games" className={tabClass("games")} aria-current={activeTab === "games" ? "page" : undefined}>
             {activeIndicator("games")}
             <Gamepad2 className="relative z-10 h-4 w-4" />
             <span className="relative z-10 hidden xs:inline">Games</span>

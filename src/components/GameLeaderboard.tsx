@@ -23,19 +23,22 @@ const GameLeaderboard = ({ gameId, mode = "campaign" }: GameLeaderboardProps) =>
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
 
   const fetchScores = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
+    setFetchError(false);
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("game_scores")
       .select("player_name, level, score")
       .eq("game_id", gameId)
       .order("score", { ascending: false })
       .limit(mode === "high-score" ? 20 : 500);
 
-    if (!data) {
+    if (error || !data) {
+      setFetchError(true);
       setEntries([]);
       setLoading(false);
       setRefreshing(false);
@@ -132,7 +135,20 @@ const GameLeaderboard = ({ gameId, mode = "campaign" }: GameLeaderboardProps) =>
         </p>
       </div>
 
-      {entries.length === 0 ? (
+      {fetchError ? (
+        <div className="px-4 py-10 text-center sm:px-5">
+          <p className="text-sm text-muted-foreground">
+            Couldn&apos;t load scores right now.
+          </p>
+          <button
+            type="button"
+            onClick={() => fetchScores(true)}
+            className="mt-3 text-sm font-medium text-primary hover:underline"
+          >
+            Try again
+          </button>
+        </div>
+      ) : entries.length === 0 ? (
         <div className="px-4 py-10 text-center sm:px-5">
           <Trophy className="mx-auto h-8 w-8 text-muted-foreground/50" aria-hidden />
           <p className="mt-2 text-sm text-muted-foreground">

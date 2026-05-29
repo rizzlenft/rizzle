@@ -23,7 +23,7 @@ const BookSession = () => {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[500px] w-[700px] rounded-full bg-primary/5 blur-[160px]" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-16">
+      <main id="main-content" className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-16">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -67,7 +67,7 @@ const BookSession = () => {
             Back to rizzle.io
           </Link>
         </motion.div>
-      </div>
+      </main>
 
       <Footer />
     </div>

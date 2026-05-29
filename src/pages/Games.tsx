@@ -103,6 +103,13 @@ const Games = () => {
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://rizzle.io/" },
+            { "@type": "ListItem", position: 2, name: "Arcade", item: "https://rizzle.io/games" },
+          ],
+        },
+        {
           "@type": "VideoGame",
           name: "Rizzle Dash",
           url: "https://rizzle.io/games/rizzle-dash.html",
@@ -199,6 +206,18 @@ const Games = () => {
     window.addEventListener("message", handleScoreMessage);
     return () => window.removeEventListener("message", handleScoreMessage);
   }, [handleScoreMessage]);
+
+  useEffect(() => {
+    if (!showNamePrompt) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowNamePrompt(false);
+        setPendingScore(null);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [showNamePrompt]);
 
   useEffect(() => {
     document.body.style.overflow = isFullscreen ? "hidden" : "";
@@ -334,6 +353,7 @@ const Games = () => {
                     title={activeGame.title}
                     className="h-full w-full border-0 touch-manipulation"
                     allow="autoplay; fullscreen"
+                    loading="lazy"
                   />
                 </div>
               </section>

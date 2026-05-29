@@ -22,6 +22,7 @@ const Hero = () => {
           className="h-full w-full scale-105 object-cover object-top sm:object-center opacity-35"
           loading="eager"
           decoding="async"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/50 to-background" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/40 via-transparent to-background/40" />
@@ -56,12 +57,14 @@ const Hero = () => {
             alt=""
             aria-hidden="true"
             className="mx-auto h-[12rem] w-auto sm:h-[26rem] md:h-[34rem] lg:h-[42rem] invert"
+            width={1200}
+            height={400}
             style={{
               imageRendering: 'auto',
               WebkitFontSmoothing: 'antialiased'
             }}
             loading="eager"
-            decoding="sync"
+            decoding="async"
           />
         </motion.h1>
         
