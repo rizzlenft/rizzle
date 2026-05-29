@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { STRIPE_CONSULT_LINK, TRINITY_LABS_URL } from "@/lib/site-links";
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -37,7 +38,15 @@ const Footer = () => {
             Arcade
           </Link>
           <a
-            href="https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00"
+            href={TRINITY_LABS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground transition-colors hover:text-primary"
+          >
+            Trinity Labs
+          </a>
+          <a
+            href={STRIPE_CONSULT_LINK}
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground transition-colors hover:text-primary"

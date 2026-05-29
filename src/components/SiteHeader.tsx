@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { Zap } from "lucide-react";
 import { track } from "@/lib/analytics";
-
-const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00";
+import { STRIPE_CONSULT_LINK } from "@/lib/site-links";
 
 const SiteHeader = () => {
   return (
@@ -17,7 +16,7 @@ const SiteHeader = () => {
       </a>
       
       <a
-        href={STRIPE_PAYMENT_LINK}
+        href={STRIPE_CONSULT_LINK}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => track("consult_cta_clicked", { location: "site_header" })}

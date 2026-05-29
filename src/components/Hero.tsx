@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Music, Play, X } from "lucide-react";
 import rizzleSig from "@/assets/rizzle-sig-v2.png";
 import rizzlePfp from "@/assets/rizzlepfp.webp";
+import { STRIPE_CONSULT_LINK } from "@/lib/site-links";
+import { track } from "@/lib/analytics";
 
 const Hero = () => {
   const [showPlayer, setShowPlayer] = useState(false);
@@ -98,9 +100,10 @@ const Hero = () => {
           </div>
           <div className="hidden sm:block h-8 w-px bg-border" />
           <a
-            href="https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00"
+            href={STRIPE_CONSULT_LINK}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => track("consult_cta_clicked", { location: "hero_stats" })}
             className="hidden sm:block group text-center transition-all duration-300 hover:scale-105"
           >
             <div className="font-display text-3xl font-bold text-primary text-glow-sm">◎</div>
@@ -110,9 +113,10 @@ const Hero = () => {
 
         {/* Mobile-only Book a Consult CTA — full width, clear it's an action */}
         <motion.a
-          href="https://buy.stripe.com/9B65kF3CTbyH5Eh0XM63K00"
+          href={STRIPE_CONSULT_LINK}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => track("consult_cta_clicked", { location: "hero_mobile" })}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.75, duration: 0.6 }}

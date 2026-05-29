@@ -9,6 +9,7 @@ const NotFound = () => {
   useSeo({
     title: "404 — Page Not Found | Rizzle",
     description: "The page you're looking for doesn't exist. Head back to the Rizzle homepage.",
+    noindex: true,
   });
 
   useEffect(() => {

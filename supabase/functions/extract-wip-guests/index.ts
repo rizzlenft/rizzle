@@ -276,7 +276,7 @@ Deno.serve(async (req) => {
           guest_name: name,
           video_id: video.videoId,
           video_title: video.title,
-          confirmed: false,
+          confirmed: true,
         }));
 
         const { error: insertError } = await supabase
