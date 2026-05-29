@@ -1765,7 +1765,11 @@ function completeLevel(){
   var lvlSlice=Math.max(0,G.score-G.levelEntryScore);
   saveBest(G.level,lvlSlice);
   G.bank=G.score;
-  try{window.parent.postMessage({type:'rizzle-score',game:'rizzle-dash',level:G.level,levelScore:lvlSlice,campaignTotal:getCampaignTotal(),runTotal:G.score,coins:coinCount,totalCoins:totalCoins,time:parseFloat(elapsed)},'*');}catch(e){}
+  // Target our own origin only — never broadcast scores to '*'. When the game
+  // is loaded standalone (not in an iframe) window.parent === window, so this
+  // still works for direct visits. When embedded on a foreign origin the
+  // postMessage will be silently dropped by the browser, which is what we want.
+  try{window.parent.postMessage({type:'rizzle-score',game:'rizzle-dash',level:G.level,levelScore:lvlSlice,campaignTotal:getCampaignTotal(),runTotal:G.score,coins:coinCount,totalCoins:totalCoins,time:parseFloat(elapsed)},window.location.origin);}catch(e){}
   setTimeout(function(){openCastle(pct,elapsed);},600);
 }
 function openCastle(pct,elapsed){
