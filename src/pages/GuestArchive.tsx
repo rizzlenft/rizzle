@@ -11,6 +11,7 @@ import { useExtractedGuests, mergeGuestData } from "@/hooks/useExtractedGuests";
 import GuestChip from "@/components/GuestChip";
 import RandomEpisodeButton from "@/components/RandomEpisodeButton";
 import NetworkStats from "@/components/NetworkStats";
+import Footer from "@/components/Footer";
 import { useSeo } from "@/hooks/useSeo";
 
 const GuestArchive = () => {
@@ -310,6 +311,7 @@ const GuestArchive = () => {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 };

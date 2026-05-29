@@ -8,7 +8,7 @@ const POSTHOG_HOST = "https://us.i.posthog.com";
 let initialized = false;
 
 export function initAnalytics() {
-  if (initialized || typeof window === "undefined") return;
+  if (initialized || typeof window === "undefined" || !import.meta.env.PROD) return;
   try {
     posthog.init(POSTHOG_KEY, {
       api_host: POSTHOG_HOST,

@@ -45,6 +45,8 @@ supabase functions deploy get-latest-wip-video extract-wip-guests --no-verify-jw
 
 Pushes to `main` auto-deploy via Cloudflare Pages. PRs get preview URLs.
 
+**Environment variables:** Vite bakes `VITE_*` vars in at build time. This repo commits `.env` with the Supabase URL + anon key (publishable only). To rotate keys without a code change, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in the Cloudflare Pages dashboard instead and remove them from `.env`.
+
 SPA routing is handled by `public/_redirects` (`/* /index.html 200`).
 
 ## Project structure
