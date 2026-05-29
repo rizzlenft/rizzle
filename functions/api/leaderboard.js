@@ -26,8 +26,15 @@ function json(data, status = 200) {
 }
 
 function supabaseConfig(env) {
-  const url = env.VITE_SUPABASE_URL;
-  const key = env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  const url =
+    env.VITE_SUPABASE_URL ||
+    env.SUPABASE_URL ||
+    "";
+  const key =
+    env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    env.SUPABASE_ANON_KEY ||
+    env.SUPABASE_PUBLISHABLE_KEY ||
+    "";
   if (!url || !key) return null;
   return { url, key };
 }

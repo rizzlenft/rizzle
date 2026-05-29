@@ -38,6 +38,7 @@ const games: GameEntry[] = [
     status: "playable",
     leaderboardMode: "campaign",
     viewport: "landscape",
+    embed: true,
   },
   {
     id: "whack-a-mole",
@@ -228,6 +229,7 @@ const Games = () => {
                         title={game.title}
                         variant={game.logoVariant ?? "square"}
                         size="sm"
+                        boost={game.id === "whack-a-mole"}
                       />
                       <div className="min-w-0 flex-1">
                         <h2 className="text-sm font-semibold leading-tight text-foreground sm:text-base">

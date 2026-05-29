@@ -8,7 +8,22 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;touch-action:none;-webkit-user-select:none;user-select:none;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
-#gc{position:relative;width:100vw;height:100vh}
+#gc{position:relative;width:100%;height:100%;min-height:0}
+/* Compact layout when embedded in the Arcade iframe (?embed=1) */
+html.embed #rotprompt{display:none!important}
+html.embed #hud{padding:4px 52px 4px 8px}
+html.embed .ttl{font-size:clamp(16px,4.5vw,40px);letter-spacing:2px}
+html.embed .sub{margin:3px 0 8px;font-size:clamp(6px,1.6vw,9px);letter-spacing:2px}
+html.embed .btn{padding:6px 16px;font-size:clamp(9px,2.2vw,13px);margin:2px;letter-spacing:1px}
+html.embed .scr{padding:6px}
+html.embed #hint{bottom:6px;font-size:9px;padding:3px 8px;letter-spacing:1px}
+html.embed #igbtns{top:3px;right:4px}
+html.embed #igbtns button{width:28px;height:24px;font-size:10px}
+html.embed #deathmsg{padding:10px 16px;font-size:clamp(12px,3vw,22px)}
+html.embed #go-box,html.embed #lco-box{padding:12px 16px;max-width:92%}
+html.embed #lg{gap:4px;width:96%}
+html.embed .lb-info{padding:2px 3px}
+html.embed #lvltoast{top:40px;font-size:clamp(7px,1.8vw,11px)}
 #c{display:block;position:relative;z-index:0;width:100%;height:100%;background:#000}
 /* HUD */
 #ui{position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:40}
@@ -86,6 +101,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Co
 @keyframes castleBounce{from{transform:scale(1)}to{transform:scale(1.12) translateY(-10px)}}
 @keyframes memeFloat{0%,100%{opacity:.7;transform:scale(0.95)}50%{opacity:1;transform:scale(1.08)}}
 </style>
+<script>
+(function(){
+  var p=new URLSearchParams(location.search);
+  if(p.get('embed')==='1'||window.self!==window.top)document.documentElement.classList.add('embed');
+})();
+</script>
 </head>
 <body>
 <div id="rotprompt" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:18px;text-align:center;padding:20px"><div style="font-size:64px;animation:rotanim 1.5s ease-in-out infinite alternate">&#8635;</div><div style="font-weight:900;font-size:24px;margin:12px 0 8px">ROTATE YOUR PHONE</div><div style="color:#aaa;font-size:15px">Rizzle Dash plays best<br>in landscape mode &#127918;</div></div>
@@ -336,15 +357,26 @@ function drawBillboardSign(ctx,sx,sy,w,h,s){
   ctx.restore();
 }
 var RIMG=document.getElementById('rimg');
+var IS_EMBED=document.documentElement.classList.contains('embed');
 function resizeCanvas(){
-  var w=window.innerWidth||document.documentElement.clientWidth;
-  var h=window.innerHeight||document.documentElement.clientHeight;
+  var gc=document.getElementById('gc');
+  var w,h;
+  if(IS_EMBED&&gc){
+    var r=gc.getBoundingClientRect();
+    w=r.width;h=r.height;
+  }else{
+    w=window.innerWidth||document.documentElement.clientWidth;
+    h=window.innerHeight||document.documentElement.clientHeight;
+  }
   w=Math.max(64,Math.floor(Number(w))||800);
   h=Math.max(64,Math.floor(Number(h))||600);
   canvas.width=w;canvas.height=h;
 }
 resizeCanvas();
 window.addEventListener('resize',function(){resizeCanvas();if(G&&G.running)genLevel(G.level,true);});
+if(IS_EMBED&&typeof ResizeObserver==='function'){
+  new ResizeObserver(function(){resizeCanvas();if(G&&G.running)genLevel(G.level,true);}).observe(document.getElementById('gc'));
+}
 
 // ============================================================
 // AUDIO
