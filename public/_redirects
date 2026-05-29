@@ -1,0 +1,12 @@
+# Cloudflare Pages / Netlify SPA fallback.
+#
+# This site is a single-page React app routed by react-router-dom. When a user
+# hits a direct URL like https://rizzle.io/games or refreshes on /guests, the
+# static host needs to serve index.html (which boots React, which then renders
+# the right route) rather than returning a 404.
+#
+# This rule says: for any request that does NOT match a real static file,
+# serve /index.html with a 200 status. Real assets (e.g. /games/rizzle-dash.html,
+# /og/og-home.jpg, /favicon.ico, /assets/*) are served as-is because they exist.
+
+/*    /index.html   200
