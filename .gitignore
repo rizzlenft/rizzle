@@ -19,6 +19,12 @@ dist-ssr
 .env.local
 .env.*.local
 
+# Local one-time migration scratchpad. Contains data exports from the old
+# Lovable-owned Supabase project (game_scores, etc.) and generated SQL we
+# paste into the new (rizzlenft-owned) project during cutover. Not source
+# code — should never be committed.
+.migration-backup/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

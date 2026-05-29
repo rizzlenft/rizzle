@@ -13,6 +13,11 @@ interface RssVideo {
   videoId: string;
   title: string;
   publishedAt: string | null;
+  // The full <media:description> from the YouTube RSS feed. This is exactly
+  // what shows under the video on youtube.com — usually contains a guest list,
+  // links to guests' social handles, episode notes, etc. We used to scrape
+  // this with Firecrawl; the RSS feed has it for free.
+  description: string;
 }
 
 async function fetchRecentWipVideos(limit: number): Promise<RssVideo[]> {
@@ -55,50 +60,46 @@ async function fetchRecentWipVideos(limit: number): Promise<RssVideo[]> {
       entryXml.match(/<media:title>([^<]+)<\/media:title>/)?.[1] ?? 'WIP Meetup';
     const published =
       entryXml.match(/<published>([^<]+)<\/published>/)?.[1] ?? null;
+    // <media:description> wraps the video's full YouTube description. It is
+    // included as a CDATA section so we extract the inner contents.
+    const descriptionMatch = entryXml.match(
+      /<media:description>([\s\S]*?)<\/media:description>/,
+    );
+    const description = decodeXmlEntities(descriptionMatch?.[1] ?? '');
     if (videoId) {
-      videos.push({ videoId, title, publishedAt: published });
+      videos.push({ videoId, title, publishedAt: published, description });
     }
   }
 
   return videos;
 }
 
+function decodeXmlEntities(s: string): string {
+  return s
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&');
+}
+
 async function extractGuestsForVideo(
   video: RssVideo,
-  firecrawlApiKey: string,
-  lovableApiKey: string,
-): Promise<{ guests: string[]; markdownLength: number }> {
-  const youtubeUrl = `https://www.youtube.com/watch?v=${video.videoId}`;
-  console.log(`Scraping ${youtubeUrl}`);
-
-  const scrapeResponse = await fetch('https://api.firecrawl.dev/v1/scrape', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${firecrawlApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      url: youtubeUrl,
-      formats: ['markdown'],
-      waitFor: 3000,
-    }),
-  });
-
-  const scrapeData = await scrapeResponse.json();
-  if (!scrapeResponse.ok) {
-    console.error(`Firecrawl error for ${video.videoId}:`, scrapeData);
-    return { guests: [], markdownLength: 0 };
+  geminiApiKey: string,
+): Promise<{ guests: string[]; descriptionLength: number }> {
+  // If YouTube didn't return a description for this video (rare), there's
+  // nothing for the AI to read — skip the API call entirely.
+  if (!video.description.trim()) {
+    return { guests: [], descriptionLength: 0 };
   }
 
-  const markdown: string = scrapeData.data?.markdown || scrapeData.markdown || '';
-
-  const aiPrompt = `You are analyzing a YouTube video page for a weekly Web3/NFT meetup called "WIP Meetup".
+  const aiPrompt = `You are analyzing a YouTube video description for a weekly Web3/NFT meetup called "WIP Meetup".
 Your task is to extract the names of guests who appeared on this episode.
 
 The video title is: "${video.title}"
 
-Here is the scraped content from the video page:
-${markdown.substring(0, 8000)}
+Here is the YouTube description text:
+${video.description.substring(0, 8000)}
 
 Instructions:
 1. Look for guest names in the video description, which typically lists speakers/guests
@@ -110,32 +111,44 @@ Instructions:
 
 Return ONLY valid JSON, no explanation. Example: ["Guest Name 1", "Guest Name 2"]`;
 
+  // Direct call to Google AI Studio's free Gemini API. Replaces the previous
+  // Lovable AI Gateway proxy (which used the same underlying Gemini model
+  // but required a paid Lovable account).
+  //
+  // Free tier (as of 2026): 15 req/min, 1500 req/day on gemini-2.5-flash.
+  // We call this at most ~5 times per cron run (once a week), well under quota.
   const aiResponse = await fetch(
-    'https://ai.gateway.lovable.dev/v1/chat/completions',
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
     {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${lovableApiKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [{ role: 'user', content: aiPrompt }],
-        temperature: 0.1,
+        contents: [{ role: 'user', parts: [{ text: aiPrompt }] }],
+        generationConfig: {
+          temperature: 0.1,
+          // Constrain output so a 'creative' completion can't run away. A
+          // JSON array of names is well under 1k tokens even for very chatty
+          // episodes.
+          maxOutputTokens: 1024,
+          responseMimeType: 'application/json',
+        },
       }),
     },
   );
 
   if (!aiResponse.ok) {
     console.error(
-      `AI API error for ${video.videoId}:`,
+      `Gemini API error for ${video.videoId}:`,
       await aiResponse.text(),
     );
-    return { guests: [], markdownLength: markdown.length };
+    return { guests: [], descriptionLength: video.description.length };
   }
 
   const aiData = await aiResponse.json();
-  const aiContent: string = aiData.choices?.[0]?.message?.content || '[]';
+  // Gemini returns content under candidates[0].content.parts[].text. With
+  // responseMimeType: 'application/json' it's already raw JSON (no fences).
+  const aiContent: string =
+    aiData?.candidates?.[0]?.content?.parts?.[0]?.text ?? '[]';
 
   let guestNames: string[] = [];
   try {
@@ -153,7 +166,7 @@ Return ONLY valid JSON, no explanation. Example: ["Guest Name 1", "Guest Name 2"
     console.error(`Failed to parse AI response for ${video.videoId}:`, err);
   }
 
-  return { guests: guestNames, markdownLength: markdown.length };
+  return { guests: guestNames, descriptionLength: video.description.length };
 }
 
 Deno.serve(async (req) => {
@@ -167,12 +180,14 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     );
 
-    const firecrawlApiKey = Deno.env.get('FIRECRAWL_API_KEY');
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
 
-    if (!firecrawlApiKey || !lovableApiKey) {
+    if (!geminiApiKey) {
       return new Response(
-        JSON.stringify({ success: false, error: 'API keys not configured' }),
+        JSON.stringify({
+          success: false,
+          error: 'GEMINI_API_KEY is not configured for this function.',
+        }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -226,11 +241,7 @@ Deno.serve(async (req) => {
       }
 
       try {
-        const { guests } = await extractGuestsForVideo(
-          video,
-          firecrawlApiKey,
-          lovableApiKey,
-        );
+        const { guests } = await extractGuestsForVideo(video, geminiApiKey);
 
         if (guests.length === 0) {
           results.push({

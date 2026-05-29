@@ -1,7 +1,12 @@
-project_id = "okfgskiibidjfneysyzi"
+# NOTE: project_id is the Supabase project this codebase deploys to. This is
+# the new, rizzlenft-owned project (Lovable's old project was okfgskiibidjfneysyzi).
+project_id = "nzenbrrraoxmtiugbwob"
 
-[functions.scrape-youtube-guests]
-verify_jwt = false
+# verify_jwt = false means the function can be invoked publicly (no auth header
+# needed). Every function below is either called from the browser (the WIP video
+# one) or called by Supabase's own pg_cron scheduler from inside the database,
+# neither of which carry a user JWT. The functions still do their OWN auth where
+# it matters (e.g. they use the service-role key internally to write to tables).
 
 [functions.get-latest-wip-video]
 verify_jwt = false

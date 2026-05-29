@@ -18,35 +18,29 @@ Deno.serve(async (req) => {
     const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
     void body;
 
-    const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
-    if (!FIRECRAWL_API_KEY) {
-      throw new Error("FIRECRAWL_API_KEY is not configured");
-    }
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-
-    const scrapeResponse = await fetch("https://api.firecrawl.dev/v1/scrape", {
-      method: "POST",
+    // Fetch the Warpcast profile page via Jina's free reader-mode proxy.
+    // r.jina.ai renders the JS-heavy Warpcast page and returns clean markdown,
+    // which our existing parseCastsFromMarkdown() understands. This replaces
+    // the previous Firecrawl integration (which required a paid API key).
+    // Same approach the fetch-twitter-posts function already uses.
+    const scrapeResponse = await fetch("https://r.jina.ai/https://warpcast.com/rizzle", {
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
+        // Asking for markdown explicitly. Without this Jina sometimes returns
+        // text/html which is still parsable but messier.
+        Accept: "text/markdown",
       },
-      body: JSON.stringify({
-        url: "https://warpcast.com/rizzle",
-        formats: ["markdown"],
-      }),
     });
 
     if (!scrapeResponse.ok) {
       const errText = await scrapeResponse.text();
-      throw new Error(`Firecrawl scrape failed [${scrapeResponse.status}]: ${errText}`);
+      throw new Error(`Jina reader fetch failed [${scrapeResponse.status}]: ${errText}`);
     }
 
-    const scrapeData = await scrapeResponse.json();
-    const markdown = scrapeData?.data?.markdown || "";
+    const markdown = await scrapeResponse.text();
 
     const parsedCasts = parseCastsFromMarkdown(markdown).slice(0, 10);
     const parsedDefaultCast = parsedCasts.find((cast) => normalizeCastUrl(cast.url) === DEFAULT_FARCASTER_URL);
