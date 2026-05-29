@@ -14,7 +14,7 @@ interface GameEntry {
   id: string;
   title: string;
   description: string;
-  emoji: string;
+  logo: string;
   path: string;
   status: "playable" | "coming-soon";
   leaderboardMode?: "campaign" | "high-score";
@@ -29,7 +29,7 @@ const games: GameEntry[] = [
     id: "rizzle-dash",
     title: "Rizzle Dash",
     description: "Endless runner — 10 levels, tap or space to jump.",
-    emoji: "🏃‍♂️",
+    logo: "/games/logos/rizzle-dash.png",
     path: "/games/rizzle-dash.html",
     status: "playable",
     leaderboardMode: "campaign",
@@ -39,7 +39,7 @@ const games: GameEntry[] = [
     id: "whack-a-mole",
     title: "Web3 Whack-a-Mole",
     description: "Bonk scammers in 30s arcade rounds — golden bonks, flying rugs, skull traps.",
-    emoji: "🐀",
+    logo: "/games/logos/whack-a-mole.png",
     path: "/games/whack-a-mole/",
     status: "playable",
     leaderboardMode: "high-score",
@@ -204,10 +204,16 @@ const Games = () => {
                         : "border-border/50 bg-card/30 hover:border-primary/30"
                     } ${game.status === "coming-soon" ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="text-3xl leading-none" aria-hidden>
-                        {game.emoji}
-                      </span>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-black/40 p-1 ring-1 ring-border/40">
+                        <img
+                          src={game.logo}
+                          alt=""
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
                       <div className="min-w-0 flex-1">
                         <h2 className="text-sm font-semibold text-foreground">{game.title}</h2>
                         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
