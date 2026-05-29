@@ -479,22 +479,27 @@ export const getYouTubeThumbnail = (videoId: string, quality: 'default' | 'mq' |
 };
 
 // Check if guest is Spotify-only (has Spotify link but no YouTube)
-export const isSpotifyOnlyGuest = (name: string): boolean => {
-  return !guestVideoLinks[name] && !!guestSpotifyLinks[name];
+export const isSpotifyOnlyGuest = (name: string, linksOverride?: GuestLinksMap): boolean => {
+  const links = resolveVideoLinks(linksOverride);
+  return !links[name] && !!guestSpotifyLinks[name];
 };
 
 // Get a random episode (returns guest name and video URL)
-export const getRandomEpisode = (): { guest: string; videoId: string; url: string } => {
-  // Get all guests with direct links
-  const guestsWithLinks = Object.keys(guestVideoLinks);
+export const getRandomEpisode = (
+  linksOverride?: GuestLinksMap
+): { guest: string; videoId: string; url: string } | null => {
+  const links = resolveVideoLinks(linksOverride);
+  const guestsWithLinks = Object.keys(links).filter((name) => getAllGuestVideoIds(name, links).length > 0);
+  if (guestsWithLinks.length === 0) return null;
+
   const randomGuest = guestsWithLinks[Math.floor(Math.random() * guestsWithLinks.length)];
-  const videoIds = getAllGuestVideoIds(randomGuest);
+  const videoIds = getAllGuestVideoIds(randomGuest, links);
   const randomVideoId = videoIds[Math.floor(Math.random() * videoIds.length)];
-  
+
   return {
     guest: randomGuest,
     videoId: randomVideoId,
-    url: `https://youtube.com/watch?v=${randomVideoId}`
+    url: `https://youtube.com/watch?v=${randomVideoId}`,
   };
 };
 

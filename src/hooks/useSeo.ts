@@ -12,6 +12,13 @@ interface SeoOptions {
   noindex?: boolean;
 }
 
+const DEFAULT_TITLE = "Rizzle | Web3 Founder & Builder Since 2019";
+const DEFAULT_DESCRIPTION =
+  "Rizzle (NFTland) — Web3 founder & builder since 2019. Projects, community, crypto art, and the longest-running metaverse meetup.";
+const DEFAULT_CANONICAL = "https://rizzle.io/";
+const DEFAULT_IMAGE = "https://rizzle.io/og/og-home.jpg";
+const DEFAULT_ROBOTS = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
+
 /**
  * Lightweight per-route SEO hook — sets <title>, meta description,
  * canonical, OG/Twitter image, and an optional route-scoped JSON-LD
@@ -40,7 +47,6 @@ const upsertCanonical = (href: string) => {
 const ROUTE_JSONLD_ID = "route-jsonld";
 
 const upsertRouteJsonLd = (data: SeoOptions["jsonLd"]) => {
-  // Always remove the prior route-scoped block so stale schema doesn't linger.
   const existing = document.getElementById(ROUTE_JSONLD_ID);
   if (existing) existing.remove();
   if (!data) return;
@@ -51,7 +57,20 @@ const upsertRouteJsonLd = (data: SeoOptions["jsonLd"]) => {
   document.head.appendChild(script);
 };
 
-const DEFAULT_ROBOTS = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
+const restoreDefaults = () => {
+  document.title = DEFAULT_TITLE;
+  upsertMeta('meta[name="description"]', "name", "description", DEFAULT_DESCRIPTION);
+  upsertMeta('meta[property="og:title"]', "property", "og:title", DEFAULT_TITLE);
+  upsertMeta('meta[name="twitter:title"]', "name", "twitter:title", DEFAULT_TITLE);
+  upsertMeta('meta[property="og:description"]', "property", "og:description", DEFAULT_DESCRIPTION);
+  upsertMeta('meta[name="twitter:description"]', "name", "twitter:description", DEFAULT_DESCRIPTION);
+  upsertCanonical(DEFAULT_CANONICAL);
+  upsertMeta('meta[property="og:url"]', "property", "og:url", DEFAULT_CANONICAL);
+  upsertMeta('meta[property="og:image"]', "property", "og:image", DEFAULT_IMAGE);
+  upsertMeta('meta[name="twitter:image"]', "name", "twitter:image", DEFAULT_IMAGE);
+  upsertMeta('meta[name="robots"]', "name", "robots", DEFAULT_ROBOTS);
+  upsertRouteJsonLd(undefined);
+};
 
 export const useSeo = ({ title, description, canonical, image, jsonLd, noindex }: SeoOptions) => {
   useEffect(() => {
@@ -74,10 +93,9 @@ export const useSeo = ({ title, description, canonical, image, jsonLd, noindex }
       upsertMeta('meta[name="twitter:image"]', "name", "twitter:image", image);
       upsertMeta('meta[property="fc:frame:image"]', "property", "fc:frame:image", image);
     }
-    // Always reset the robots tag to the site default first, then override with
-    // noindex on private routes. This way navigating back to a public route
-    // restores indexable behavior.
     upsertMeta('meta[name="robots"]', "name", "robots", noindex ? "noindex, nofollow" : DEFAULT_ROBOTS);
     upsertRouteJsonLd(jsonLd);
+
+    return restoreDefaults;
   }, [title, description, canonical, image, jsonLd, noindex]);
 };

@@ -43,13 +43,20 @@ const GameLeaderboard = ({ gameId, mode = "campaign" }: GameLeaderboardProps) =>
     }
 
     if (mode === "high-score") {
-      setEntries(
-        data.map((row) => ({
-          player_name: row.player_name,
-          campaign_total: row.score,
-          highest_level: row.level,
+      const bestByPlayer = new Map<string, number>();
+      for (const row of data) {
+        const current = bestByPlayer.get(row.player_name) ?? 0;
+        if (row.score > current) bestByPlayer.set(row.player_name, row.score);
+      }
+      const sorted = [...bestByPlayer.entries()]
+        .map(([player_name, score]) => ({
+          player_name,
+          campaign_total: score,
+          highest_level: 1,
         }))
-      );
+        .sort((a, b) => b.campaign_total - a.campaign_total)
+        .slice(0, 20);
+      setEntries(sorted);
     } else {
       const playerLevels = new Map<string, Map<number, number>>();
       for (const row of data) {

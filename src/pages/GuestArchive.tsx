@@ -17,15 +17,10 @@ import { useSeo } from "@/hooks/useSeo";
 
 const GuestArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { data: extractedGuests = [] } = useExtractedGuests();
+  const { data: extractedGuests = [], isError: guestsFetchFailed } = useExtractedGuests();
 
-  useSeo({
-    title: "Network | Rizzle's Guest Archive — WIP Meetup, Matt & Rizz, TokenSmart",
-    description:
-      "Searchable directory of legendary web3 guests and collaborators from The WIP Meetup, The Matthew & Rizzle Show, and the TokenSmart Podcast.",
-    canonical: "https://rizzle.io/guests",
-    image: "https://rizzle.io/og/og-guests.jpg",
-    jsonLd: [
+  const guestsJsonLd = useMemo(
+    () => [
       {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -59,6 +54,16 @@ const GuestArchive = () => {
         author: { "@id": "https://rizzle.io/#person" },
       },
     ],
+    [],
+  );
+
+  useSeo({
+    title: "Network | Rizzle's Guest Archive — WIP Meetup, Matt & Rizz, TokenSmart",
+    description:
+      "Searchable directory of legendary web3 guests and collaborators from The WIP Meetup, The Matthew & Rizzle Show, and the TokenSmart Podcast.",
+    canonical: "https://rizzle.io/guests",
+    image: "https://rizzle.io/og/og-guests.jpg",
+    jsonLd: guestsJsonLd,
   });
 
   // Scroll to top when component mounts
@@ -77,11 +82,13 @@ const GuestArchive = () => {
     return Array.from(allNames).sort((a, b) => a.localeCompare(b));
   }, [mergedLinks]);
 
+  const normalizeSearch = (value: string) =>
+    value.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
+
   const filteredGuests = useMemo(() => {
     if (!searchQuery.trim()) return allGuests;
-    return allGuests.filter(guest =>
-      guest.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const q = normalizeSearch(searchQuery.trim());
+    return allGuests.filter((guest) => normalizeSearch(guest).includes(q));
   }, [searchQuery, allGuests]);
 
   // Group guests by first letter
@@ -202,6 +209,7 @@ const GuestArchive = () => {
             </div>
 
             {/* Description - more prominent */}
+            <h1 className="sr-only">Rizzle Network — Guest Archive</h1>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -246,16 +254,18 @@ const GuestArchive = () => {
             </motion.div>
 
             {/* Stats */}
-            <NetworkStats
-              totalGuests={allGuests.length}
-              extractedVideoIds={extractedGuests.map(g => g.video_id)}
-            />
+            <NetworkStats totalGuests={allGuests.length} mergedLinks={mergedLinks} />
           </motion.div>
         </div>
       </header>
 
       {/* Search and guest list */}
-      <main className="mx-auto max-w-6xl px-6 py-12">
+      <main className="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+        {guestsFetchFailed && (
+          <p className="mb-6 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-center text-sm text-yellow-200/90" role="status">
+            Live guest updates are temporarily unavailable — showing saved directory.
+          </p>
+        )}
         {/* Search bar and Random button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -267,11 +277,12 @@ const GuestArchive = () => {
             <div className="relative flex-1 w-full">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                type="text"
+                type="search"
                 placeholder="Search guests..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-card/50 border-border/50 focus:border-primary/50"
+                className="min-h-[44px] pl-10 bg-card/50 border-border/50 focus:border-primary/50"
+                aria-label="Search guests"
               />
             </div>
             <RandomEpisodeButton />
@@ -292,7 +303,7 @@ const GuestArchive = () => {
         >
           {sortedKeys.map((letter) => (
             <div key={letter}>
-              <div className="sticky top-[52px] z-20 mb-4 flex items-center gap-3 bg-background/95 backdrop-blur-sm py-2">
+              <div className="sticky top-14 sm:top-16 z-20 mb-4 flex items-center gap-3 bg-background/95 backdrop-blur-sm py-2">
                 <span className="font-display text-2xl font-bold text-primary">
                   {letter}
                 </span>

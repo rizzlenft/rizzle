@@ -71,7 +71,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
   // For any guest that has a Spotify episode link, always show the high-res TokenSmart thumbnail.
   // This prevents missing/low-quality YouTube thumbs (e.g. Sparrow) and keeps Spotify branding consistent.
   const hasSpotifyLink = !!guestSpotifyLinks[guest];
-  const isSpotifyOnly = isSpotifyOnlyGuest(guest);
+  const isSpotifyOnly = isSpotifyOnlyGuest(guest, guestLinks);
   const currentThumbnailUrl = hasSpotifyLink
     ? tokensmartThumbnail
     : previewVideoId

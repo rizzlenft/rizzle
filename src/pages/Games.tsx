@@ -96,20 +96,35 @@ const Games = () => {
   useSeo({
     title: "Arcade | Rizzle Dash, Whack-a-Mole & Web3 Mini-Games",
     description:
-      "Play Rizzle Dash and Web3 Whack-a-Mole — silly arcade games with leaderboards. More coming soon.",
+      "Play Rizzle Dash and Web3 Whack-a-Mole — free browser arcade games with live leaderboards. Built by Rizzle.",
     canonical: "https://rizzle.io/games",
+    image: "https://rizzle.io/og/og-home.jpg",
     jsonLd: {
       "@context": "https://schema.org",
-      "@type": "VideoGame",
-      name: "Rizzle Dash",
-      url: "https://rizzle.io/games",
-      gamePlatform: ["Web Browser", "Mobile Web"],
-      applicationCategory: "Game",
-      operatingSystem: "Any",
-      author: { "@id": "https://rizzle.io/#person" },
-      description:
-        "A fast-paced endless runner with 10 levels, castle sequences, and a pumping soundtrack.",
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      "@graph": [
+        {
+          "@type": "VideoGame",
+          name: "Rizzle Dash",
+          url: "https://rizzle.io/games/rizzle-dash.html",
+          gamePlatform: ["Web Browser", "Mobile Web"],
+          applicationCategory: "Game",
+          operatingSystem: "Any",
+          author: { "@id": "https://rizzle.io/#person" },
+          description: "A fast-paced endless runner with 10 levels and leaderboards.",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        },
+        {
+          "@type": "VideoGame",
+          name: "Web3 Whack-a-Mole",
+          url: "https://rizzle.io/games/whack-a-mole/",
+          gamePlatform: ["Web Browser", "Mobile Web"],
+          applicationCategory: "Game",
+          operatingSystem: "Any",
+          author: { "@id": "https://rizzle.io/#person" },
+          description: "Bonk scammers in 30-second arcade rounds with high-score leaderboards.",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        },
+      ],
     },
   });
 
@@ -127,6 +142,15 @@ const Games = () => {
 
   const handleScoreMessage = useCallback((e: MessageEvent) => {
     if (e.origin !== window.location.origin) return;
+
+    if (e.data?.type === "whack-score") {
+      const score = e.data.score;
+      if (Number.isInteger(score) && score >= 0 && score <= 99_999) {
+        setLeaderboardKey((k) => k + 1);
+      }
+      return;
+    }
+
     if (e.data?.type !== "rizzle-score") return;
 
     const { level, levelScore, campaignTotal } = e.data;

@@ -20,7 +20,7 @@ export function useExtractedGuests() {
 
       if (error) {
         console.error("Error fetching extracted guests:", error);
-        return [];
+        throw error;
       }
 
       return data || [];
