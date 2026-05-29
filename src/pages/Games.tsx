@@ -19,6 +19,11 @@ interface GameEntry {
   /** Square icon optimized for small tab cards */
   logoThumb?: string;
   logoVariant?: "square" | "wide";
+  logoFit?: "contain" | "cover";
+  logoZoom?: string;
+  logoPad?: "none" | "xs" | "sm";
+  logoBrightFrame?: boolean;
+  logoDarkFrame?: boolean;
   path: string;
   status: "playable" | "coming-soon";
   leaderboardMode?: "campaign" | "high-score";
@@ -32,8 +37,12 @@ const games: GameEntry[] = [
     id: "rizzle-dash",
     title: "Rizzle Dash",
     description: "Endless runner — 10 levels. Tap, click, or press space to jump.",
-    logo: "/games/logos/rizzle-dash.png",
+    logo: "/games/logos/rizzle-dash-tab.png",
+    logoThumb: "/games/logos/rizzle-dash-tab.png",
     logoVariant: "square",
+    logoFit: "contain",
+    logoZoom: "scale-[1.22]",
+    logoPad: "none",
     path: "/games/rizzle-dash.html",
     status: "playable",
     leaderboardMode: "campaign",
@@ -44,9 +53,13 @@ const games: GameEntry[] = [
     id: "whack-a-mole",
     title: "Web3 Whack-a-Mole",
     description: "Bonk scammers in 30s rounds — golden bonks, flying rugs, skull traps.",
-    logo: "/games/logos/whack-a-mole-icon.png",
-    logoThumb: "/games/logos/whack-a-mole-icon.png",
+    logo: "/games/logos/whack-a-mole-tab.png",
+    logoThumb: "/games/logos/whack-a-mole-tab.png",
     logoVariant: "square",
+    logoFit: "cover",
+    logoZoom: "scale-[1.08]",
+    logoPad: "none",
+    logoDarkFrame: true,
     path: "/games/whack-a-mole/",
     status: "playable",
     leaderboardMode: "high-score",
@@ -229,7 +242,11 @@ const Games = () => {
                         title={game.title}
                         variant={game.logoVariant ?? "square"}
                         size="sm"
-                        boost={game.id === "whack-a-mole"}
+                        fit={game.logoFit}
+                        zoom={game.logoZoom}
+                        pad={game.logoPad}
+                        brightFrame={game.logoBrightFrame}
+                        darkFrame={game.logoDarkFrame}
                       />
                       <div className="min-w-0 flex-1">
                         <h2 className="text-sm font-semibold leading-tight text-foreground sm:text-base">
