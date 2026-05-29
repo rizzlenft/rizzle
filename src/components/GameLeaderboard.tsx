@@ -122,7 +122,7 @@ const GameLeaderboard = ({ gameId, mode = "campaign" }: GameLeaderboardProps) =>
       <div className="divide-y divide-border/30">
         {entries.map((entry, i) => (
           <div
-            key={entry.player_name}
+            key={`${entry.player_name}-${i}`}
             className="flex items-center gap-3 px-4 py-2.5 text-sm"
           >
             <span className="w-6 text-center">
