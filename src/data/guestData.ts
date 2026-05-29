@@ -429,9 +429,14 @@ export const guestSpotifyLinks: Record<string, string> = {
 };
 
 // Get URL for a guest - returns YouTube if available, Spotify if available, or search fallback
-export const getGuestVideoUrl = (name: string): string => {
-  // First check YouTube links
-  const videoId = guestVideoLinks[name];
+export type GuestLinksMap = Record<string, string | string[]>;
+
+const resolveVideoLinks = (linksOverride?: GuestLinksMap): GuestLinksMap =>
+  linksOverride ?? guestVideoLinks;
+
+export const getGuestVideoUrl = (name: string, linksOverride?: GuestLinksMap): string => {
+  const links = resolveVideoLinks(linksOverride);
+  const videoId = links[name];
   if (videoId) {
     const id = Array.isArray(videoId) ? videoId[0] : videoId;
     return `https://youtube.com/watch?v=${id}`;
@@ -446,15 +451,17 @@ export const getGuestVideoUrl = (name: string): string => {
 };
 
 // Get all video IDs for a guest
-export const getAllGuestVideoIds = (name: string): string[] => {
-  const videoId = guestVideoLinks[name];
+export const getAllGuestVideoIds = (name: string, linksOverride?: GuestLinksMap): string[] => {
+  const links = resolveVideoLinks(linksOverride);
+  const videoId = links[name];
   if (!videoId) return [];
   return Array.isArray(videoId) ? videoId : [videoId];
 };
 
 // Get episode count for a guest
-export const getGuestEpisodeCount = (name: string): number => {
-  const videoId = guestVideoLinks[name];
+export const getGuestEpisodeCount = (name: string, linksOverride?: GuestLinksMap): number => {
+  const links = resolveVideoLinks(linksOverride);
+  const videoId = links[name];
   if (!videoId) return 0;
   return Array.isArray(videoId) ? videoId.length : 1;
 };
@@ -492,7 +499,8 @@ export const getRandomEpisode = (): { guest: string; videoId: string; url: strin
 };
 
 // Check if guest has a direct link (YouTube or Spotify)
-export const hasDirectLink = (name: string) => !!guestVideoLinks[name] || !!guestSpotifyLinks[name];
+export const hasDirectLink = (name: string, linksOverride?: GuestLinksMap) =>
+  !!resolveVideoLinks(linksOverride)[name] || !!guestSpotifyLinks[name];
 
 // Verified guest list - extracted from all video titles in CSV
 export const guestData = [

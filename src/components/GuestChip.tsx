@@ -15,6 +15,7 @@ import {
   isSpotifyOnlyGuest,
   guestSpotifyLinks,
 } from "@/data/guestData";
+import { useGuestLinks } from "@/contexts/GuestLinksContext";
 import tokensmartThumbnail from "@/assets/tokensmart-thumbnail.webp";
 
 interface GuestChipProps {
@@ -22,6 +23,7 @@ interface GuestChipProps {
 }
 
 const GuestChip = ({ guest }: GuestChipProps) => {
+  const guestLinks = useGuestLinks();
   const [copied, setCopied] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const { toast } = useToast();
@@ -39,9 +41,9 @@ const GuestChip = ({ guest }: GuestChipProps) => {
     return () => window.removeEventListener("resize", checkViewport);
   }, []);
 
-  const videoIds = getAllGuestVideoIds(guest);
-  const episodeCount = getGuestEpisodeCount(guest);
-  const url = getGuestVideoUrl(guest);
+  const videoIds = getAllGuestVideoIds(guest, guestLinks);
+  const episodeCount = getGuestEpisodeCount(guest, guestLinks);
+  const url = getGuestVideoUrl(guest, guestLinks);
 
   const {
     currentIndex,
@@ -116,7 +118,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
         data-guest-chip
         whileHover={{ scale: 1.05 }}
         className={`group relative inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all cursor-pointer ${
-          hasDirectLink(guest)
+          hasDirectLink(guest, guestLinks)
             ? "border-primary/30 hover:border-primary"
             : "border-border/50 hover:border-primary/50"
         }`}
