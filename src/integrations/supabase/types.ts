@@ -10,76 +10,10 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.1"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
-      bookings: {
-        Row: {
-          booking_date: string
-          client_email: string
-          client_name: string
-          created_at: string
-          end_time: string
-          id: string
-          meeting_link: string | null
-          start_time: string
-          status: string
-        }
-        Insert: {
-          booking_date: string
-          client_email: string
-          client_name: string
-          created_at?: string
-          end_time: string
-          id?: string
-          meeting_link?: string | null
-          start_time: string
-          status?: string
-        }
-        Update: {
-          booking_date?: string
-          client_email?: string
-          client_name?: string
-          created_at?: string
-          end_time?: string
-          id?: string
-          meeting_link?: string | null
-          start_time?: string
-          status?: string
-        }
-        Relationships: []
-      }
-      farcaster_casts: {
-        Row: {
-          author_username: string
-          cast_text: string
-          cast_url: string | null
-          hash: string | null
-          id: string
-          published_at: string | null
-          scraped_at: string
-        }
-        Insert: {
-          author_username?: string
-          cast_text: string
-          cast_url?: string | null
-          hash?: string | null
-          id?: string
-          published_at?: string | null
-          scraped_at?: string
-        }
-        Update: {
-          author_username?: string
-          cast_text?: string
-          cast_url?: string | null
-          hash?: string | null
-          id?: string
-          published_at?: string | null
-          scraped_at?: string
-        }
-        Relationships: []
-      }
       game_scores: {
         Row: {
           created_at: string
@@ -131,36 +65,6 @@ export type Database = {
           id?: string
           video_id?: string
           video_title?: string | null
-        }
-        Relationships: []
-      }
-      twitter_tweets: {
-        Row: {
-          author_username: string
-          hash: string | null
-          id: string
-          published_at: string | null
-          scraped_at: string
-          tweet_text: string
-          tweet_url: string | null
-        }
-        Insert: {
-          author_username?: string
-          hash?: string | null
-          id?: string
-          published_at?: string | null
-          scraped_at?: string
-          tweet_text: string
-          tweet_url?: string | null
-        }
-        Update: {
-          author_username?: string
-          hash?: string | null
-          id?: string
-          published_at?: string | null
-          scraped_at?: string
-          tweet_text?: string
-          tweet_url?: string | null
         }
         Relationships: []
       }
