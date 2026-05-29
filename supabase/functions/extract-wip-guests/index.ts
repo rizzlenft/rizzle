@@ -174,6 +174,26 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Gate: this function calls Google Gemini, which has a daily quota and a
+  // (small) cost-of-abuse profile. Even though we ship the Supabase anon key
+  // in the browser, this function should NEVER be invoked from a client; it's
+  // only called by the pg_cron job in our own DB. Require a shared secret in
+  // the x-cron-secret header, set on both ends (cron job SQL + Supabase
+  // function secrets) so only our cron can trigger it.
+  //
+  // Anonymous public callers (bots that find this function URL) just get 401.
+  const expectedSecret = Deno.env.get('EXTRACT_WIP_GUESTS_CRON_SECRET');
+  const providedSecret = req.headers.get('x-cron-secret');
+  if (!expectedSecret || providedSecret !== expectedSecret) {
+    return new Response(
+      JSON.stringify({ success: false, error: 'Unauthorized' }),
+      {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
+    );
+  }
+
   try {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,

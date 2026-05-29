@@ -45,7 +45,9 @@ const Games = () => {
     description:
       "Play Rizzle Dash — a fast-paced endless runner with 10 levels and a leaderboard. More silly games coming soon.",
     canonical: "https://rizzle.io/games",
-    image: "https://rizzle.io/og/og-games.jpg",
+    // No game-specific OG image — falls back to the default og-home.jpg set
+    // in index.html. The old og-games.jpg promised "EARN REWARDS ONCHAIN"
+    // which doesn't match the actual game (free leaderboard, no rewards).
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "VideoGame",
@@ -64,8 +66,23 @@ const Games = () => {
   const toggleFullscreen = () => setIsFullscreen((f) => !f);
 
   const handleScoreMessage = useCallback((e: MessageEvent) => {
+    // Reject messages from any other origin. The game iframe is served from
+    // the same domain as the page, so legitimate score events always arrive
+    // with e.origin === window.location.origin. Anything else (an attacker
+    // embedding our page, a browser extension, etc.) is dropped.
+    if (e.origin !== window.location.origin) return;
     if (e.data?.type !== "rizzle-score") return;
+
     const { level, levelScore, campaignTotal } = e.data;
+    // Light input validation — the game caps at 10 levels, scores are
+    // small positive integers in practice. This isn't a substitute for
+    // server-side validation (that'd require an Edge Function) but it
+    // prevents the obvious junk-injection from a buggy or hostile client.
+    const validLevel = Number.isInteger(level) && level >= 1 && level <= 10;
+    const validScore = Number.isInteger(levelScore) && levelScore >= 0 && levelScore <= 100_000;
+    const validTotal = Number.isInteger(campaignTotal) && campaignTotal >= 0 && campaignTotal <= 1_000_000;
+    if (!validLevel || !validScore || !validTotal) return;
+
     setPendingScore({ level, score: levelScore, campaignTotal });
     const saved = localStorage.getItem("rd_player");
     if (saved) {
