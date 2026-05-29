@@ -35,7 +35,7 @@ const Footer = () => {
             Network
           </Link>
           <Link to="/games" className="text-muted-foreground transition-colors hover:text-primary">
-            Arcade
+            Games
           </Link>
           <a
             href={TRINITY_LABS_URL}

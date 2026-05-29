@@ -15,6 +15,7 @@ export function useExtractedGuests() {
       const { data, error } = await supabase
         .from("guest_appearances")
         .select("guest_name, video_id, video_title, confirmed")
+        .eq("confirmed", true)
         .order("extracted_at", { ascending: false });
 
       if (error) {
