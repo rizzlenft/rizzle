@@ -29,12 +29,12 @@ function supabaseConfig(env) {
   const url =
     env.VITE_SUPABASE_URL ||
     env.SUPABASE_URL ||
-    "";
+    "https://nzenbrrraoxmtiugbwob.supabase.co";
   const key =
     env.VITE_SUPABASE_PUBLISHABLE_KEY ||
     env.SUPABASE_ANON_KEY ||
     env.SUPABASE_PUBLISHABLE_KEY ||
-    "";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56ZW5icnJyYW94bXRpdWdid29iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNjIwMzcsImV4cCI6MjA5NTYzODAzN30.uq0ymWIsNM-n_nj232AzfLmZ25Uf-JkXiMayCBKKISw";
   if (!url || !key) return null;
   return { url, key };
 }
