@@ -9,6 +9,13 @@ interface ProjectLink {
   emoji?: string;
 }
 
+/** Compact outbound pill stacked under the WIP live preview (top-right of card image). */
+interface PreviewAction {
+  label: string;
+  href: string;
+  emoji?: string;
+}
+
 interface ProjectCardProps {
   name: string;
   description: string;
@@ -18,6 +25,8 @@ interface ProjectCardProps {
   featured?: boolean;
   image?: string;
   showLivePreview?: boolean;
+  /** Shown below the WIP video preview — e.g. Trinity Labs project link. */
+  previewActions?: PreviewAction[];
   imagePosition?: string;
 }
 
@@ -29,6 +38,7 @@ const ProjectCard = ({
   featured,
   image,
   showLivePreview,
+  previewActions,
   imagePosition,
 }: ProjectCardProps) => {
   return (
@@ -53,8 +63,29 @@ const ProjectCard = ({
           <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
           {/* Live preview overlay in top-right corner */}
           {showLivePreview && (
-            <div className="absolute right-2 top-2 z-10">
+            <div className="absolute right-2 top-2 z-10 flex flex-col items-end gap-1.5">
               <WipLivePreview />
+              {previewActions?.map((action) => (
+                <a
+                  key={action.href}
+                  href={action.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    track("project_preview_action_clicked", {
+                      project: name,
+                      link_label: action.label,
+                      href: action.href,
+                    });
+                  }}
+                  className="inline-flex items-center gap-1 rounded-full border border-white/30 bg-black/70 px-2 py-1 text-[10px] font-semibold text-white shadow-lg backdrop-blur-sm transition-all hover:border-primary/60 hover:bg-black/85"
+                >
+                  {action.emoji && <span className="text-[11px] leading-none">{action.emoji}</span>}
+                  <span>{action.label}</span>
+                  <ExternalLink className="h-2.5 w-2.5 opacity-80" />
+                </a>
+              ))}
             </div>
           )}
         </div>

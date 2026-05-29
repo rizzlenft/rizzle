@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, Users } from "lucide-react";
+import { Search } from "lucide-react";
 import TopNav from "@/components/TopNav";
 import { Input } from "@/components/ui/input";
 import wipLogo from "@/assets/wip-logo.webp";

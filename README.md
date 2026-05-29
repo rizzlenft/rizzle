@@ -1,73 +1,59 @@
-# Welcome to your Lovable project
+# rizzle.io
 
-## Project info
+Personal site for [Rizzle](https://rizzle.io) — Web3 founder, builder, and host of The WIP Meetup.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Stack
 
-## How can I edit this code?
+- **Frontend:** Vite, React, TypeScript, Tailwind CSS, shadcn-ui
+- **Backend:** Supabase (leaderboard, guest cache, WIP video cache)
+- **Hosting:** Cloudflare Pages (`npm run build` → `dist/`)
+- **Analytics:** PostHog (optional, production only)
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Local development
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Requires Node.js 20+ (Volta recommended)
+npm install
+npm run dev        # http://localhost:8080
+npm run build      # production bundle → dist/
+npm run preview    # serve dist/ locally
 ```
 
-**Edit a file directly in GitHub**
+Copy `.env.example` to `.env` and fill in your Supabase project URL + anon key.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Supabase
 
-**Use GitHub Codespaces**
+Project: `nzenbrrraoxmtiugbwob` (rizzlenft-owned).
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**Edge Functions** (deploy with Supabase CLI):
 
-## What technologies are used for this project?
+- `get-latest-wip-video` — caches latest WIP Meetup YouTube video (cron every 6h)
+- `extract-wip-guests` — extracts guest names from episode descriptions via Gemini (cron weekly)
 
-This project is built with:
+**Secrets required on the project:**
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- `GEMINI_API_KEY` — Google AI Studio (free tier)
+- `EXTRACT_WIP_GUESTS_CRON_SECRET` — shared secret; cron job sends it in `x-cron-secret`
 
-## How can I deploy this project?
+```sh
+export PATH="$HOME/.local/share/supabase:$PATH"
+supabase link --project-ref nzenbrrraoxmtiugbwob
+supabase functions deploy get-latest-wip-video extract-wip-guests --no-verify-jwt
+```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Deploying
 
-## Can I connect a custom domain to my Lovable project?
+Pushes to `main` auto-deploy via Cloudflare Pages. PRs get preview URLs.
 
-Yes, you can!
+SPA routing is handled by `public/_redirects` (`/* /index.html 200`).
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Project structure
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```
+src/pages/          Route components (Index, Games, GuestArchive, …)
+src/components/     UI building blocks
+src/hooks/          Data fetching (WIP video, guests, SEO)
+src/data/           Static guest directory
+public/games/       Rizzle Dash (self-contained HTML game)
+supabase/functions/ Edge Functions
+```

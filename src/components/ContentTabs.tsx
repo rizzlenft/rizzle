@@ -57,6 +57,7 @@ const ContentTabs = ({ activeTab }: ContentTabsProps) => {
 
 // Inline Projects content (without section wrapper and header)
 import ProjectCard from "./ProjectCard";
+import { TRINITY_LABS_URL } from "@/lib/site-links";
 import wipMeetupImg from "@/assets/wip-logo.webp";
 import marsPodcastImg from "@/assets/mattandrizz.webp";
 import avastarsImg from "@/assets/avastars.avif";
@@ -73,11 +74,14 @@ import rizzleWebDevImg from "@/assets/rizzle-web-development.webp";
 const projects = [
   {
     name: "The WIP Meetup",
-    description: "Every Thursday at 3pm ET — community gatherings exploring web3, metaverse, and digital culture. Free gifts, WIPcoin, and controlled chaos.",
+    description: "Every Thursday at 3pm ET — community gatherings exploring web3, metaverse, and digital culture. Free gifts and controlled chaos.",
     emoji: "🎙️",
     featured: true,
     image: wipMeetupImg,
     showLivePreview: true,
+    previewActions: [
+      { label: "Trinity Labs", emoji: "⚗️", href: TRINITY_LABS_URL },
+    ],
     links: [
       { label: "Website", emoji: "🌐", href: "https://thewipmeetup.com/" },
     ],
@@ -91,7 +95,6 @@ const projects = [
     links: [
       { label: "WIP Meetup", emoji: "🎙️", href: "https://farcaster.xyz/miniapps/yDcoJ9X6iJ2G/the-wip-meetup-miniapp" },
       { label: "Meme Studio", emoji: "🎨", href: "https://farcaster.xyz/miniapps/L6eTiFxvy99r/meme-studio" },
-      { label: "WIPcoin Portal", emoji: "🪙", href: "https://farcaster.xyz/miniapps/eOxi0VR7PqQk/wipcoin-portal" },
     ],
   },
   {
