@@ -8,6 +8,7 @@ import marsLogo from "@/assets/mattandrizz.webp";
 import tokensmartLogo from "@/assets/tokensmart.webp";
 import { guestData, guestVideoLinks } from "@/data/guestData";
 import { useExtractedGuests, mergeGuestData } from "@/hooks/useExtractedGuests";
+import { GuestLinksProvider } from "@/contexts/GuestLinksContext";
 import GuestChip from "@/components/GuestChip";
 import RandomEpisodeButton from "@/components/RandomEpisodeButton";
 import NetworkStats from "@/components/NetworkStats";
@@ -66,12 +67,15 @@ const GuestArchive = () => {
   }, []);
 
   // Merge static guest list with dynamically extracted guests
+  const mergedLinks = useMemo(
+    () => mergeGuestData(guestVideoLinks, extractedGuests),
+    [extractedGuests]
+  );
+
   const allGuests = useMemo(() => {
-    const mergedLinks = mergeGuestData(guestVideoLinks, extractedGuests);
-    // Combine static guest names with any new names from database
     const allNames = new Set([...guestData, ...Object.keys(mergedLinks)]);
     return Array.from(allNames).sort((a, b) => a.localeCompare(b));
-  }, [extractedGuests]);
+  }, [mergedLinks]);
 
   const filteredGuests = useMemo(() => {
     if (!searchQuery.trim()) return allGuests;
@@ -99,6 +103,7 @@ const GuestArchive = () => {
   });
 
   return (
+    <GuestLinksProvider links={mergedLinks}>
     <div className="min-h-screen bg-background">
       <TopNav activeTab="guests" />
 
@@ -313,6 +318,7 @@ const GuestArchive = () => {
       </main>
       <Footer />
     </div>
+    </GuestLinksProvider>
   );
 };
 
