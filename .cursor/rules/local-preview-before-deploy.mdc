@@ -1,0 +1,35 @@
+---
+description: Preview locally before merging or pushing to production
+alwaysApply: true
+---
+
+# Local preview before deploy
+
+Do **not** merge PRs, push to `main`, or tell the user a change is "live" until they have previewed it locally (or explicitly approved skipping preview).
+
+## Required workflow
+
+1. Make changes on a **feature branch** (never commit directly to `main` for user-facing work).
+2. Run the local dev server and verify in the browser:
+   ```bash
+   cd ~/Projects/rizzle && npm run dev
+   # → http://localhost:8080
+   ```
+3. For game changes, also rebuild from source when needed:
+   ```bash
+   npm run sync:whack-a-mole
+   ```
+4. Tell the user what URL to open and what to check.
+5. Only open/merge a PR **after** the user confirms preview looks good.
+
+## Game-specific checks (`/games`)
+
+- Game selector tabs visible at the top
+- Selected game loads in iframe (no wouter 404)
+- Rizzle Dash still works
+- Leaderboard section renders (scores may need production API)
+
+## Exceptions
+
+- Docs-only or comment-only changes may skip browser preview if the user agrees.
+- Emergency hotfixes: still prefer a branch + quick local smoke test when possible.

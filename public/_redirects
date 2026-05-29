@@ -12,6 +12,8 @@
 # Whack-a-Mole is a separate client-side SPA under /games/whack-a-mole/ — its
 # in-game /leaderboard route must boot the game shell, not the main React app.
 
-/games/whack-a-mole/leaderboard    /games/whack-a-mole/index.html   200
+/games/whack-a-mole                  /games/whack-a-mole/index.html   200
+/games/whack-a-mole/                 /games/whack-a-mole/index.html   200
+/games/whack-a-mole/leaderboard      /games/whack-a-mole/index.html   200
 
 /*    /index.html   200

@@ -35,7 +35,7 @@ const games: GameEntry[] = [
     title: "Web3 Whack-a-Mole",
     description: "Bonk the scammers, save the chain. 30-second arcade rounds with golden bonks, flying rugs, and skull traps.",
     emoji: "🐀",
-    path: "/games/whack-a-mole/index.html",
+    path: "/games/whack-a-mole/",
     status: "playable",
     leaderboardMode: "high-score",
   },
@@ -161,6 +161,35 @@ const Games = () => {
           </motion.div>
 
           <div className="mx-auto max-w-4xl space-y-6">
+            {/* Game selector */}
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              {games.map((game) => (
+                <button
+                  key={game.id}
+                  onClick={() => {
+                    if (game.status === "playable") {
+                      track("game_started", { game_id: game.id, title: game.title });
+                      setActiveGame(game);
+                    }
+                  }}
+                  className={`group rounded-lg border p-4 text-left transition-all ${
+                    activeGame?.id === game.id
+                      ? "border-primary bg-primary/10"
+                      : "border-border/50 bg-card/30 hover:border-primary/30"
+                  } ${game.status === "coming-soon" ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                >
+                  <span className="text-2xl">{game.emoji}</span>
+                  <h3 className="mt-1 text-sm font-semibold text-foreground">{game.title}</h3>
+                  <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">{game.description}</p>
+                  {game.status === "coming-soon" && (
+                    <span className="mt-2 inline-block rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                      Coming Soon
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+
             {/* Game viewport */}
             {activeGame && !isFullscreen && (
               <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl sm:aspect-[16/9]">
@@ -190,35 +219,6 @@ const Games = () => {
                 mode={activeGame.leaderboardMode ?? "campaign"}
               />
             )}
-          </div>
-
-          {/* Game selector */}
-          <div className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3">
-            {games.map((game) => (
-                <button
-                  key={game.id}
-                  onClick={() => {
-                    if (game.status === "playable") {
-                      track("game_started", { game_id: game.id, title: game.title });
-                      setActiveGame(game);
-                    }
-                  }}
-                  className={`group rounded-lg border p-4 text-left transition-all ${
-                    activeGame?.id === game.id
-                      ? "border-primary bg-primary/10"
-                      : "border-border/50 bg-card/30 hover:border-primary/30"
-                  } ${game.status === "coming-soon" ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
-                >
-                  <span className="text-2xl">{game.emoji}</span>
-                  <h3 className="mt-1 text-sm font-semibold text-foreground">{game.title}</h3>
-                  <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">{game.description}</p>
-                  {game.status === "coming-soon" && (
-                    <span className="mt-2 inline-block rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                      Coming Soon
-                    </span>
-                  )}
-                </button>
-              ))}
           </div>
         </main>
 
