@@ -8,5 +8,10 @@
 # This rule says: for any request that does NOT match a real static file,
 # serve /index.html with a 200 status. Real assets (e.g. /games/rizzle-dash.html,
 # /og/og-home.jpg, /favicon.ico, /assets/*) are served as-is because they exist.
+#
+# Whack-a-Mole is a separate client-side SPA under /games/whack-a-mole/ — its
+# in-game /leaderboard route must boot the game shell, not the main React app.
+
+/games/whack-a-mole/leaderboard    /games/whack-a-mole/index.html   200
 
 /*    /index.html   200

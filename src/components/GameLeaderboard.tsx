@@ -10,6 +10,8 @@ interface LeaderboardEntry {
 
 interface GameLeaderboardProps {
   gameId: string;
+  /** campaign = sum best per level (Rizzle Dash); high-score = top single scores */
+  mode?: "campaign" | "high-score";
 }
 
 const RANK_ICONS = [
@@ -18,7 +20,7 @@ const RANK_ICONS = [
   <Award className="h-4 w-4 text-amber-600" />,
 ];
 
-const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
+const GameLeaderboard = ({ gameId, mode = "campaign" }: GameLeaderboardProps) => {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,10 +30,22 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
       .select("player_name, level, score")
       .eq("game_id", gameId)
       .order("score", { ascending: false })
-      .limit(500);
+      .limit(mode === "high-score" ? 20 : 500);
 
     if (!data) {
       setEntries([]);
+      setLoading(false);
+      return;
+    }
+
+    if (mode === "high-score") {
+      setEntries(
+        data.map((row) => ({
+          player_name: row.player_name,
+          campaign_total: row.score,
+          highest_level: row.level,
+        }))
+      );
       setLoading(false);
       return;
     }
@@ -65,8 +79,9 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchScores();
-  }, [gameId]);
+  }, [gameId, mode]);
 
   if (loading) {
     return (
@@ -94,9 +109,15 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
           <Trophy className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold text-foreground">Leaderboard</h3>
         </div>
-        <p className="mt-1 text-[10px] text-muted-foreground leading-relaxed">
-          Your <strong>Campaign Total</strong> = the sum of your <em>best</em> score on each level. Only your highest score per level counts — replay levels to beat your personal best and climb the board!
-        </p>
+        {mode === "campaign" ? (
+          <p className="mt-1 text-[10px] text-muted-foreground leading-relaxed">
+            Your <strong>Campaign Total</strong> = the sum of your <em>best</em> score on each level. Only your highest score per level counts — replay levels to beat your personal best and climb the board!
+          </p>
+        ) : (
+          <p className="mt-1 text-[10px] text-muted-foreground leading-relaxed">
+            Top bonks from 30-second rounds. Beat the scammers, save the chain.
+          </p>
+        )}
       </div>
       <div className="divide-y divide-border/30">
         {entries.map((entry, i) => (
@@ -112,9 +133,13 @@ const GameLeaderboard = ({ gameId }: GameLeaderboardProps) => {
             <span className="flex-1 truncate font-medium text-foreground">
               {entry.player_name}
             </span>
-            <span className="text-xs text-muted-foreground">Lv{entry.highest_level}</span>
+            {mode === "campaign" && (
+              <span className="text-xs text-muted-foreground">Lv{entry.highest_level}</span>
+            )}
             <span className="font-mono text-sm font-semibold text-primary">
-              {(entry.campaign_total ?? 0).toLocaleString()}
+              {mode === "high-score"
+                ? (entry.campaign_total ?? 0).toString().padStart(4, "0")
+                : (entry.campaign_total ?? 0).toLocaleString()}
             </span>
           </div>
         ))}
