@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
-import { Gamepad2, Maximize2, Minimize2 } from "lucide-react";
+import { Gamepad2, Maximize2, Minimize2, Expand } from "lucide-react";
 import TopNav from "@/components/TopNav";
 import Footer from "@/components/Footer";
 import GameLeaderboard from "@/components/GameLeaderboard";
+import GameLogo from "@/components/games/GameLogo";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSeo } from "@/hooks/useSeo";
@@ -14,41 +15,69 @@ interface GameEntry {
   id: string;
   title: string;
   description: string;
-  emoji: string;
+  logo: string;
+  /** Square icon optimized for small tab cards */
+  logoThumb?: string;
+  logoVariant?: "square" | "wide";
   path: string;
   status: "playable" | "coming-soon";
   leaderboardMode?: "campaign" | "high-score";
+  viewport: "landscape" | "arcade";
+  embed?: boolean;
+  expandHint?: string;
 }
 
 const games: GameEntry[] = [
   {
     id: "rizzle-dash",
     title: "Rizzle Dash",
-    description: "A fast-paced endless runner with 10 levels, castle sequences, and a pumping soundtrack. Tap/click/space to jump!",
-    emoji: "🏃‍♂️",
+    description: "Endless runner — 10 levels. Tap, click, or press space to jump.",
+    logo: "/games/logos/rizzle-dash.png",
+    logoVariant: "square",
     path: "/games/rizzle-dash.html",
     status: "playable",
     leaderboardMode: "campaign",
+    viewport: "landscape",
+    embed: true,
   },
   {
     id: "whack-a-mole",
     title: "Web3 Whack-a-Mole",
-    description: "Bonk the scammers, save the chain. 30-second arcade rounds with golden bonks, flying rugs, and skull traps.",
-    emoji: "🐀",
-    path: "/games/whack-a-mole/index.html",
+    description: "Bonk scammers in 30s rounds — golden bonks, flying rugs, skull traps.",
+    logo: "/games/logos/whack-a-mole-icon.png",
+    logoThumb: "/games/logos/whack-a-mole-icon.png",
+    logoVariant: "square",
+    path: "/games/whack-a-mole/",
     status: "playable",
     leaderboardMode: "high-score",
+    viewport: "arcade",
+    embed: true,
+    expandHint: "Tap Expand for the full arcade cabinet experience.",
   },
 ];
 
+function gameIframeSrc(game: GameEntry) {
+  if (!game.embed) return game.path;
+  const sep = game.path.includes("?") ? "&" : "?";
+  return `${game.path}${sep}embed=1`;
+}
+
+const viewportClass: Record<GameEntry["viewport"], string> = {
+  landscape:
+    "aspect-video w-full min-h-[200px] max-h-[50vh] sm:min-h-[280px] sm:max-h-[420px]",
+  arcade:
+    "aspect-[3/4] w-full min-h-[min(62dvh,520px)] max-h-[min(78dvh,720px)] sm:min-h-[520px] md:min-h-[560px]",
+};
+
 const Games = () => {
+  const tabsId = useId();
+  const viewportRef = useRef<HTMLElement>(null);
   const [activeGame, setActiveGame] = useState<GameEntry | null>(games[0]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showNamePrompt, setShowNamePrompt] = useState(false);
   const [pendingScore, setPendingScore] = useState<{ level: number; score: number; campaignTotal: number } | null>(null);
   const [playerName, setPlayerName] = useState(() => localStorage.getItem("rd_player") || "");
   const [submitting, setSubmitting] = useState(false);
-  const leaderboardRef = useRef<{ refresh: () => void } | null>(null);
   const [leaderboardKey, setLeaderboardKey] = useState(0);
 
   useSeo({
@@ -56,9 +85,6 @@ const Games = () => {
     description:
       "Play Rizzle Dash and Web3 Whack-a-Mole — silly arcade games with leaderboards. More coming soon.",
     canonical: "https://rizzle.io/games",
-    // No game-specific OG image — falls back to the default og-home.jpg set
-    // in index.html. The old og-games.jpg promised "EARN REWARDS ONCHAIN"
-    // which doesn't match the actual game (free leaderboard, no rewards).
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "VideoGame",
@@ -76,19 +102,21 @@ const Games = () => {
 
   const toggleFullscreen = () => setIsFullscreen((f) => !f);
 
+  const selectGame = (game: GameEntry) => {
+    if (game.status !== "playable") return;
+    track("game_started", { game_id: game.id, title: game.title });
+    setActiveGame(game);
+    setIsFullscreen(false);
+    requestAnimationFrame(() => {
+      viewportRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  };
+
   const handleScoreMessage = useCallback((e: MessageEvent) => {
-    // Reject messages from any other origin. The game iframe is served from
-    // the same domain as the page, so legitimate score events always arrive
-    // with e.origin === window.location.origin. Anything else (an attacker
-    // embedding our page, a browser extension, etc.) is dropped.
     if (e.origin !== window.location.origin) return;
     if (e.data?.type !== "rizzle-score") return;
 
     const { level, levelScore, campaignTotal } = e.data;
-    // Light input validation — the game caps at 10 levels, scores are
-    // small positive integers in practice. This isn't a substitute for
-    // server-side validation (that'd require an Edge Function) but it
-    // prevents the obvious junk-injection from a buggy or hostile client.
     const validLevel = Number.isInteger(level) && level >= 1 && level <= 10;
     const validScore = Number.isInteger(levelScore) && levelScore >= 0 && levelScore <= 100_000;
     const validTotal = Number.isInteger(campaignTotal) && campaignTotal >= 0 && campaignTotal <= 1_000_000;
@@ -135,8 +163,17 @@ const Games = () => {
     return () => window.removeEventListener("message", handleScoreMessage);
   }, [handleScoreMessage]);
 
+  useEffect(() => {
+    document.body.style.overflow = isFullscreen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isFullscreen]);
+
+  const iframeSrc = activeGame ? gameIframeSrc(activeGame) : "";
+
   return (
-    <div className="relative min-h-screen bg-background overflow-hidden">
+    <div className="relative min-h-screen bg-background">
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full bg-primary/8 blur-[180px]" />
         <div className="absolute -right-20 -top-20 h-[400px] w-[400px] rounded-full bg-accent/6 blur-[140px]" />
@@ -145,119 +182,174 @@ const Games = () => {
       <div className="relative z-10">
         <TopNav activeTab="games" />
 
-        <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-          <motion.div
+        <main className="mx-auto max-w-6xl px-3 py-6 pb-10 sm:px-6 sm:py-8" id="main-content">
+          <motion.header
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 text-center"
+            className="mb-5 text-center sm:mb-6"
           >
-            <h1 className="flex items-center justify-center gap-3 text-3xl font-bold text-foreground sm:text-4xl">
-              <Gamepad2 className="h-8 w-8 text-primary" />
+            <h1 className="flex items-center justify-center gap-2.5 text-2xl font-bold text-foreground sm:gap-3 sm:text-4xl">
+              <Gamepad2 className="h-7 w-7 text-primary sm:h-8 sm:w-8" aria-hidden />
               Arcade
             </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Silly games built for fun. More coming soon.
+            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+              Free mini-games with leaderboards. Pick a game, play, climb the board.
             </p>
-          </motion.div>
+          </motion.header>
 
-          <div className="mx-auto max-w-4xl space-y-6">
-            {/* Game viewport */}
-            {activeGame && !isFullscreen && (
-              <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl sm:aspect-[16/9]">
-                <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
+          <div className="mx-auto max-w-4xl space-y-4 sm:space-y-5">
+            <div
+              role="tablist"
+              aria-label="Choose a game"
+              className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+            >
+              {games.map((game) => {
+                const selected = activeGame?.id === game.id;
+                const tabId = `${tabsId}-${game.id}`;
+                return (
                   <button
-                    onClick={toggleFullscreen}
-                    className="rounded-md bg-black/60 p-1.5 text-foreground/70 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-foreground"
-                    title="Fullscreen"
+                    key={game.id}
+                    id={tabId}
+                    role="tab"
+                    type="button"
+                    aria-selected={selected}
+                    aria-controls={`${tabsId}-panel`}
+                    tabIndex={selected ? 0 : -1}
+                    onClick={() => selectGame(game)}
+                    disabled={game.status === "coming-soon"}
+                    className={`min-h-[88px] rounded-xl border p-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:min-h-[96px] sm:p-4 ${
+                      selected
+                        ? "border-primary bg-primary/10 shadow-[0_0_24px_hsl(var(--primary)/0.15)]"
+                        : "border-border/50 bg-card/40 hover:border-primary/35 hover:bg-card/55"
+                    } ${game.status === "coming-soon" ? "cursor-not-allowed opacity-50" : "cursor-pointer active:scale-[0.99]"}`}
                   >
-                    <Maximize2 className="h-4 w-4" />
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <GameLogo
+                        src={game.logoThumb ?? game.logo}
+                        title={game.title}
+                        variant={game.logoVariant ?? "square"}
+                        size="sm"
+                        boost={game.id === "whack-a-mole"}
+                      />
+                      <div className="min-w-0 flex-1">
+                        <h2 className="text-sm font-semibold leading-tight text-foreground sm:text-base">
+                          {game.title}
+                        </h2>
+                        <p className="mt-1 text-xs leading-snug text-muted-foreground sm:text-sm sm:leading-relaxed">
+                          {game.description}
+                        </p>
+                      </div>
+                    </div>
                   </button>
+                );
+              })}
+            </div>
+
+            {activeGame && !isFullscreen && (
+              <section
+                ref={viewportRef}
+                id={`${tabsId}-panel`}
+                role="tabpanel"
+                aria-labelledby={`${tabsId}-${activeGame.id}`}
+                aria-label={`${activeGame.title} game`}
+                className="space-y-3"
+              >
+                {activeGame.expandHint && (
+                  <div className="flex items-stretch gap-2 rounded-xl border border-primary/25 bg-primary/5 p-2 sm:items-center sm:justify-between sm:px-3 sm:py-2.5">
+                    <p className="flex flex-1 items-center gap-2 px-1 text-xs leading-snug text-muted-foreground sm:text-sm">
+                      <Expand className="hidden h-4 w-4 shrink-0 text-primary sm:block" aria-hidden />
+                      <span>{activeGame.expandHint}</span>
+                    </p>
+                    <button
+                      type="button"
+                      onClick={toggleFullscreen}
+                      className="flex min-h-[44px] shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    >
+                      <Maximize2 className="h-4 w-4" aria-hidden />
+                      Expand
+                    </button>
+                  </div>
+                )}
+
+                <div
+                  className={`relative mx-auto overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl ${viewportClass[activeGame.viewport]}`}
+                >
+                  {!activeGame.expandHint && (
+                    <div className="absolute right-2 top-2 z-10">
+                      <button
+                        type="button"
+                        onClick={toggleFullscreen}
+                        className="flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-lg bg-black/75 px-3 text-xs text-foreground/90 backdrop-blur-sm transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        aria-label={`Expand ${activeGame.title} to fullscreen`}
+                      >
+                        <Maximize2 className="h-4 w-4" aria-hidden />
+                        <span className="hidden sm:inline">Fullscreen</span>
+                      </button>
+                    </div>
+                  )}
+                  <iframe
+                    key={activeGame.id}
+                    src={iframeSrc}
+                    title={activeGame.title}
+                    className="h-full w-full border-0 touch-manipulation"
+                    allow="autoplay; fullscreen"
+                  />
                 </div>
-                <iframe
-                  src={activeGame.path}
-                  title={activeGame.title}
-                  className="h-full w-full border-0"
-                  allow="autoplay; fullscreen"
-                />
-              </div>
+              </section>
             )}
 
-            {/* Leaderboard */}
             {activeGame && (
               <GameLeaderboard
-                key={leaderboardKey}
+                key={`${leaderboardKey}-${activeGame.id}`}
                 gameId={activeGame.id}
                 mode={activeGame.leaderboardMode ?? "campaign"}
               />
             )}
-          </div>
-
-          {/* Game selector */}
-          <div className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3">
-            {games.map((game) => (
-                <button
-                  key={game.id}
-                  onClick={() => {
-                    if (game.status === "playable") {
-                      track("game_started", { game_id: game.id, title: game.title });
-                      setActiveGame(game);
-                    }
-                  }}
-                  className={`group rounded-lg border p-4 text-left transition-all ${
-                    activeGame?.id === game.id
-                      ? "border-primary bg-primary/10"
-                      : "border-border/50 bg-card/30 hover:border-primary/30"
-                  } ${game.status === "coming-soon" ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
-                >
-                  <span className="text-2xl">{game.emoji}</span>
-                  <h3 className="mt-1 text-sm font-semibold text-foreground">{game.title}</h3>
-                  <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">{game.description}</p>
-                  {game.status === "coming-soon" && (
-                    <span className="mt-2 inline-block rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                      Coming Soon
-                    </span>
-                  )}
-                </button>
-              ))}
           </div>
         </main>
 
         <Footer />
       </div>
 
-      {/* Name prompt modal — z-index above fullscreen portal */}
       {showNamePrompt && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[10000] flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center">
           <motion.form
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            initial={{ scale: 0.95, opacity: 0, y: 12 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
             onSubmit={handleNameSubmit}
-            className="mx-4 w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-2xl"
+            className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-2xl"
+            aria-labelledby="score-modal-title"
           >
-            <h2 className="text-lg font-bold text-foreground">🏆 New High Score!</h2>
+            <h2 id="score-modal-title" className="text-lg font-bold text-foreground">
+              New high score!
+            </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Enter your name for the leaderboard
             </p>
+            <label htmlFor="player-name" className="sr-only">
+              Player name
+            </label>
             <input
+              id="player-name"
               autoFocus
               maxLength={20}
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               placeholder="Your name"
-              className="mt-4 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="mt-4 w-full rounded-lg border border-border bg-background px-3 py-3 text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <div className="mt-4 flex gap-2">
               <button
                 type="button"
                 onClick={() => { setShowNamePrompt(false); setPendingScore(null); }}
-                className="flex-1 rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground hover:bg-muted"
+                className="min-h-[44px] flex-1 rounded-lg border border-border px-3 text-sm text-muted-foreground hover:bg-muted"
               >
                 Skip
               </button>
               <button
                 type="submit"
                 disabled={!playerName.trim() || submitting}
-                className="flex-1 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+                className="min-h-[44px] flex-1 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
               >
                 {submitting ? "Saving…" : "Submit"}
               </button>
@@ -266,22 +358,29 @@ const Games = () => {
         </div>
       )}
 
-      {/* Fullscreen portal — rendered outside overflow-hidden ancestors */}
       {isFullscreen && activeGame && createPortal(
-        <div className="fixed inset-0 z-[9999] bg-black">
-          <div className="absolute right-2 top-2 z-10">
+        <div
+          className="fixed inset-0 z-[9999] bg-black supports-[height:100dvh]:h-[100dvh] h-screen"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${activeGame.title} fullscreen`}
+        >
+          <div className="absolute left-0 right-0 top-0 z-10 flex justify-end p-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
             <button
+              type="button"
               onClick={toggleFullscreen}
-              className="rounded-md bg-black/60 p-1.5 text-white/70 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-white"
-              title="Exit fullscreen"
+              className="flex min-h-[44px] items-center gap-2 rounded-lg bg-black/70 px-4 py-2 text-sm text-white backdrop-blur-sm transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              aria-label="Exit fullscreen"
             >
-              <Minimize2 className="h-5 w-5" />
+              <Minimize2 className="h-5 w-5" aria-hidden />
+              Exit
             </button>
           </div>
           <iframe
-            src={activeGame.path}
+            key={`fs-${activeGame.id}`}
+            src={iframeSrc}
             title={activeGame.title}
-            className="h-full w-full border-0"
+            className="h-full w-full border-0 touch-manipulation"
             allow="autoplay; fullscreen"
           />
         </div>,
