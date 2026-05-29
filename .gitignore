@@ -25,6 +25,10 @@ dist-ssr
 # code — should never be committed.
 .migration-backup/
 
+# Supabase CLI's local cache (project ref, gotrue version, postgres version,
+# etc.). Recreated on every `supabase link`. Never belongs in git.
+supabase/.temp/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
