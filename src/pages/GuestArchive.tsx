@@ -36,7 +36,7 @@ const GuestArchive = () => {
         url: "https://rizzle.io/guests",
         name: "Rizzle's Network",
         description:
-          "A searchable directory of legendary web3 guests and collaborators across Rizzle's shows.",
+          "A searchable directory of web3 guests and collaborators across Rizzle's shows.",
         isPartOf: { "@id": "https://rizzle.io/#website" },
         about: { "@id": "https://rizzle.io/#person" },
       },
@@ -68,7 +68,7 @@ const GuestArchive = () => {
   useSeo({
     title: "Network | Rizzle's Guest Archive — WIP Meetup, Matt & Rizz, TokenSmart",
     description:
-      "Searchable directory of legendary web3 guests and collaborators from The WIP Meetup, The Matthew & Rizzle Show, and the TokenSmart Podcast.",
+      "Searchable directory of web3 guests and collaborators from The WIP Meetup, The Matthew & Rizzle Show, and the TokenSmart Podcast.",
     canonical: "https://rizzle.io/guests",
     image: "https://rizzle.io/og/og-guests.jpg",
     jsonLd: guestsJsonLd,
@@ -224,7 +224,7 @@ const GuestArchive = () => {
               transition={{ delay: 0.5, duration: 0.5 }}
               className="mb-2 text-center text-lg sm:text-xl text-foreground/80 max-w-lg font-medium"
             >
-              A directory of Rizzle's legendary guests and collaborators from
+              A directory of guests and collaborators from
             </motion.p>
 
             <motion.div
@@ -259,6 +259,21 @@ const GuestArchive = () => {
               >
                 TokenSmart Podcast
               </a>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.82, duration: 0.5 }}
+              className="mt-5 w-full max-w-3xl rounded-xl border border-border/60 bg-card/40 px-4 py-3 text-left"
+            >
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:text-sm">
+                Why this network matters
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-foreground/85">
+                This archive maps years of conversations with creators, builders, and ecosystem collaborators
+                across recurring shows, live events, and launch cycles.
+              </p>
             </motion.div>
 
             {/* Stats */}

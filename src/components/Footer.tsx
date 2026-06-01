@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { STRIPE_CONSULT_LINK, TRINITY_LABS_URL } from "@/lib/site-links";
+import { START_HERE_PATH, STRIPE_CONSULT_LINK, TRINITY_LABS_URL } from "@/lib/site-links";
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -37,6 +37,9 @@ const Footer = () => {
           <Link to="/games" className="text-muted-foreground transition-colors hover:text-primary">
             Games
           </Link>
+          <Link to={START_HERE_PATH} className="text-muted-foreground transition-colors hover:text-primary">
+            Start Here
+          </Link>
           <a
             href={TRINITY_LABS_URL}
             target="_blank"
@@ -51,7 +54,7 @@ const Footer = () => {
             rel="noopener noreferrer"
             className="text-muted-foreground transition-colors hover:text-primary"
           >
-            Hire a Rizzle
+            Strategy Sprint
           </a>
         </nav>
 

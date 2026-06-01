@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import ContentTabs from "@/components/ContentTabs";
 import Footer from "@/components/Footer";
 import TopNav from "@/components/TopNav";
+import TrustStack from "@/components/TrustStack";
 import { useSeo } from "@/hooks/useSeo";
 
 const Socials = lazy(() => import("@/components/Socials"));
@@ -34,9 +35,9 @@ const Index = () => {
           },
         }
       : {
-          title: "Rizzle | Web3 Founder & Builder Since 2019",
+          title: "Rizzle | Crypto Ecosystem Operator",
           description:
-            "Rizzle (NFTland) — Web3 founder & builder since 2019. Creator of The WIP Meetup, Avastars, Matt & Rizz Show. Strategy, launches & growth for onchain projects.",
+            "Rizzle (NFTland) — crypto operator and builder since 2019. I help teams launch, grow communities, and ship memorable onchain products.",
           canonical: "https://rizzle.io/",
           image: "https://rizzle.io/og/og-home.jpg",
           jsonLd: {
@@ -44,7 +45,7 @@ const Index = () => {
             "@type": "ProfilePage",
             "@id": "https://rizzle.io/#profilepage",
             url: "https://rizzle.io/",
-            name: "Rizzle — Web3 Founder & Builder",
+            name: "Rizzle — Crypto Ecosystem Operator",
             mainEntity: { "@id": "https://rizzle.io/#person" },
             isPartOf: { "@id": "https://rizzle.io/#website" },
           },
@@ -74,6 +75,7 @@ const Index = () => {
         <TopNav activeTab={activeTab} onTabChange={setActiveTab} />
         <main id="main-content">
           {activeTab === "projects" && <Hero />}
+          {activeTab === "projects" && <TrustStack />}
           <ContentTabs activeTab={activeTab} setActiveTab={setActiveTab} />
           <Suspense fallback={null}>
             <Socials />

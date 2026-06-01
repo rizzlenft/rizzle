@@ -77,26 +77,29 @@ const ProjectCard = ({
         {/* Unified link chips — same style across every card */}
         {links && links.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
-            {links.map((m) => (
-              <a
-                key={m.href}
-                href={m.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() =>
-                  track("project_link_clicked", {
-                    project: name,
-                    link_label: m.label,
-                    href: m.href,
-                  })
-                }
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-medium text-foreground/90 backdrop-blur-sm transition-all hover:border-primary/60 hover:bg-primary/10 hover:text-primary"
-              >
-                {m.emoji && <span>{m.emoji}</span>}
-                <span>{m.label}</span>
-                <ExternalLink className="h-3 w-3 opacity-70" />
-              </a>
-            ))}
+            {links.map((m) => {
+              const isInternal = m.href.startsWith("/");
+              return (
+                <a
+                  key={m.href}
+                  href={m.href}
+                  target={isInternal ? undefined : "_blank"}
+                  rel={isInternal ? undefined : "noopener noreferrer"}
+                  onClick={() =>
+                    track("project_link_clicked", {
+                      project: name,
+                      link_label: m.label,
+                      href: m.href,
+                    })
+                  }
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-medium text-foreground/90 backdrop-blur-sm transition-all hover:border-primary/60 hover:bg-primary/10 hover:text-primary"
+                >
+                  {m.emoji && <span>{m.emoji}</span>}
+                  <span>{m.label}</span>
+                  <ExternalLink className="h-3 w-3 opacity-70" />
+                </a>
+              );
+            })}
           </div>
         )}
       </div>

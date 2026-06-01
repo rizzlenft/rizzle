@@ -12,6 +12,7 @@ import RouteErrorBoundary from "./components/RouteErrorBoundary";
 const GuestArchive = lazy(() => import("./pages/GuestArchive"));
 const BookSession = lazy(() => import("./pages/BookSession"));
 const Games = lazy(() => import("./pages/Games"));
+const WorkWithRizzle = lazy(() => import("./pages/WorkWithRizzle"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -50,6 +51,7 @@ const App = () => (
               <Route path="/guests" element={<GuestArchive />} />
               <Route path="/book-session" element={<BookSession />} />
               <Route path="/games" element={<Games />} />
+              <Route path="/work-with-rizzle" element={<WorkWithRizzle />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

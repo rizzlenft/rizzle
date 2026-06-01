@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Music, Play, X } from "lucide-react";
 import rizzleSig from "@/assets/rizzle-sig-v2.png";
 import rizzlePfp from "@/assets/rizzlepfp.webp";
-import { STRIPE_CONSULT_LINK } from "@/lib/site-links";
+import { START_HERE_PATH, STRIPE_CONSULT_LINK } from "@/lib/site-links";
 import { track } from "@/lib/analytics";
 
 const Hero = () => {
@@ -12,7 +12,7 @@ const Hero = () => {
 
 
   return (
-    <section className="relative flex flex-col items-center justify-center px-6 py-8">
+    <section className="relative flex flex-col items-center justify-center px-6 py-8 sm:py-10">
       {/* Prominent PFP hero background */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[50vh] sm:h-[72vh] overflow-hidden">
         <img
@@ -39,24 +39,24 @@ const Hero = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 max-w-4xl text-center"
+        className="relative z-10 w-full max-w-4xl"
       >
-        {/* Spacer for removed tagline */}
-        <div className="-mb-8 sm:-mb-24" />
+        {/* Spacer for signature overlap */}
+        <div className="-mb-4 sm:-mb-12" />
         
         {/* Signature — wrapped as H1 for SEO without disturbing visual layout */}
         <motion.h1
-          className="-mb-4 sm:-mb-28 pointer-events-none select-none m-0"
+          className="-mb-2 sm:-mb-14 pointer-events-none m-0 select-none text-center"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
         >
-          <span className="sr-only">Rizzle — Web3 Founder & Builder Since 2019</span>
+          <span className="sr-only">Rizzle — Crypto Ecosystem Operator</span>
           <img
             src={rizzleSig}
             alt=""
             aria-hidden="true"
-            className="mx-auto h-[12rem] w-auto sm:h-[26rem] md:h-[34rem] lg:h-[42rem] invert"
+            className="mx-auto h-[10rem] w-auto sm:h-[17rem] md:h-[22rem] lg:h-[26rem] invert"
             width={1200}
             height={400}
             style={{
@@ -68,86 +68,71 @@ const Hero = () => {
           />
         </motion.h1>
         
-        {/* Bio */}
+        {/* Positioning */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
+          className="mx-auto max-w-3xl text-center text-[clamp(1.8rem,4vw,2.6rem)] font-display font-bold leading-tight text-primary"
         >
-          <span className="text-primary font-semibold">Web3 Founder & Builder</span> — Been in the game since before the hype. 
-          Community strategy, product launches, growth — if it's onchain, I've probably shipped it. 
-          My biggest edge is getting projects from zero to traction.
+          Crypto Ecosystem Operator
         </motion.p>
-        
-        {/* Stats row — 3 stats on mobile (consult promoted to its own CTA below) */}
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.6 }}
-          className="mt-6 grid grid-cols-3 gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-8"
+          transition={{ delay: 0.62, duration: 0.6 }}
+          className="mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground sm:text-sm"
         >
-          <div className="text-center">
-            <div className="font-display text-3xl font-bold text-primary text-glow-sm">10+</div>
-            <div className="text-sm text-muted-foreground">Projects</div>
-          </div>
-          <div className="hidden sm:block h-8 w-px bg-border" />
-          <div className="text-center">
-            <div className="font-display text-3xl font-bold text-primary text-glow-sm">19K</div>
-            <div className="text-sm text-muted-foreground">Followers</div>
-          </div>
-          <div className="hidden sm:block h-8 w-px bg-border" />
-          <div className="text-center">
-            <div className="font-display text-3xl font-bold text-primary text-glow-sm">8+</div>
-            <div className="text-sm text-muted-foreground">Years in Web3</div>
-          </div>
-          <div className="hidden sm:block h-8 w-px bg-border" />
+          <span className="rounded-full border border-border/45 bg-background/30 px-3 py-1">10+ launches</span>
+          <span className="rounded-full border border-border/45 bg-background/30 px-3 py-1">19K audience</span>
+          <span className="rounded-full border border-border/45 bg-background/30 px-3 py-1">8+ years</span>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.76, duration: 0.6 }}
+          className="mt-4 flex flex-col items-center justify-center gap-2"
+        >
+          <a
+            href={START_HERE_PATH}
+            onClick={() => track("opportunity_cta_clicked", { location: "hero" })}
+            className="inline-flex min-w-[260px] items-center justify-center rounded-full border border-primary/40 bg-primary px-7 py-3 font-mono text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90"
+          >
+            Start Here
+          </a>
           <a
             href={STRIPE_CONSULT_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => track("consult_cta_clicked", { location: "hero_stats" })}
-            className="hidden sm:block group text-center transition-all duration-300 hover:scale-105"
+            onClick={() => track("consult_cta_clicked", { location: "hero_primary" })}
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary sm:text-sm"
           >
-            <div className="font-display text-3xl font-bold text-primary text-glow-sm">◎</div>
-            <div className="text-sm text-muted-foreground group-hover:text-primary transition-colors">Book a Consult</div>
+            <span className="text-primary">◎</span>
+            Or book a strategy sprint
           </a>
         </motion.div>
-
-        {/* Mobile-only Book a Consult CTA — full width, clear it's an action */}
-        <motion.a
-          href={STRIPE_CONSULT_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => track("consult_cta_clicked", { location: "hero_mobile" })}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.75, duration: 0.6 }}
-          className="mt-5 sm:hidden mx-auto inline-flex items-center justify-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-2.5 font-mono text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-primary-foreground"
-        >
-          <span className="text-base leading-none">◎</span>
-          Book a Consult
-        </motion.a>
 
         {/* Song A Day Mann feature */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.6 }}
-          className="mt-8"
+          transition={{ delay: 0.88, duration: 0.6 }}
+          className="mt-3"
         >
           {!showPlayer ? (
             <button
               onClick={() => setShowPlayer(true)}
-              className="group mx-auto flex items-center gap-3 rounded-full border border-primary/20 bg-primary/5 px-5 py-2.5 transition-all duration-300 hover:border-primary/40 hover:bg-primary/10 hover:box-glow-sm animate-[song-pulse_3s_ease-in-out_infinite]"
+              className="group mx-auto flex items-center gap-2.5 rounded-full border border-border/60 bg-card/35 px-4 py-2 text-xs transition-all duration-300 hover:border-primary/40 hover:bg-primary/8"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 transition-colors group-hover:bg-primary/30">
-                <Play className="h-3.5 w-3.5 fill-primary text-primary ml-0.5" />
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 transition-colors group-hover:bg-primary/25">
+                <Play className="ml-0.5 h-3 w-3 fill-primary text-primary" />
               </span>
-              <span className="font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors">
+              <span className="font-mono text-xs text-muted-foreground transition-colors group-hover:text-foreground">
                 <span className="text-primary">@songadaymann</span> The Legend of Rizzle
               </span>
-              <Music className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+              <Music className="h-3 w-3 text-muted-foreground transition-colors group-hover:text-primary" />
             </button>
           ) : (
             <motion.div
@@ -182,6 +167,9 @@ const Hero = () => {
           )}
         </motion.div>
       </motion.div>
+
+      <div className="pointer-events-none relative z-10 mt-6 h-px w-full max-w-5xl bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-background/70" />
     </section>
   );
 };

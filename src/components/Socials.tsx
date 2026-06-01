@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import crowdsurfingGif from "@/assets/crowdsurfing-rizzle.webp";
 import { track } from "@/lib/analytics";
-import { STRIPE_CONSULT_LINK } from "@/lib/site-links";
+import { START_HERE_PATH, STRIPE_CONSULT_LINK, TRINITY_LABS_URL } from "@/lib/site-links";
 
 // Custom brand icons as SVG components
 const XIcon = ({ className }: { className?: string }) => (
@@ -25,6 +25,21 @@ const DiscordIcon = ({ className }: { className?: string }) => (
 const HireIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+  </svg>
+);
+
+const SprintIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 3" />
+  </svg>
+);
+
+const LabsIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M10 2v7.3L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9.3V2" />
+    <path d="M8 2h8" />
+    <path d="M8 14h8" />
   </svg>
 );
 
@@ -64,10 +79,24 @@ const socials = [
     color: "group-hover:text-foreground",
   },
   {
-    name: "Hire a Rizzle",
-    handle: "web3 consultation",
-    href: STRIPE_CONSULT_LINK,
+    name: "Start Here",
+    handle: "hire / partner / invest",
+    href: START_HERE_PATH,
     icon: HireIcon,
+    color: "group-hover:text-primary",
+  },
+  {
+    name: "Trinity Labs",
+    handle: "current project",
+    href: TRINITY_LABS_URL,
+    icon: LabsIcon,
+    color: "group-hover:text-primary",
+  },
+  {
+    name: "Book Strategy Sprint",
+    handle: "paid 45-minute call",
+    href: STRIPE_CONSULT_LINK,
+    icon: SprintIcon,
     color: "group-hover:text-primary",
   },
 ];
@@ -101,7 +130,7 @@ const Socials = () => {
             Connect
           </h2>
           <p className="text-primary/70 text-sm max-w-md mx-auto">
-            Schedule a Web3 Consultation with Rizzle to build something real.
+            Open to new roles, collaborations, and investment conversations.
           </p>
         </motion.div>
         
@@ -113,15 +142,21 @@ const Socials = () => {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="flex flex-wrap justify-center gap-6"
         >
-          {socials.map((social, index) => (
+          {socials.map((social, index) => {
+            const isInternal = social.href.startsWith("/");
+            return (
             <motion.a
               key={social.name}
               href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={isInternal ? undefined : "_blank"}
+              rel={isInternal ? undefined : "noopener noreferrer"}
               onClick={() => {
-                if (social.name === "Hire a Rizzle") {
+                if (social.name === "Book Strategy Sprint") {
                   track("consult_cta_clicked", { location: "socials" });
+                } else if (social.name === "Start Here") {
+                  track("opportunity_cta_clicked", { location: "socials" });
+                } else if (social.name === "Trinity Labs") {
+                  track("project_link_clicked", { project: "Trinity Labs", location: "socials" });
                 } else {
                   track("social_link_clicked", { network: social.name });
                 }
@@ -152,7 +187,8 @@ const Socials = () => {
               {/* Hover glow effect */}
               <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             </motion.a>
-          ))}
+          );
+          })}
         </motion.div>
       </div>
     </section>

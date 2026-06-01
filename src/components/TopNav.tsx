@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { Briefcase, Gamepad2, Sparkles, Users } from "lucide-react";
+import { Briefcase, Compass, Gamepad2, Sparkles, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { track } from "@/lib/analytics";
 
 interface TopNavProps {
-  activeTab?: "projects" | "art" | "guests" | "games";
+  activeTab?: "projects" | "art" | "guests" | "games" | "work";
   onTabChange?: (tab: "projects" | "art") => void;
 }
 
@@ -84,6 +84,11 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
             {activeIndicator("games")}
             <Gamepad2 className="relative z-10 h-4 w-4" />
             <span className="relative z-10 hidden xs:inline">Games</span>
+          </Link>
+          <Link to="/work-with-rizzle" className={tabClass("work")} aria-current={activeTab === "work" ? "page" : undefined}>
+            {activeIndicator("work")}
+            <Compass className="relative z-10 h-4 w-4" />
+            <span className="relative z-10 hidden xs:inline">Start Here</span>
           </Link>
         </div>
       </div>

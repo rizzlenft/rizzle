@@ -30,7 +30,7 @@ const ContentTabs = ({ activeTab }: ContentTabsProps) => {
               </h2>
               <p className="mx-auto max-w-lg text-muted-foreground">
                 {activeTab === "projects" 
-                  ? "Building across the metaverse, one weird idea at a time"
+                  ? "A focused look at launches, communities, and products I helped bring to life."
                   : "Early AI experiments and a curated collection of digital art"
                 }
               </p>
@@ -57,7 +57,7 @@ const ContentTabs = ({ activeTab }: ContentTabsProps) => {
 
 // Inline Projects content (without section wrapper and header)
 import ProjectCard from "./ProjectCard";
-import { TRINITY_LABS_URL } from "@/lib/site-links";
+import { START_HERE_PATH, TRINITY_LABS_URL } from "@/lib/site-links";
 import wipMeetupImg from "@/assets/wip-logo.webp";
 import marsPodcastImg from "@/assets/mattandrizz.webp";
 import avastarsImg from "@/assets/avastars.avif";
@@ -74,27 +74,31 @@ import trinityLabsImg from "@/assets/trinity-labs.webp";
 const projects = [
   {
     name: "The WIP Meetup",
-    description: "Every Thursday at 3pm ET — community gatherings exploring web3, metaverse, and digital culture. Free gifts and controlled chaos.",
+    description: "Founded in 2019 and still running: a weekly web3 meetup for builders and creators with live sessions, guests, and community-driven experiments.",
     emoji: "🎙️",
     featured: true,
     image: wipMeetupImg,
     showLivePreview: true,
     links: [
       { label: "Website", emoji: "🌐", href: "https://thewipmeetup.com/" },
+      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
   {
     name: "Trinity Labs",
     description:
-      "Multi-pool token liquidity on Base. Launch with built-in curves across USDC, ETH, and Clanker — automated arbitrage and deflationary burns on every sell.",
+      "Current venture focused on multi-pool token liquidity on Base, designed to make launches cleaner, fairer, and easier to sustain.",
     emoji: "⚗️",
     image: trinityLabsImg,
     imagePosition: "center 40%",
-    links: [{ label: "Website", emoji: "🌐", href: TRINITY_LABS_URL }],
+    links: [
+      { label: "Website", emoji: "🌐", href: TRINITY_LABS_URL },
+      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
+    ],
   },
   {
     name: "MiniApps",
-    description: "A growing suite of Farcaster miniapps built natively for the Farcaster ecosystem.",
+    description: "A growing set of Farcaster miniapps built for real usage, repeat engagement, and fun community moments.",
     emoji: "📱",
     image: rizzleMiniappsImg,
     imagePosition: "center 30%",
@@ -105,7 +109,7 @@ const projects = [
   },
   {
     name: "Babacci",
-    description: "An ambitious generative 3D NFT project of unique creatures called Babacci. Fully onchain on Base. Download the 3D file for use across the metaverse.",
+    description: "A generative 3D collection of unique creatures, fully onchain on Base, with downloadable files for virtual world use.",
     emoji: "🎨",
     image: babacciImg,
     links: [
@@ -114,16 +118,18 @@ const projects = [
   },
   {
     name: "OnChainChain",
-    description: "A 2,000-edition generative Art Blocks project with all metadata onchain on Ethereum mainnet. Download the 3D file to wear on your avatar across the metaverse.",
+    description: "Co-led a generative Ethereum launch from concept to public mint with a multi-creator team and clear collector narrative.",
     emoji: "⛓️",
+    featured: true,
     image: onchainchainImg,
     links: [
       { label: "Art Blocks", emoji: "🎨", href: "https://www.artblocks.io/collection/onchainchain-by-rizzle-sebi-miguelgarest" },
+      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
   {
     name: "Rizzlefest",
-    description: "A legendary, recurrent web3 camping retreat bringing the community together IRL for adventure, connection, and unforgettable vibes in the great outdoors.",
+    description: "A recurring web3 camping retreat built to bring internet-native communities together offline in a more human way.",
     emoji: "🏕️",
     image: rizzlefestImg,
     links: [
@@ -132,7 +138,7 @@ const projects = [
   },
   {
     name: "The Matthew & Rizzle Show",
-    description: "One of web3's earliest podcasts (2019-2026). Iconic guests, real talk, and five years of cutting through the noise. Now concluded.",
+    description: "One of web3's early podcasts (2019-2026), known for sharp conversations and long-form interviews across multiple cycles.",
     emoji: "🎧",
     image: marsPodcastImg,
     imagePosition: "center 25%",
@@ -142,7 +148,7 @@ const projects = [
   },
   {
     name: "Fly Frogs",
-    description: "Joined forces with Josh & Molly's 2021 NFT project post-launch. Sold through 10k NFTs and built the foundation of the Fly Frogs brand.",
+    description: "Joined post-launch in 2021 and helped drive Fly Frogs through key growth phases, including sellout and brand development.",
     emoji: "🐸",
     image: flyfrog3dImg,
     links: [
@@ -152,7 +158,7 @@ const projects = [
   },
   {
     name: "TokenSmart",
-    description: "One of the largest early web3 communities (2019-2021). Home of the TokenSmart Podcast (now on Spotify), plus daily/weekly community events featuring top builders and creators, growing to over 20,000 Discord members.",
+    description: "One of the larger early web3 communities (2019-2021), with recurring events and podcast content that grew to 20,000+ Discord members.",
     emoji: "🧠",
     image: tokensmartImg,
     links: [
@@ -162,7 +168,7 @@ const projects = [
   },
   {
     name: "Metalympics",
-    description: "In 2020, the Metalympics was a 3-month metaverse event attracting 20+ web3 sponsors, hundreds of competitors, and became one of the largest cutting-edge web3 events to date.",
+    description: "A 2020 three-month metaverse event with 20+ sponsors and hundreds of participants across competitive community programming.",
     emoji: "🏆",
     image: metalympicsImg,
     links: [
@@ -171,20 +177,23 @@ const projects = [
   },
   {
     name: "Avastars",
-    description: "Fully onchain generative PFP NFTs on Ethereum mainnet. Est. 2020. A trailblazing project with over 4,000 ETH in secondary sales.",
+    description: "Co-founded and launched one of the earliest fully onchain generative PFP projects, reaching 4,000+ ETH in secondary volume.",
     emoji: "👾",
     image: avastarsImg,
     links: [
       { label: "OpenSea", emoji: "⛵", href: "https://opensea.io/collection/avastar" },
+      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
   {
     name: "nft42",
-    description: "Co-founded this groundbreaking NFT studio (2019-2022). Launched Avastars, TokenSmart, and Stealthtest. Collaborated with Gary Vee, Snoop Dogg, Nyan Cat, and other icons to build their first NFT collections.",
+    description: "Co-founded an NFT studio (2019-2022) and led launches and creator collaborations across multiple notable collections and campaigns.",
     emoji: "✨",
+    featured: true,
     image: nft42Img,
     links: [
       { label: "Website", emoji: "🌐", href: "https://nft42.com" },
+      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
 ];
@@ -210,8 +219,25 @@ const itemVariants = {
 };
 
 const ProjectsContent = () => {
+  const projectPriority: Record<string, number> = {
+    "The WIP Meetup": 1,
+    nft42: 2,
+    OnChainChain: 3,
+    "Trinity Labs": 4,
+    Avastars: 5,
+  };
+
+  const sortedProjects = [...projects].sort((a, b) => {
+    const aRank = projectPriority[a.name] ?? 999;
+    const bRank = projectPriority[b.name] ?? 999;
+    return aRank - bRank;
+  });
+
   return (
     <div className="mx-auto max-w-6xl px-6">
+      <p className="mb-6 text-center text-sm text-muted-foreground sm:text-base">
+        Flagship work first, followed by experiments and side quests.
+      </p>
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -219,7 +245,7 @@ const ProjectsContent = () => {
         viewport={{ once: true, margin: "-50px" }}
         className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {projects.map((project) => (
+        {sortedProjects.map((project) => (
           <motion.div
             key={project.name}
             variants={itemVariants}
