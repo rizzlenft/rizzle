@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build && node scripts/postbuild-seo.mjs",
     "indexnow:submit": "node scripts/indexnow-submit.mjs",
+    "seo:smoke": "node scripts/seo-smoke.mjs",
     "sync:whack-a-mole": "node scripts/sync-whack-a-mole.mjs",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
