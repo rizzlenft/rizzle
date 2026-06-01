@@ -16,4 +16,8 @@
 /games/whack-a-mole/                 /games/whack-a-mole/index.html   200
 /games/whack-a-mole/leaderboard      /games/whack-a-mole/index.html   200
 
+# Verification file helpers
+/google8ae5c1b1bff64cbc.html         /google8ae5c1b1bff64cbc.html     200
+/sitemap.xml/BingSiteAuth.xml        /BingSiteAuth.xml                 301
+
 /*    /index.html   200
