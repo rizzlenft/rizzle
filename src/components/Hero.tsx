@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Music, Play, X } from "lucide-react";
 import rizzleSig from "@/assets/rizzle-sig-v2.png";
 import rizzlePfp from "@/assets/rizzlepfp.webp";
+import { Button } from "@/components/ui/button";
 import { START_HERE_PATH, STRIPE_CONSULT_LINK } from "@/lib/site-links";
 import { track } from "@/lib/analytics";
 
@@ -12,7 +13,7 @@ const Hero = () => {
 
 
   return (
-    <section className="relative flex flex-col items-center justify-center px-6 py-8 sm:py-10">
+    <section className="relative section-y flex flex-col items-center justify-center">
       {/* Prominent PFP hero background */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[50vh] sm:h-[72vh] overflow-hidden">
         <img
@@ -38,8 +39,8 @@ const Hero = () => {
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-4xl"
+        transition={{ duration: 0.55, ease: "easeOut" }}
+        className="page-container relative z-10 w-full max-w-4xl"
       >
         {/* Spacer for signature overlap */}
         <div className="-mb-4 sm:-mb-12" />
@@ -49,7 +50,7 @@ const Hero = () => {
           className="-mb-2 sm:-mb-14 pointer-events-none m-0 select-none text-center"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+          transition={{ delay: 0.12, duration: 0.45, ease: "easeOut" }}
         >
           <span className="sr-only">Rizzle — Crypto Ecosystem Operator</span>
           <img
@@ -72,7 +73,7 @@ const Hero = () => {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
+          transition={{ delay: 0.2, duration: 0.45 }}
           className="mx-auto max-w-3xl text-center text-[clamp(1.8rem,4vw,2.6rem)] font-display font-bold leading-tight text-primary"
         >
           Crypto Ecosystem Operator
@@ -81,7 +82,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.62, duration: 0.6 }}
+          transition={{ delay: 0.26, duration: 0.42 }}
           className="mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground sm:text-sm"
         >
           <span className="rounded-full border border-border/45 bg-background/30 px-3 py-1">10+ launches</span>
@@ -92,16 +93,22 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.76, duration: 0.6 }}
+          transition={{ delay: 0.32, duration: 0.42 }}
           className="mt-4 flex flex-col items-center justify-center gap-2"
         >
-          <a
-            href={START_HERE_PATH}
-            onClick={() => track("opportunity_cta_clicked", { location: "hero" })}
-            className="inline-flex min-w-[260px] items-center justify-center rounded-full border border-primary/40 bg-primary px-7 py-3 font-mono text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90"
+          <Button
+            asChild
+            variant="cta-primary"
+            size="pill"
+            className="min-w-[260px] px-7"
           >
-            Start Here
-          </a>
+            <a
+              href={START_HERE_PATH}
+              onClick={() => track("opportunity_cta_clicked", { location: "hero" })}
+            >
+              Start Here
+            </a>
+          </Button>
           <a
             href={STRIPE_CONSULT_LINK}
             target="_blank"
@@ -110,7 +117,7 @@ const Hero = () => {
             className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary sm:text-sm"
           >
             <span className="text-primary">◎</span>
-            Or book a strategy sprint
+            Or book a strategy sprint call
           </a>
         </motion.div>
 
@@ -118,7 +125,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.88, duration: 0.6 }}
+          transition={{ delay: 0.38, duration: 0.42 }}
           className="mt-3"
         >
           {!showPlayer ? (

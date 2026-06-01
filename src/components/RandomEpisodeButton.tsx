@@ -94,7 +94,7 @@ const RandomEpisodeButton = () => {
               exit={{ opacity: 0, y: 16, scale: 0.98 }}
               className="fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 sm:absolute sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:-translate-x-1/2 sm:top-full sm:mt-4 sm:w-72"
             >
-              <div className="rounded-xl overflow-hidden shadow-2xl border border-border/50 bg-card">
+              <div className="surface-glass overflow-hidden shadow-2xl">
                 <div className="relative aspect-video">
                   <img
                     src={getYouTubeThumbnail(randomResult.videoId, "hq")}

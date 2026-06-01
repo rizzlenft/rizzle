@@ -7,15 +7,15 @@ interface ContentTabsProps {
 
 const ContentTabs = ({ activeTab }: ContentTabsProps) => {
   return (
-    <section className="relative px-6 py-8" aria-label={activeTab === "projects" ? "Projects" : "CryptoArt"}>
-      <div className="mx-auto max-w-6xl">
+    <section className="relative section-y" aria-label={activeTab === "projects" ? "Projects" : "CryptoArt"}>
+      <div className="page-container">
         {/* Dynamic title */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
+          transition={{ duration: 0.45 }}
+          className="mb-10 text-center sm:mb-12"
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -23,15 +23,15 @@ const ContentTabs = ({ activeTab }: ContentTabsProps) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.22 }}
             >
-              <h2 className="mb-4 font-display text-4xl font-bold text-foreground sm:text-5xl">
+              <h2 className="mb-4 font-display text-3xl font-bold text-foreground sm:text-4xl">
                 {activeTab === "projects" ? "Projects" : "CryptoArt"}
               </h2>
               <p className="mx-auto max-w-lg text-muted-foreground">
                 {activeTab === "projects" 
-                  ? "A focused look at launches, communities, and products I helped bring to life."
-                  : "Early AI experiments and a curated collection of digital art"
+                  ? "A focused look at launches, communities, and products I've helped build."
+                  : "Early AI experiments plus a curated digital art collection"
                 }
               </p>
             </motion.div>
@@ -46,7 +46,7 @@ const ContentTabs = ({ activeTab }: ContentTabsProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.35 }}
         >
           {activeTab === "projects" ? <ProjectsContent /> : <CryptoArtContent />}
         </motion.div>
@@ -74,7 +74,7 @@ import trinityLabsImg from "@/assets/trinity-labs.webp";
 const projects = [
   {
     name: "The WIP Meetup",
-    description: "Founded in 2019 and still running: a weekly web3 meetup for builders and creators with live sessions, guests, and community-driven experiments.",
+    description: "Founded in 2019 and still running: a weekly web3 meetup with live sessions, guests, and community-led experiments.",
     emoji: "🎙️",
     featured: true,
     image: wipMeetupImg,
@@ -87,7 +87,7 @@ const projects = [
   {
     name: "Trinity Labs",
     description:
-      "Current venture focused on multi-pool token liquidity on Base, designed to make launches cleaner, fairer, and easier to sustain.",
+      "Current venture focused on multi-pool token liquidity on Base, built to make launches cleaner, fairer, and easier to sustain.",
     emoji: "⚗️",
     image: trinityLabsImg,
     imagePosition: "center 40%",
@@ -98,7 +98,7 @@ const projects = [
   },
   {
     name: "MiniApps",
-    description: "A growing set of Farcaster miniapps built for real usage, repeat engagement, and fun community moments.",
+    description: "A growing set of Farcaster miniapps built for real usage, repeat engagement, and playful community moments.",
     emoji: "📱",
     image: rizzleMiniappsImg,
     imagePosition: "center 30%",
@@ -109,7 +109,7 @@ const projects = [
   },
   {
     name: "Babacci",
-    description: "A generative 3D collection of unique creatures, fully onchain on Base, with downloadable files for virtual world use.",
+    description: "A generative 3D collection of unique creatures, fully onchain on Base, with downloadable assets for virtual worlds.",
     emoji: "🎨",
     image: babacciImg,
     links: [
@@ -118,7 +118,7 @@ const projects = [
   },
   {
     name: "OnChainChain",
-    description: "Co-led a generative Ethereum launch from concept to public mint with a multi-creator team and clear collector narrative.",
+    description: "Co-led a generative Ethereum launch from concept to public mint with a multi-creator team and strong collector narrative.",
     emoji: "⛓️",
     featured: true,
     image: onchainchainImg,
@@ -129,7 +129,7 @@ const projects = [
   },
   {
     name: "Rizzlefest",
-    description: "A recurring web3 camping retreat built to bring internet-native communities together offline in a more human way.",
+    description: "A recurring web3 camping retreat built to bring internet-native communities together offline.",
     emoji: "🏕️",
     image: rizzlefestImg,
     links: [
@@ -138,7 +138,7 @@ const projects = [
   },
   {
     name: "The Matthew & Rizzle Show",
-    description: "One of web3's early podcasts (2019-2026), known for sharp conversations and long-form interviews across multiple cycles.",
+    description: "One of web3's early podcasts (2019-2026), known for sharp conversations and long-form interviews across multiple market cycles.",
     emoji: "🎧",
     image: marsPodcastImg,
     imagePosition: "center 25%",
@@ -148,7 +148,7 @@ const projects = [
   },
   {
     name: "Fly Frogs",
-    description: "Joined post-launch in 2021 and helped drive Fly Frogs through key growth phases, including sellout and brand development.",
+    description: "Joined post-launch in 2021 and helped push Fly Frogs through key growth phases, including sellout and brand development.",
     emoji: "🐸",
     image: flyfrog3dImg,
     links: [
@@ -168,7 +168,7 @@ const projects = [
   },
   {
     name: "Metalympics",
-    description: "A 2020 three-month metaverse event with 20+ sponsors and hundreds of participants across competitive community programming.",
+    description: "A three-month 2020 metaverse event with 20+ sponsors and hundreds of participants across community competitions.",
     emoji: "🏆",
     image: metalympicsImg,
     links: [
@@ -177,7 +177,7 @@ const projects = [
   },
   {
     name: "Avastars",
-    description: "Co-founded and launched one of the earliest fully onchain generative PFP projects, reaching 4,000+ ETH in secondary volume.",
+    description: "Co-founded and launched one of the earliest fully onchain generative PFP projects; secondary volume surpassed 4,000 ETH.",
     emoji: "👾",
     image: avastarsImg,
     links: [
@@ -187,7 +187,7 @@ const projects = [
   },
   {
     name: "nft42",
-    description: "Co-founded an NFT studio (2019-2022) and led launches and creator collaborations across multiple notable collections and campaigns.",
+    description: "Co-founded a pioneering NFT studio (2019-2022) focused on fully onchain metadata and high-profile creator launches.",
     emoji: "✨",
     featured: true,
     image: nft42Img,
@@ -234,23 +234,19 @@ const ProjectsContent = () => {
   });
 
   return (
-    <div className="mx-auto max-w-6xl px-6">
-      <p className="mb-6 text-center text-sm text-muted-foreground sm:text-base">
-        Flagship work first, followed by experiments and side quests.
+    <div className="page-container">
+      <p className="mb-5 text-center text-sm text-muted-foreground sm:mb-6 sm:text-base">
+        Flagship work first, then experiments and side quests.
       </p>
       <motion.div
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
-        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:col-auto"
       >
         {sortedProjects.map((project) => (
-          <motion.div
-            key={project.name}
-            variants={itemVariants}
-            className={project.featured ? "sm:col-span-2 lg:col-span-2" : ""}
-          >
+          <motion.div key={project.name} variants={itemVariants}>
             <ProjectCard {...project} />
           </motion.div>
         ))}
@@ -344,7 +340,7 @@ const collectedCollections = [
 
 const CryptoArtContent = () => {
   return (
-    <div className="mx-auto max-w-6xl px-6">
+    <div className="page-container">
       {/* Featured image */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}

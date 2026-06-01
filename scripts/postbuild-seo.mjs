@@ -1,12 +1,10 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const DIST_DIR = path.resolve("dist");
 const BASE_HTML_PATH = path.join(DIST_DIR, "index.html");
 const SITEMAP_PATH = path.join(DIST_DIR, "sitemap.xml");
 const RSS_PATH = path.join(DIST_DIR, "rss.xml");
-
-const today = new Date().toISOString().slice(0, 10);
 
 const routes = [
   {
@@ -17,6 +15,7 @@ const routes = [
       "Rizzle (NFTland) — crypto operator and builder since 2019. Community growth, launch execution, and onchain product momentum.",
     priority: "1.0",
     changefreq: "weekly",
+    sourceFiles: ["src/pages/Index.tsx", "src/components/Hero.tsx", "src/components/ContentTabs.tsx"],
   },
   {
     path: "/guests",
@@ -26,6 +25,7 @@ const routes = [
       "Searchable archive of guests and collaborators across The WIP Meetup, The Matthew & Rizzle Show, and TokenSmart.",
     priority: "0.8",
     changefreq: "weekly",
+    sourceFiles: ["src/pages/GuestArchive.tsx"],
   },
   {
     path: "/games",
@@ -35,6 +35,7 @@ const routes = [
       "Play Rizzle Dash and Web3 Whack-a-Mole with live leaderboards in Rizzle's browser arcade.",
     priority: "0.7",
     changefreq: "weekly",
+    sourceFiles: ["src/pages/Games.tsx"],
   },
   {
     path: "/work-with-rizzle",
@@ -44,6 +45,7 @@ const routes = [
       "Choose the best path to work with Rizzle: hiring, partnerships, or investment conversations.",
     priority: "0.9",
     changefreq: "weekly",
+    sourceFiles: ["src/pages/WorkWithRizzle.tsx", "functions/api/contact.js"],
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Service",
@@ -74,6 +76,7 @@ const queryRoutes = [
     loc: "https://rizzle.io/?tab=art",
     priority: "0.8",
     changefreq: "monthly",
+    sourceFiles: ["src/pages/Index.tsx", "src/components/ContentTabs.tsx"],
   },
 ];
 
@@ -166,15 +169,16 @@ function buildSitemapXml() {
       loc: route.canonical,
       priority: route.priority,
       changefreq: route.changefreq,
+      lastmod: route.lastmod,
     })),
-    ...queryRoutes,
+    ...queryRoutes.map((route) => ({ ...route, lastmod: route.lastmod })),
   ];
 
   const rows = urlEntries
     .map(
       (entry) => `  <url>
     <loc>${entry.loc}</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${entry.lastmod}</lastmod>
     <changefreq>${entry.changefreq}</changefreq>
     <priority>${entry.priority}</priority>
   </url>`,
@@ -226,6 +230,30 @@ ${items}
 }
 
 async function main() {
+  const today = new Date().toISOString().slice(0, 10);
+
+  async function resolveLastmod(sourceFiles = []) {
+    let latest = 0;
+    for (const relativePath of sourceFiles) {
+      try {
+        const fullPath = path.resolve(relativePath);
+        const details = await stat(fullPath);
+        latest = Math.max(latest, details.mtimeMs);
+      } catch {
+        // Keep best-effort behavior and fall back to today's date.
+      }
+    }
+    if (!latest) return today;
+    return new Date(latest).toISOString().slice(0, 10);
+  }
+
+  for (const route of routes) {
+    route.lastmod = await resolveLastmod(route.sourceFiles);
+  }
+  for (const route of queryRoutes) {
+    route.lastmod = await resolveLastmod(route.sourceFiles);
+  }
+
   const baseHtml = await readFile(BASE_HTML_PATH, "utf8");
 
   for (const route of routes) {

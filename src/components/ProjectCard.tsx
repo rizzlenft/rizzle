@@ -35,8 +35,8 @@ const ProjectCard = ({
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:box-glow-sm ${
-        featured ? "md:col-span-2 box-glow border-primary/30" : ""
+      className={`surface-glass group relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:border-primary/50 hover:box-glow-sm ${
+        featured ? "box-glow border-primary/30" : ""
       }`}
     >
       {/* Image */}

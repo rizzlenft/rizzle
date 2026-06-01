@@ -6,6 +6,9 @@ import TopNav from "@/components/TopNav";
 import Footer from "@/components/Footer";
 import GameLeaderboard from "@/components/GameLeaderboard";
 import GameLogo from "@/components/games/GameLogo";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSeo } from "@/hooks/useSeo";
@@ -238,13 +241,13 @@ const Games = () => {
       <div className="relative z-10">
         <TopNav activeTab="games" />
 
-        <main className="mx-auto max-w-6xl px-3 py-6 pb-10 sm:px-6 sm:py-8" id="main-content">
+        <main className="page-container section-y pb-10" id="main-content">
           <motion.header
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-5 text-center sm:mb-6"
           >
-            <h1 className="flex items-center justify-center gap-2.5 text-2xl font-bold text-foreground sm:gap-3 sm:text-4xl">
+            <h1 className="flex items-center justify-center gap-2.5 font-display text-3xl font-bold text-foreground sm:gap-3 sm:text-4xl">
               <Gamepad2 className="h-7 w-7 text-primary sm:h-8 sm:w-8" aria-hidden />
               Arcade
             </h1>
@@ -273,10 +276,10 @@ const Games = () => {
                     tabIndex={selected ? 0 : -1}
                     onClick={() => selectGame(game)}
                     disabled={game.status === "coming-soon"}
-                    className={`min-h-[88px] rounded-xl border p-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:min-h-[96px] sm:p-4 ${
+                    className={`min-h-[88px] surface-glass p-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:min-h-[96px] sm:p-4 ${
                       selected
                         ? "border-primary bg-primary/10 shadow-[0_0_24px_hsl(var(--primary)/0.15)]"
-                        : "border-border/50 bg-card/40 hover:border-primary/35 hover:bg-card/55"
+                        : "hover:border-primary/35 hover:bg-card/55"
                     } ${game.status === "coming-soon" ? "cursor-not-allowed opacity-50" : "cursor-pointer active:scale-[0.99]"}`}
                   >
                     <div className="flex items-center gap-3 sm:gap-4">
@@ -315,19 +318,15 @@ const Games = () => {
                 className="space-y-3"
               >
                 {activeGame.expandHint && (
-                  <div className="flex items-stretch gap-2 rounded-xl border border-primary/25 bg-primary/5 p-2 sm:items-center sm:justify-between sm:px-3 sm:py-2.5">
+                  <div className="surface-glass flex items-stretch gap-2 border-primary/25 bg-primary/5 p-2 sm:items-center sm:justify-between sm:px-3 sm:py-2.5">
                     <p className="flex flex-1 items-center gap-2 px-1 text-xs leading-snug text-muted-foreground sm:text-sm">
                       <Expand className="hidden h-4 w-4 shrink-0 text-primary sm:block" aria-hidden />
                       <span>{activeGame.expandHint}</span>
                     </p>
-                    <button
-                      type="button"
-                      onClick={toggleFullscreen}
-                      className="flex min-h-[44px] shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                    >
+                    <Button type="button" variant="cta-primary" onClick={toggleFullscreen} className="shrink-0">
                       <Maximize2 className="h-4 w-4" aria-hidden />
                       Expand
-                    </button>
+                    </Button>
                   </div>
                 )}
 
@@ -387,33 +386,35 @@ const Games = () => {
             <p className="mt-1 text-sm text-muted-foreground">
               Enter your name for the leaderboard
             </p>
-            <label htmlFor="player-name" className="sr-only">
+            <Label htmlFor="player-name" className="sr-only">
               Player name
-            </label>
-            <input
+            </Label>
+            <Input
               id="player-name"
               autoFocus
               maxLength={20}
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               placeholder="Your name"
-              className="mt-4 w-full rounded-lg border border-border bg-background px-3 py-3 text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="mt-4"
             />
             <div className="mt-4 flex gap-2">
-              <button
+              <Button
                 type="button"
                 onClick={() => { setShowNamePrompt(false); setPendingScore(null); }}
-                className="min-h-[44px] flex-1 rounded-lg border border-border px-3 text-sm text-muted-foreground hover:bg-muted"
+                variant="cta-secondary"
+                className="flex-1"
               >
                 Skip
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 disabled={!playerName.trim() || submitting}
-                className="min-h-[44px] flex-1 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+                variant="cta-primary"
+                className="flex-1"
               >
                 {submitting ? "Saving…" : "Submit"}
-              </button>
+              </Button>
             </div>
           </motion.form>
         </div>

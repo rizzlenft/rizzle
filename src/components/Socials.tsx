@@ -103,7 +103,7 @@ const socials = [
 
 const Socials = () => {
   return (
-    <section className="relative px-6 py-16 overflow-hidden">
+    <section className="relative section-y-lg overflow-hidden">
       {/* Background gif */}
       <div 
         className="pointer-events-none absolute inset-0 opacity-40"
@@ -117,7 +117,7 @@ const Socials = () => {
       {/* Gradient overlay for better text readability */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background/60" />
       
-      <div className="relative mx-auto max-w-4xl">
+      <div className="page-container relative max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -126,11 +126,11 @@ const Socials = () => {
           className="mb-10 text-center"
         >
           {/* Signature-style Connect heading */}
-          <h2 className="mb-3 font-display text-6xl font-bold text-primary text-glow sm:text-7xl md:text-8xl italic tracking-tight">
+          <h2 className="mb-3 font-display text-5xl font-bold text-primary text-glow sm:text-6xl md:text-7xl italic tracking-tight">
             Connect
           </h2>
           <p className="text-primary/70 text-sm max-w-md mx-auto">
-            Open to new roles, collaborations, and investment conversations.
+            Reach out for roles, collaborations, or investor conversations.
           </p>
         </motion.div>
         
@@ -140,7 +140,7 @@ const Socials = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="flex flex-wrap justify-center gap-6"
+          className="flex flex-wrap justify-center gap-4 sm:gap-6"
         >
           {socials.map((social, index) => {
             const isInternal = social.href.startsWith("/");
@@ -167,7 +167,7 @@ const Socials = () => {
               transition={{ delay: 0.1 * index, duration: 0.5 }}
               whileHover={{ scale: 1.05, y: -4 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative flex flex-col items-center gap-3 rounded-2xl border border-border/50 bg-card/30 px-8 py-6 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-card/60 hover:box-glow-sm"
+              className="surface-glass-strong group relative flex flex-col items-center gap-3 px-6 py-5 sm:px-8 sm:py-6 transition-all duration-300 hover:border-primary/50 hover:bg-card/60 hover:box-glow-sm"
             >
               {/* Icon */}
               <div className={`transition-colors duration-300 text-muted-foreground ${social.color}`}>

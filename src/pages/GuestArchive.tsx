@@ -129,7 +129,7 @@ const GuestArchive = () => {
         <div className="pointer-events-none absolute left-1/4 top-0 h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
         <div className="pointer-events-none absolute right-1/4 top-0 h-48 w-48 rounded-full bg-accent/10 blur-[80px]" />
 
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-12">
+        <div className="page-container relative z-10 py-12">
 
           {/* Logos showcase */}
           <motion.div
@@ -139,7 +139,7 @@ const GuestArchive = () => {
             className="flex flex-col items-center"
           >
             {/* Triple logo display */}
-            <div className="mb-8 flex items-center justify-center gap-3 sm:gap-8">
+            <div className="mb-8 flex flex-wrap items-center justify-center gap-3 sm:flex-nowrap sm:gap-8">
               <motion.a
                 href="https://thewipmeetup.com/"
                 target="_blank"
@@ -217,14 +217,16 @@ const GuestArchive = () => {
             </div>
 
             {/* Description - more prominent */}
-            <h1 className="sr-only">Rizzle Network — Guest Archive</h1>
+            <h1 className="text-center font-display text-3xl font-bold text-foreground sm:text-4xl">
+              Network
+            </h1>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              className="mb-2 text-center text-lg sm:text-xl text-foreground/80 max-w-lg font-medium"
+              className="mb-2 mt-2 max-w-2xl text-center text-base font-medium text-foreground/80 sm:text-lg"
             >
-              A directory of guests and collaborators from
+              Guests and collaborators featured across
             </motion.p>
 
             <motion.div
@@ -271,7 +273,7 @@ const GuestArchive = () => {
                 Why this network matters
               </p>
               <p className="mt-1 text-sm leading-relaxed text-foreground/85">
-                This archive maps years of conversations with creators, builders, and ecosystem collaborators
+                This archive captures years of conversations with creators, builders, and ecosystem collaborators
                 across recurring shows, live events, and launch cycles.
               </p>
             </motion.div>
@@ -283,7 +285,7 @@ const GuestArchive = () => {
       </header>
 
       {/* Search and guest list */}
-      <main id="main-content" className="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+      <main id="main-content" className="page-container section-y">
         {guestsFetchFailed && (
           <p className="mb-6 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-center text-sm text-yellow-200/90" role="status">
             Live guest updates are temporarily unavailable — showing saved directory.
@@ -293,7 +295,7 @@ const GuestArchive = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.5 }}
+          transition={{ delay: 0.15, duration: 0.45 }}
           className="mb-10"
         >
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto">
@@ -321,7 +323,7 @@ const GuestArchive = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
+          transition={{ delay: 0.22, duration: 0.45 }}
           className="space-y-8"
         >
           {sortedKeys.map((letter) => (

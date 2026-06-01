@@ -97,7 +97,7 @@ const GameLeaderboard = ({ gameId, mode = "campaign" }: GameLeaderboardProps) =>
   if (loading) {
     return (
       <div
-        className="rounded-xl border border-border/50 bg-card/30 px-4 py-10 text-center text-sm text-muted-foreground"
+        className="surface-glass px-4 py-10 text-center text-sm text-muted-foreground"
         aria-live="polite"
       >
         Loading scores…
@@ -107,7 +107,7 @@ const GameLeaderboard = ({ gameId, mode = "campaign" }: GameLeaderboardProps) =>
 
   return (
     <section
-      className="rounded-xl border border-border/50 bg-card/30 overflow-hidden"
+      className="surface-glass overflow-hidden"
       aria-labelledby={`leaderboard-${gameId}`}
     >
       <div className="border-b border-border/50 bg-card/50 px-4 py-3 sm:px-5">

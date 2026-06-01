@@ -117,7 +117,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
       <motion.div
         data-guest-chip
         whileHover={{ scale: 1.05 }}
-        className={`group relative inline-flex items-center gap-1.5 rounded-full border bg-card/30 px-3 py-1.5 text-sm text-foreground hover:bg-card/60 transition-all cursor-pointer ${
+        className={`group relative inline-flex min-h-[44px] items-center gap-1.5 rounded-full border bg-card/30 px-3.5 py-2 text-sm text-foreground hover:bg-card/60 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           hasDirectLink(guest, guestLinks)
             ? "border-primary/30 hover:border-primary"
             : "border-border/50 hover:border-primary/50"
@@ -147,7 +147,7 @@ const GuestChip = ({ guest }: GuestChipProps) => {
         <button
           type="button"
           onClick={handleCopy}
-          className="ml-1 flex min-h-[44px] min-w-[44px] items-center justify-center rounded hover:bg-primary/20 transition-colors sm:min-h-0 sm:min-w-0 sm:p-0.5"
+          className="ml-1 flex min-h-[40px] min-w-[40px] items-center justify-center rounded hover:bg-primary/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:min-h-0 sm:min-w-0 sm:p-0.5"
           aria-label={`Copy link for ${guest}`}
           title="Copy link"
         >

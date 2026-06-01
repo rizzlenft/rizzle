@@ -41,20 +41,21 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
       aria-label="Main navigation"
       className="sticky top-0 z-50 w-full border-b border-border/30 bg-background/80 backdrop-blur-md"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-2 py-2 sm:px-6">
+      <div className="page-container flex items-center justify-between py-2">
         {/* Left — tagline pill (hidden on very small screens) */}
         <Link
           to="/"
           className="hidden xs:flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary hover:bg-primary/15 transition-colors"
         >
           <span className="text-sm">🏴‍☠️</span>
-          <span className="hidden sm:inline">web3 founder since 2019</span>
+          <span className="hidden sm:inline">operator since 2019</span>
           <span className="sm:hidden">since 2019</span>
           <span className="text-sm">🐸</span>
         </Link>
 
         {/* Right — tab toggle (centered on small screens) */}
-        <div className="inline-flex items-center gap-0.5 sm:gap-1 rounded-full border border-border/50 bg-card/30 p-1 backdrop-blur-sm mx-auto xs:mx-0 xs:ml-auto">
+        <div className="mx-auto max-w-full overflow-x-auto xs:mx-0 xs:ml-auto">
+          <div className="inline-flex min-w-max items-center gap-0.5 rounded-full border border-border/50 bg-card/30 p-1 backdrop-blur-sm sm:gap-1">
           <button
             type="button"
             onClick={() => handleTabClick("projects")}
@@ -83,13 +84,14 @@ const TopNav = ({ activeTab = "projects", onTabChange }: TopNavProps) => {
           <Link to="/games" className={tabClass("games")} aria-current={activeTab === "games" ? "page" : undefined}>
             {activeIndicator("games")}
             <Gamepad2 className="relative z-10 h-4 w-4" />
-            <span className="relative z-10 hidden xs:inline">Games</span>
+            <span className="relative z-10 hidden xs:inline">Arcade</span>
           </Link>
           <Link to="/work-with-rizzle" className={tabClass("work")} aria-current={activeTab === "work" ? "page" : undefined}>
             {activeIndicator("work")}
             <Compass className="relative z-10 h-4 w-4" />
             <span className="relative z-10 hidden xs:inline">Start Here</span>
           </Link>
+          </div>
         </div>
       </div>
     </nav>

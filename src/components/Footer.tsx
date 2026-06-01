@@ -6,13 +6,13 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border px-6 py-10" aria-label="Site footer">
+    <footer className="border-t border-border py-10" aria-label="Site footer">
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="mx-auto max-w-6xl"
+        className="page-container"
       >
         <div className="mb-6 flex items-center justify-center gap-2">
           <span className="text-2xl" aria-hidden="true">🐸</span>
@@ -35,7 +35,7 @@ const Footer = () => {
             Network
           </Link>
           <Link to="/games" className="text-muted-foreground transition-colors hover:text-primary">
-            Games
+            Arcade
           </Link>
           <Link to={START_HERE_PATH} className="text-muted-foreground transition-colors hover:text-primary">
             Start Here
@@ -59,7 +59,7 @@ const Footer = () => {
         </nav>
 
         <p className="mb-2 text-center text-sm text-muted-foreground">
-          Web3 Founder &amp; Builder since 2019 — building onchain culture.
+          Crypto ecosystem operator since 2019 — building onchain products, communities, and culture.
         </p>
         <p className="text-center text-xs text-muted-foreground/70">
           © {year} Rizzle. All rights reserved.

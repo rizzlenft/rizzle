@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import { CheckCircle2, Mail, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import TopNav from "@/components/TopNav";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 import { useSeo } from "@/hooks/useSeo";
+import { START_HERE_PATH } from "@/lib/site-links";
 
 const BookSession = () => {
   useSeo({
@@ -23,12 +26,13 @@ const BookSession = () => {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[500px] w-[700px] rounded-full bg-primary/5 blur-[160px]" />
       </div>
 
-      <main id="main-content" className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-16">
+      <TopNav />
+      <main id="main-content" className="relative z-10 page-container section-y flex min-h-[calc(100vh-72px)] flex-col items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="mx-auto max-w-lg w-full rounded-2xl border border-primary/30 bg-card/80 backdrop-blur-sm p-8 text-center box-glow-sm"
+          className="surface-glass-strong mx-auto w-full max-w-lg border-primary/30 p-8 text-center box-glow-sm"
         >
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
             <CheckCircle2 className="h-8 w-8 text-primary" />
@@ -48,24 +52,20 @@ const BookSession = () => {
             <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
               <Mail className="h-4 w-4 text-primary shrink-0" />
               <div>
-                <p className="text-xs text-muted-foreground">Questions? Reach out directly:</p>
-                <a
-                  href="mailto:rizzlenft@gmail.com"
-                  className="text-sm text-primary font-medium hover:underline"
-                >
-                  rizzlenft@gmail.com
-                </a>
+                <p className="text-xs text-muted-foreground">Need to send details before your session?</p>
+                <Link to={START_HERE_PATH} className="text-sm text-primary font-medium hover:underline">
+                  Use the private inquiry form
+                </Link>
               </div>
             </div>
           </div>
 
-          <Link
-            to="/"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg border border-border/50 bg-secondary/30 px-5 py-2.5 font-mono text-sm text-muted-foreground transition-all hover:text-foreground hover:border-primary/30"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Back to rizzle.io
-          </Link>
+          <Button asChild variant="cta-secondary" size="pill" className="mt-6 gap-2 font-mono text-sm">
+            <Link to="/">
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to rizzle.io
+            </Link>
+          </Button>
         </motion.div>
       </main>
 

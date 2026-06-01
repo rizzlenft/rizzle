@@ -32,3 +32,7 @@ jobs:
       - name: Submit IndexNow URLs
         run: npm run indexnow:submit
         continue-on-error: true
+
+      - name: Live SEO verification
+        run: npm run seo:live-smoke
+        continue-on-error: true

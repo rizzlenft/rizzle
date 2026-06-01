@@ -4,16 +4,6 @@ export const STRIPE_CONSULT_LINK =
 
 export const START_HERE_PATH = "/work-with-rizzle";
 
-export const OPPORTUNITIES_CONTACT_LINK =
-  "mailto:rizzlenft@gmail.com?subject=Opportunities%2C%20Partnerships%20%26%20Investment";
-
-export const HIRE_CONTACT_LINK =
-  "mailto:rizzlenft@gmail.com?subject=Hiring%20Conversation";
-
-export const PARTNER_CONTACT_LINK =
-  "mailto:rizzlenft@gmail.com?subject=Partnership%20Conversation";
-
-export const INVEST_CONTACT_LINK =
-  "mailto:rizzlenft@gmail.com?subject=Investment%20Conversation";
+export const CONTACT_API_PATH = "/api/contact";
 
 export const TRINITY_LABS_URL = "https://trinity-labs.org/";
