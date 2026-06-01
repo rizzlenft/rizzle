@@ -243,7 +243,7 @@ const ProjectsContent = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
-        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:col-auto"
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 [&>*]:!col-span-1 [&>*]:[grid-column:span_1/span_1]"
       >
         {sortedProjects.map((project) => (
           <motion.div key={project.name} variants={itemVariants}>
