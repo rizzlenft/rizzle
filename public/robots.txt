@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://rizzle.io/sitemap.xml
+Sitemap: https://rizzle.io/rss.xml

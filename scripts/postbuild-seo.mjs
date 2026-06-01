@@ -4,6 +4,7 @@ import path from "node:path";
 const DIST_DIR = path.resolve("dist");
 const BASE_HTML_PATH = path.join(DIST_DIR, "index.html");
 const SITEMAP_PATH = path.join(DIST_DIR, "sitemap.xml");
+const RSS_PATH = path.join(DIST_DIR, "rss.xml");
 
 const today = new Date().toISOString().slice(0, 10);
 
@@ -73,6 +74,32 @@ const queryRoutes = [
     loc: "https://rizzle.io/?tab=art",
     priority: "0.8",
     changefreq: "monthly",
+  },
+];
+
+const rssItems = [
+  {
+    title: "Work With Rizzle: Hire, Partner, or Invest",
+    link: "https://rizzle.io/work-with-rizzle",
+    description:
+      "Choose the best path to work with Rizzle, including hiring, partnerships, and investment conversations.",
+  },
+  {
+    title: "Rizzle Projects",
+    link: "https://rizzle.io/",
+    description:
+      "Flagship launches, community programs, and onchain products built and operated by Rizzle.",
+  },
+  {
+    title: "Rizzle Network Archive",
+    link: "https://rizzle.io/guests",
+    description:
+      "Searchable archive of collaborators and guests from The WIP Meetup, The Matthew & Rizzle Show, and TokenSmart.",
+  },
+  {
+    title: "Rizzle Arcade",
+    link: "https://rizzle.io/games",
+    description: "Browser games by Rizzle with live leaderboards.",
   },
 ];
 
@@ -161,6 +188,43 @@ ${rows}
 `;
 }
 
+function escapeXml(str) {
+  return str
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
+
+function buildRssXml() {
+  const pubDate = new Date().toUTCString();
+  const items = rssItems
+    .map(
+      (item) => `  <item>
+    <title>${escapeXml(item.title)}</title>
+    <link>${escapeXml(item.link)}</link>
+    <guid>${escapeXml(item.link)}</guid>
+    <description>${escapeXml(item.description)}</description>
+    <pubDate>${pubDate}</pubDate>
+  </item>`,
+    )
+    .join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>Rizzle Updates</title>
+  <link>https://rizzle.io/</link>
+  <description>Updates from Rizzle: projects, community, and onchain work.</description>
+  <language>en-us</language>
+  <lastBuildDate>${pubDate}</lastBuildDate>
+${items}
+</channel>
+</rss>
+`;
+}
+
 async function main() {
   const baseHtml = await readFile(BASE_HTML_PATH, "utf8");
 
@@ -176,7 +240,8 @@ async function main() {
   }
 
   await writeFile(SITEMAP_PATH, buildSitemapXml(), "utf8");
-  console.log("[postbuild-seo] route html + sitemap generated");
+  await writeFile(RSS_PATH, buildRssXml(), "utf8");
+  console.log("[postbuild-seo] route html + sitemap + rss generated");
 }
 
 main().catch((err) => {
