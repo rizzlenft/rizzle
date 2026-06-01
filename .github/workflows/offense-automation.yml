@@ -32,9 +32,7 @@ jobs:
         run: npm run seo:smoke
 
       - name: Submit IndexNow URLs
-        run: npm run indexnow:submit
-        continue-on-error: true
+        run: npm run indexnow:submit || echo "::warning::IndexNow submission failed; continuing."
 
       - name: Live SEO verification
-        run: npm run seo:live-smoke
-        continue-on-error: true
+        run: npm run seo:live-smoke || echo "::warning::Live SEO verification failed; continuing."
