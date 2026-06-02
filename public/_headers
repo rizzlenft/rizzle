@@ -17,15 +17,18 @@
 /games
   X-Frame-Options: SAMEORIGIN
 
-/games/
+/games/index.html
   X-Frame-Options: SAMEORIGIN
 
 # Standalone HTML games must be iframe-embeddable (play.fun, etc.).
 /games/rizzle-dash
   Content-Security-Policy: frame-ancestors *;
+  X-Frame-Options: ALLOWALL
 
 /games/rizzle-dash/
   Content-Security-Policy: frame-ancestors *;
+  X-Frame-Options: ALLOWALL
 
 /games/rizzle-dash.html
   Content-Security-Policy: frame-ancestors *;
+  X-Frame-Options: ALLOWALL
