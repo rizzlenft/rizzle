@@ -16,6 +16,11 @@
 /games/whack-a-mole/                 /games/whack-a-mole/index.html   200
 /games/whack-a-mole/leaderboard      /games/whack-a-mole/index.html   200
 
+# Rizzle Dash standalone HTML game (clean share URL without .html)
+/games/rizzle-dash                   /games/rizzle-dash.html          200
+/games/rizzle-dash/                  /games/rizzle-dash.html          200
+/rizzledash                          /games/rizzle-dash               301
+
 # Verification file helpers
 /google8ae5c1b1bff64cbc.html         /google8ae5c1b1bff64cbc.html     200
 /sitemap.xml/google8ae5c1b1bff64cbc.html  /google8ae5c1b1bff64cbc.html 200

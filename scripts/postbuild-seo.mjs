@@ -80,6 +80,15 @@ const queryRoutes = [
   },
 ];
 
+const staticPages = [
+  {
+    loc: "https://rizzle.io/games/rizzle-dash",
+    priority: "0.65",
+    changefreq: "monthly",
+    sourceFiles: ["public/games/rizzle-dash.html"],
+  },
+];
+
 const rssItems = [
   {
     title: "Work With Rizzle: Hire, Partner, or Invest",
@@ -103,6 +112,11 @@ const rssItems = [
     title: "Rizzle Arcade",
     link: "https://rizzle.io/games",
     description: "Browser games by Rizzle with live leaderboards.",
+  },
+  {
+    title: "Rizzle Dash",
+    link: "https://rizzle.io/games/rizzle-dash",
+    description: "Free browser endless runner with 10 levels and live leaderboards.",
   },
 ];
 
@@ -172,6 +186,7 @@ function buildSitemapXml() {
       lastmod: route.lastmod,
     })),
     ...queryRoutes.map((route) => ({ ...route, lastmod: route.lastmod })),
+    ...staticPages.map((route) => ({ ...route, lastmod: route.lastmod })),
   ];
 
   const rows = urlEntries
@@ -251,6 +266,9 @@ async function main() {
     route.lastmod = await resolveLastmod(route.sourceFiles);
   }
   for (const route of queryRoutes) {
+    route.lastmod = await resolveLastmod(route.sourceFiles);
+  }
+  for (const route of staticPages) {
     route.lastmod = await resolveLastmod(route.sourceFiles);
   }
 

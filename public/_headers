@@ -13,5 +13,19 @@
 /games/*
   Cache-Control: public, max-age=3600
 
-/games/*
+# Keep the Arcade shell (React page) from being embedded elsewhere.
+/games
   X-Frame-Options: SAMEORIGIN
+
+/games/
+  X-Frame-Options: SAMEORIGIN
+
+# Standalone HTML games must be iframe-embeddable (play.fun, etc.).
+/games/rizzle-dash
+  Content-Security-Policy: frame-ancestors *;
+
+/games/rizzle-dash/
+  Content-Security-Policy: frame-ancestors *;
+
+/games/rizzle-dash.html
+  Content-Security-Policy: frame-ancestors *;

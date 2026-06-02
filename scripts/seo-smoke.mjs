@@ -25,6 +25,7 @@ const requiredByFile = {
     "https://rizzle.io/work-with-rizzle",
     "https://rizzle.io/guests",
     "https://rizzle.io/games",
+    "https://rizzle.io/games/rizzle-dash",
   ],
   "rss.xml": ["<rss version=\"2.0\">", "<channel>", "https://rizzle.io/work-with-rizzle"],
 };

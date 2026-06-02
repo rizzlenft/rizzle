@@ -10,6 +10,7 @@
 - Home / Projects: https://rizzle.io/
 - Network archive: https://rizzle.io/guests
 - Arcade: https://rizzle.io/games
+- Rizzle Dash (play): https://rizzle.io/games/rizzle-dash
 - CryptoArt tab: https://rizzle.io/?tab=art
 
 ## Current Venture

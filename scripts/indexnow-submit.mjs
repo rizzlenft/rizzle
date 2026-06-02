@@ -6,6 +6,7 @@ const URLS = [
   "https://rizzle.io/",
   "https://rizzle.io/guests",
   "https://rizzle.io/games",
+  "https://rizzle.io/games/rizzle-dash",
   "https://rizzle.io/work-with-rizzle",
   "https://rizzle.io/?tab=art",
 ];

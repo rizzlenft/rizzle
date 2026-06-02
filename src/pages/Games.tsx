@@ -46,7 +46,7 @@ const games: GameEntry[] = [
     logoFit: "contain",
     logoZoom: "scale-[1.22]",
     logoPad: "none",
-    path: "/games/rizzle-dash.html",
+    path: "/games/rizzle-dash",
     status: "playable",
     leaderboardMode: "campaign",
     viewport: "landscape",
@@ -115,7 +115,7 @@ const Games = () => {
         {
           "@type": "VideoGame",
           name: "Rizzle Dash",
-          url: "https://rizzle.io/games/rizzle-dash.html",
+          url: "https://rizzle.io/games/rizzle-dash",
           gamePlatform: ["Web Browser", "Mobile Web"],
           applicationCategory: "Game",
           operatingSystem: "Any",
