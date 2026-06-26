@@ -17,7 +17,7 @@
     "model": null
   },
   "commands": {
-    "typecheck": null,
+    "typecheck": "npm run typecheck",
     "lint": "npm run lint",
     "format": null,
     "test": "npm run test",

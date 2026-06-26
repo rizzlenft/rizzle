@@ -34,7 +34,7 @@ async function fetchRecentWipVideos(limit: number): Promise<RssVideo[]> {
   }
 
   const pageHtml = await pageResponse.text();
-  let channelId =
+  const channelId =
     pageHtml.match(/channel_id=([^"&]+)/)?.[1] ??
     pageHtml.match(/"externalId":"([^"]+)"/)?.[1] ??
     null;

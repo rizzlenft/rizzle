@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+*.tsbuildinfo
 
 # Local environment files. The currently tracked .env contains only the
 # Supabase publishable (anon) key, which is safe to be public — but this
