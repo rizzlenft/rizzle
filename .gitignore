@@ -29,6 +29,11 @@ dist-ssr
 # etc.). Recreated on every `supabase link`. Never belongs in git.
 supabase/.temp/
 
+# clawpatch local review/fix state (generated)
+.clawpatch/*
+!.clawpatch/config.json
+clawpatch-report*.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

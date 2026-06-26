@@ -33,7 +33,6 @@ interface GameEntry {
   viewport: "landscape" | "arcade";
   embed?: boolean;
   expandHint?: string;
-  showLeaderboard?: boolean;
 }
 
 const games: GameEntry[] = [
@@ -85,7 +84,6 @@ const games: GameEntry[] = [
     status: "playable",
     viewport: "landscape",
     embed: true,
-    showLeaderboard: false,
   },
 ];
 
@@ -386,7 +384,7 @@ const Games = () => {
               </section>
             )}
 
-            {activeGame && activeGame.showLeaderboard !== false && activeGame.leaderboardMode && (
+            {activeGame?.leaderboardMode && (
               <GameLeaderboard
                 key={`${leaderboardKey}-${activeGame.id}`}
                 gameId={activeGame.id}

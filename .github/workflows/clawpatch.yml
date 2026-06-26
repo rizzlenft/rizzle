@@ -1,0 +1,53 @@
+name: Clawpatch Review
+
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: "clawpatch provider (cursor, codex, mock)"
+        required: false
+        default: "mock"
+      fix_limit:
+        description: "Max findings to auto-fix (0 = review only)"
+        required: false
+        default: "0"
+
+jobs:
+  clawpatch:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install clawpatch
+        run: npm install -g clawpatch@latest
+
+      - name: Map project features
+        run: |
+          clawpatch init || true
+          clawpatch map
+          clawpatch status
+
+      - name: Review (report only)
+        run: |
+          PROVIDER="${{ github.event.inputs.provider }}"
+          clawpatch review --provider "$PROVIDER" --jobs 2 --limit 10 || true
+          clawpatch report -o clawpatch-report.md
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: clawpatch-report
+          path: clawpatch-report.md
+          if-no-files-found: warn
