@@ -33,6 +33,7 @@ interface GameEntry {
   viewport: "landscape" | "arcade";
   embed?: boolean;
   expandHint?: string;
+  showLeaderboard?: boolean;
 }
 
 const games: GameEntry[] = [
@@ -70,6 +71,22 @@ const games: GameEntry[] = [
     embed: true,
     expandHint: "Tap Expand for the full arcade cabinet experience.",
   },
+  {
+    id: "capyrizzle",
+    title: "CapyRizzle Rush",
+    description: "Fire-chief capybara endless sprint — tap to jump every fire, soak the crowd.",
+    logo: "/games/logos/capyrizzle-tab.png",
+    logoThumb: "/games/logos/capyrizzle-tab.png",
+    logoVariant: "square",
+    logoFit: "cover",
+    logoZoom: "scale-[1.05]",
+    logoPad: "none",
+    path: "/games/capyrizzle/",
+    status: "playable",
+    viewport: "landscape",
+    embed: true,
+    showLeaderboard: false,
+  },
 ];
 
 function gameIframeSrc(game: GameEntry) {
@@ -97,9 +114,9 @@ const Games = () => {
   const [leaderboardKey, setLeaderboardKey] = useState(0);
 
   useSeo({
-    title: "Arcade | Rizzle Dash, Whack-a-Mole & Web3 Mini-Games",
+    title: "Arcade | Rizzle Dash, CapyRizzle Rush & Web3 Mini-Games",
     description:
-      "Play Rizzle Dash and Web3 Whack-a-Mole — free browser arcade games with live leaderboards. Built by Rizzle.",
+      "Play Rizzle Dash, CapyRizzle Rush, and Web3 Whack-a-Mole — free browser arcade games with live leaderboards. Built by Rizzle.",
     canonical: "https://rizzle.io/games",
     image: "https://rizzle.io/og/og-home.jpg",
     jsonLd: {
@@ -132,6 +149,17 @@ const Games = () => {
           operatingSystem: "Any",
           author: { "@id": "https://rizzle.io/#person" },
           description: "Bonk scammers in 30-second arcade rounds with high-score leaderboards.",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        },
+        {
+          "@type": "VideoGame",
+          name: "CapyRizzle Rush",
+          url: "https://rizzle.io/games/capyrizzle/",
+          gamePlatform: ["Web Browser", "Mobile Web"],
+          applicationCategory: "Game",
+          operatingSystem: "Any",
+          author: { "@id": "https://rizzle.io/#person" },
+          description: "One-button capybara fire-truck sprint through a burning city. Tap to jump every fire.",
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         },
       ],
@@ -260,7 +288,7 @@ const Games = () => {
             <div
               role="tablist"
               aria-label="Choose a game"
-              className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
             >
               {games.map((game) => {
                 const selected = activeGame?.id === game.id;
@@ -358,11 +386,11 @@ const Games = () => {
               </section>
             )}
 
-            {activeGame && (
+            {activeGame && activeGame.showLeaderboard !== false && activeGame.leaderboardMode && (
               <GameLeaderboard
                 key={`${leaderboardKey}-${activeGame.id}`}
                 gameId={activeGame.id}
-                mode={activeGame.leaderboardMode ?? "campaign"}
+                mode={activeGame.leaderboardMode}
               />
             )}
           </div>

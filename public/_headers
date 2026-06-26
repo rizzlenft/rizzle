@@ -32,3 +32,15 @@
 /games/rizzle-dash.html
   Content-Security-Policy: frame-ancestors *;
   X-Frame-Options: ALLOWALL
+
+/games/capyrizzle
+  Content-Security-Policy: frame-ancestors *;
+  X-Frame-Options: ALLOWALL
+
+/games/capyrizzle/
+  Content-Security-Policy: frame-ancestors *;
+  X-Frame-Options: ALLOWALL
+
+/games/capyrizzle/index.html
+  Content-Security-Policy: frame-ancestors *;
+  X-Frame-Options: ALLOWALL

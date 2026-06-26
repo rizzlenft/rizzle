@@ -16,6 +16,9 @@
 /games/whack-a-mole/                 /games/whack-a-mole/index.html   200
 /games/whack-a-mole/leaderboard      /games/whack-a-mole/index.html   200
 
+/games/capyrizzle                    /games/capyrizzle/index.html     200
+/games/capyrizzle/                   /games/capyrizzle/index.html     200
+
 # Rizzle Dash: Cloudflare Pages already serves rizzle-dash.html at /games/rizzle-dash.
 # Do NOT rewrite that path back to .html — it causes ERR_TOO_MANY_REDIRECTS.
 /games/rizzle-dash/                  /games/rizzle-dash               301

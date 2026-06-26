@@ -87,6 +87,12 @@ const staticPages = [
     changefreq: "monthly",
     sourceFiles: ["public/games/rizzle-dash.html"],
   },
+  {
+    loc: "https://rizzle.io/games/capyrizzle/",
+    priority: "0.65",
+    changefreq: "monthly",
+    sourceFiles: ["public/games/capyrizzle/index.html"],
+  },
 ];
 
 const rssItems = [
@@ -117,6 +123,11 @@ const rssItems = [
     title: "Rizzle Dash",
     link: "https://rizzle.io/games/rizzle-dash",
     description: "Free browser endless runner with 10 levels and live leaderboards.",
+  },
+  {
+    title: "CapyRizzle Rush",
+    link: "https://rizzle.io/games/capyrizzle/",
+    description: "Capybara fire-truck sprint through a burning city — tap to jump every fire.",
   },
 ];
 
