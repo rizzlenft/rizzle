@@ -35,9 +35,9 @@ const Index = () => {
           },
         }
       : {
-          title: "Rizzle | Crypto Ecosystem Operator",
+          title: "Rizzle | Web3 & AI Strategist",
           description:
-            "Rizzle (NFTland) — crypto operator and builder since 2019. I help teams launch, grow communities, and ship memorable onchain products.",
+            "Web3 & AI strategist launching progressive companies and projects with cutting-edge tech. Operator and builder since 2019.",
           canonical: "https://rizzle.io/",
           image: "https://rizzle.io/og/og-home.jpg",
           jsonLd: {
@@ -45,7 +45,7 @@ const Index = () => {
             "@type": "ProfilePage",
             "@id": "https://rizzle.io/#profilepage",
             url: "https://rizzle.io/",
-            name: "Rizzle — Crypto Ecosystem Operator",
+            name: "Rizzle — Web3 & AI Strategist",
             mainEntity: { "@id": "https://rizzle.io/#person" },
             isPartOf: { "@id": "https://rizzle.io/#website" },
           },

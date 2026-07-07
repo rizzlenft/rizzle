@@ -52,7 +52,7 @@ const Hero = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.12, duration: 0.45, ease: "easeOut" }}
         >
-          <span className="sr-only">Rizzle — Crypto Ecosystem Operator</span>
+          <span className="sr-only">Rizzle — Web3 & AI Strategist</span>
           <img
             src={rizzleSig}
             alt=""
@@ -76,13 +76,22 @@ const Hero = () => {
           transition={{ delay: 0.2, duration: 0.45 }}
           className="mx-auto max-w-3xl text-center text-[clamp(1.8rem,4vw,2.6rem)] font-display font-bold leading-tight text-primary"
         >
-          Crypto Ecosystem Operator
+          Web3 & AI Strategist
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.23, duration: 0.42 }}
+          className="mx-auto mt-3 max-w-2xl text-center text-base leading-relaxed text-muted-foreground sm:text-lg"
+        >
+          Launching progressive companies and projects utilizing the most cutting-edge tech
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.26, duration: 0.42 }}
+          transition={{ delay: 0.28, duration: 0.42 }}
           className="mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground sm:text-sm"
         >
           <span className="rounded-full border border-border/45 bg-background/30 px-3 py-1">10+ launches</span>

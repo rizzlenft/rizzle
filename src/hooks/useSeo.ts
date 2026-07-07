@@ -12,9 +12,9 @@ interface SeoOptions {
   noindex?: boolean;
 }
 
-const DEFAULT_TITLE = "Rizzle | Crypto Ecosystem Operator";
+const DEFAULT_TITLE = "Rizzle | Web3 & AI Strategist";
 const DEFAULT_DESCRIPTION =
-  "Rizzle (NFTland) — crypto ecosystem operator since 2019. Launches, community programs, and onchain products.";
+  "Web3 & AI strategist launching progressive companies and projects with cutting-edge tech. Launches, community programs, and onchain products since 2019.";
 const DEFAULT_CANONICAL = "https://rizzle.io/";
 const DEFAULT_IMAGE = "https://rizzle.io/og/og-home.jpg";
 const DEFAULT_ROBOTS = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";

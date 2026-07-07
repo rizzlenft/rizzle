@@ -10,9 +10,9 @@ const routes = [
   {
     path: "/",
     canonical: "https://rizzle.io/",
-    title: "Rizzle | Crypto Ecosystem Operator",
+    title: "Rizzle | Web3 & AI Strategist",
     description:
-      "Rizzle (NFTland) — crypto operator and builder since 2019. Community growth, launch execution, and onchain product momentum.",
+      "Web3 & AI strategist launching progressive companies and projects with cutting-edge tech. Operator and builder since 2019.",
     priority: "1.0",
     changefreq: "weekly",
     sourceFiles: ["src/pages/Index.tsx", "src/components/Hero.tsx", "src/components/ContentTabs.tsx"],
