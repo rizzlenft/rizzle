@@ -1,7 +1,20 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import sharp from "sharp";
+
+// sharp is intentionally NOT a project dependency: it ships native binaries that
+// can break the production build (e.g. Cloudflare Pages) and is only needed to
+// (re)generate favicons manually. Run `npm i -D sharp` locally before running
+// `npm run favicon:generate`, or run this via `npx sharp`.
+let sharp;
+try {
+  ({ default: sharp } = await import("sharp"));
+} catch {
+  console.error(
+    "[favicon] 'sharp' is not installed. Run `npm i -D sharp` first, then `npm run favicon:generate`. Do not commit sharp to package.json.",
+  );
+  process.exit(1);
+}
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const publicDir = path.join(root, "public");
