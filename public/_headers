@@ -10,6 +10,21 @@
 /og/*
   Cache-Control: public, max-age=604800
 
+/public/favicon.ico
+  Cache-Control: public, max-age=604800
+
+/public/favicon.svg
+  Cache-Control: public, max-age=604800
+
+/public/favicon-16.png
+  Cache-Control: public, max-age=604800
+
+/public/favicon-32.png
+  Cache-Control: public, max-age=604800
+
+/public/apple-touch-icon.png
+  Cache-Control: public, max-age=604800
+
 /games/*
   Cache-Control: public, max-age=3600
 

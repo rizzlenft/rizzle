@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Rizzle">
+  <rect width="64" height="64" rx="14" fill="#0a0a0a"/>
+  <rect x="2.5" y="2.5" width="59" height="59" rx="11.5" fill="none" stroke="#ccff00" stroke-opacity="0.4" stroke-width="2"/>
+  <path fill="#ccff00" d="M21.5 46V18h14.4c7 0 11.6 3.8 11.6 9.8 0 4.4-2.5 7.6-6.4 8.8L42.5 46h-7l-6.5-9.4H28v9.4h-6.5zm6.5-15.4h7c3.2 0 5.1-1.7 5.1-4.3 0-2.6-1.9-4.1-5.1-4.1h-7v8.4z"/>
+</svg>
