@@ -208,8 +208,21 @@ const WorkWithRizzle = () => {
       setMessage("");
       setWebsite("");
       track("contact_form_submitted", { intent, location: "work_with_rizzle" });
-      const turnstile = (window as Window & { turnstile?: { reset: () => void } }).turnstile;
-      turnstile?.reset();
+      // Only reset when a Turnstile widget is actually mounted. Calling
+      // turnstile.reset() with no widget throws and overwrote success UX.
+      if (turnstileSiteKey) {
+        try {
+          const turnstile = (
+            window as Window & {
+              turnstile?: { reset: (widget?: HTMLElement | string) => void };
+            }
+          ).turnstile;
+          const widget = formRef.current?.querySelector<HTMLElement>(".cf-turnstile");
+          if (turnstile && widget) turnstile.reset(widget);
+        } catch {
+          // Ignore Turnstile reset failures; the message already sent.
+        }
+      }
     } catch (err) {
       setFeedback({
         type: "error",
