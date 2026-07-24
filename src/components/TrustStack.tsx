@@ -4,14 +4,26 @@ import wipLogo from "@/assets/wip-logo.webp";
 import avastarsImg from "@/assets/avastars.avif";
 import onchainchainImg from "@/assets/onchainchain.webp";
 import miniappsImg from "@/assets/rizzle-miniapps.webp";
+import { GITHUB_PROFILE_URL, GITLAB_PROFILE_URL } from "@/lib/site-links";
 
-const trustItems = [
+type TrustLink = {
+  label: string;
+  href: string;
+};
+
+const trustItems: {
+  title: string;
+  led: string;
+  changed: string;
+  links: TrustLink[];
+  image: string;
+  imagePosition: string;
+}[] = [
   {
     title: "The WIP Meetup",
     led: "I founded and still run this recurring web3 community program (since 2019).",
     changed: "Kept a consistent weekly cadence of guests, programming, and ecosystem activations across multiple cycles.",
-    linkLabel: "Visit The WIP Meetup",
-    linkHref: "https://thewipmeetup.com/",
+    links: [{ label: "Visit The WIP Meetup", href: "https://thewipmeetup.com/" }],
     image: wipLogo,
     imagePosition: "center",
   },
@@ -19,8 +31,7 @@ const trustItems = [
     title: "nft42 + Avastars",
     led: "Co-founded nft42, an NFT studio focused on fully onchain metadata, with Avastars as an early flagship.",
     changed: "Helped grow the studio into high-profile launches, while Avastars reached 4,000+ ETH in secondary volume.",
-    linkLabel: "View Avastars Collection",
-    linkHref: "https://opensea.io/collection/avastar",
+    links: [{ label: "View Avastars Collection", href: "https://opensea.io/collection/avastar" }],
     image: avastarsImg,
     imagePosition: "center",
   },
@@ -28,8 +39,12 @@ const trustItems = [
     title: "OnChainChain",
     led: "Co-led a generative Ethereum launch with a multi-creator team.",
     changed: "Shipped a 2,000-edition Art Blocks release with onchain metadata and strong collector follow-through.",
-    linkLabel: "View Art Blocks Listing",
-    linkHref: "https://www.artblocks.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
+    links: [
+      {
+        label: "View Art Blocks Listing",
+        href: "https://www.artblocks.io/collection/onchainchain-by-rizzle-sebi-miguelgarest",
+      },
+    ],
     image: onchainchainImg,
     imagePosition: "center 35%",
   },
@@ -37,8 +52,10 @@ const trustItems = [
     title: "Shipping in Public",
     led: "I keep shipping products, integrations, and growth experiments in public.",
     changed: "Turned strategy into shipped work across this site, miniapps, and game leaderboard systems.",
-    linkLabel: "View GitLab Activity",
-    linkHref: "https://gitlab.com/rizzlenft",
+    links: [
+      { label: "View GitHub Activity", href: GITHUB_PROFILE_URL },
+      { label: "View GitLab Activity", href: GITLAB_PROFILE_URL },
+    ],
     image: miniappsImg,
     imagePosition: "center 35%",
   },
@@ -99,15 +116,20 @@ const TrustStack = () => {
                   <span className="font-semibold text-foreground">Result: </span>
                   {item.changed}
                 </p>
-                <a
-                  href={item.linkHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-primary/35 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-                >
-                  {item.linkLabel}
-                  <ExternalLink className="h-3 w-3" />
-                </a>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {item.links.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-primary/35 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                    >
+                      {link.label}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  ))}
+                </div>
               </div>
             </motion.article>
           ))}

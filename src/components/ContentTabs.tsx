@@ -57,7 +57,11 @@ const ContentTabs = ({ activeTab }: ContentTabsProps) => {
 
 // Inline Projects content (without section wrapper and header)
 import ProjectCard from "./ProjectCard";
-import { START_HERE_PATH, TRINITY_LABS_URL } from "@/lib/site-links";
+import {
+  GITHUB_WIP_ARCHIVE_HUB_URL,
+  START_HERE_PATH,
+  TRINITY_LABS_URL,
+} from "@/lib/site-links";
 import wipMeetupImg from "@/assets/wip-logo.webp";
 import marsPodcastImg from "@/assets/mattandrizz.webp";
 import avastarsImg from "@/assets/avastars.avif";
@@ -81,6 +85,7 @@ const projects = [
     showLivePreview: true,
     links: [
       { label: "Website", emoji: "🌐", href: "https://thewipmeetup.com/" },
+      { label: "Source", emoji: "💻", href: GITHUB_WIP_ARCHIVE_HUB_URL },
       { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
