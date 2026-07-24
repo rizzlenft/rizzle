@@ -112,6 +112,7 @@ const projects = [
     imagePosition: "center 45%",
     links: [
       { label: "Website", emoji: "🌐", href: MEMES_RIZZLE_URL },
+      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
   {
@@ -123,6 +124,7 @@ const projects = [
     links: [
       { label: "WIP Meetup", emoji: "🎙️", href: "https://farcaster.xyz/miniapps/yDcoJ9X6iJ2G/the-wip-meetup-miniapp" },
       { label: "Meme Studio", emoji: "🎨", href: "https://farcaster.xyz/miniapps/L6eTiFxvy99r/meme-studio" },
+      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
   {
@@ -152,6 +154,7 @@ const projects = [
     image: rizzlefestImg,
     links: [
       { label: "#rizzlefest", emoji: "🐦", href: "https://twitter.com/hashtag/rizzlefest" },
+      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
   {
@@ -191,6 +194,7 @@ const projects = [
     image: metalympicsImg,
     links: [
       { label: "Twitter", emoji: "🐦", href: "https://twitter.com/metalympics" },
+      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
   {
@@ -200,7 +204,6 @@ const projects = [
     image: avastarsImg,
     links: [
       { label: "OpenSea", emoji: "⛵", href: "https://opensea.io/collection/avastar" },
-      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
   {
@@ -211,7 +214,6 @@ const projects = [
     image: nft42Img,
     links: [
       { label: "Website", emoji: "🌐", href: "https://nft42.com" },
-      { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
     ],
   },
 ];
