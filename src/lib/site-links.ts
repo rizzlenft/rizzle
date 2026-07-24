@@ -8,6 +8,8 @@ export const CONTACT_API_PATH = "/api/contact";
 
 export const TRINITY_LABS_URL = "https://trinity-labs.org/";
 
+export const MEMES_RIZZLE_URL = "https://memes.rizzle.io";
+
 export const GITHUB_PROFILE_URL = "https://github.com/rizzlenft";
 
 export const GITLAB_PROFILE_URL = "https://gitlab.com/rizzlenft";

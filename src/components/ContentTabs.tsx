@@ -59,6 +59,7 @@ const ContentTabs = ({ activeTab }: ContentTabsProps) => {
 import ProjectCard from "./ProjectCard";
 import {
   GITHUB_WIP_ARCHIVE_HUB_URL,
+  MEMES_RIZZLE_URL,
   START_HERE_PATH,
   TRINITY_LABS_URL,
 } from "@/lib/site-links";
@@ -74,6 +75,7 @@ import babacciImg from "@/assets/babacci-new.webp";
 import nft42Img from "@/assets/nft42.webp";
 import rizzleMiniappsImg from "@/assets/rizzle-miniapps.webp";
 import trinityLabsImg from "@/assets/trinity-labs.webp";
+import memeStudioImg from "@/assets/meme-studio.webp";
 
 const projects = [
   {
@@ -99,6 +101,17 @@ const projects = [
     links: [
       { label: "Website", emoji: "🌐", href: TRINITY_LABS_URL },
       { label: "Work together", emoji: "🤝", href: START_HERE_PATH },
+    ],
+  },
+  {
+    name: "Meme Studio",
+    description:
+      "Create, customize, and deploy memes to pump.fun — a standalone meme launch platform by Rizzle.",
+    emoji: "🎨",
+    image: memeStudioImg,
+    imagePosition: "center 45%",
+    links: [
+      { label: "Website", emoji: "🌐", href: MEMES_RIZZLE_URL },
     ],
   },
   {
@@ -227,9 +240,10 @@ const ProjectsContent = () => {
   const projectPriority: Record<string, number> = {
     "The WIP Meetup": 1,
     nft42: 2,
-    OnChainChain: 3,
+    "Meme Studio": 3,
     "Trinity Labs": 4,
-    Avastars: 5,
+    OnChainChain: 5,
+    Avastars: 6,
   };
 
   const sortedProjects = [...projects].sort((a, b) => {
