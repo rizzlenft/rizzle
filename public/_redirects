@@ -24,6 +24,13 @@
 /games/rizzle-dash/                  /games/rizzle-dash               301
 /rizzledash                          /games/rizzle-dash               301
 
+# Legacy Lovable OG images → branded share cards (301 busts Discord/CF cache on old URLs).
+/og/og-home.jpg                      /og/share-home.jpg               301
+/og/og-guests.jpg                    /og/share-guests.jpg             301
+/og/og-games.jpg                     /og/share-games.jpg              301
+/og/og-work.jpg                      /og/share-work.jpg               301
+/og/og-book.jpg                      /og/share-book.jpg               301
+
 # Verification file helpers
 /google8ae5c1b1bff64cbc.html         /google8ae5c1b1bff64cbc.html     200
 /sitemap.xml/google8ae5c1b1bff64cbc.html  /google8ae5c1b1bff64cbc.html 200

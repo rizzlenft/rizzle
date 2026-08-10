@@ -18,7 +18,7 @@ const DEFAULT_TITLE = "Rizzle | Web3 & AI Strategist";
 const DEFAULT_DESCRIPTION =
   "Web3 & AI strategist launching progressive companies and projects with cutting-edge tech. Launches, community programs, and onchain products since 2019.";
 const DEFAULT_CANONICAL = "https://rizzle.io/";
-const DEFAULT_IMAGE = "https://rizzle.io/og/og-home.jpg";
+const DEFAULT_IMAGE = "https://rizzle.io/og/share-home.jpg";
 const DEFAULT_IMAGE_ALT = "Rizzle — Web3 & AI Strategist";
 const OG_WIDTH = "1200";
 const OG_HEIGHT = "630";

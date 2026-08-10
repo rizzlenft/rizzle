@@ -171,7 +171,7 @@ async function buildHomeOg() {
   const pfpLeft = WIDTH - 72 - 280;
   const pfpTop = Math.round((HEIGHT - 280) / 2) - 10;
 
-  await writeOg("og-home.jpg", [
+  await writeOg("share-home.jpg", [
     { input: backgroundSvg(), top: 0, left: 0 },
     {
       input: textOverlaySvg([
@@ -208,7 +208,7 @@ async function buildGuestsOg() {
     loadLogo("tokensmart.webp", 200, 100),
   ]);
 
-  await writeOg("og-guests.jpg", [
+  await writeOg("share-guests.jpg", [
     { input: backgroundSvg({ orbCx: "25%", orbCy: "70%" }), top: 0, left: 0 },
     {
       input: textOverlaySvg([
@@ -253,7 +253,7 @@ async function buildGamesOg() {
     loadPublicLogo("games/logos/whack-a-mole-tab.png", 120, 120),
   ]);
 
-  await writeOg("og-games.jpg", [
+  await writeOg("share-games.jpg", [
     { input: backgroundSvg({ orbCx: "75%", orbCy: "75%" }), top: 0, left: 0 },
     {
       input: textOverlaySvg([
@@ -295,7 +295,7 @@ async function buildWorkOg() {
   const pfpLeft = WIDTH - 72 - 240;
   const pfpTop = Math.round((HEIGHT - 240) / 2);
 
-  await writeOg("og-work.jpg", [
+  await writeOg("share-work.jpg", [
     { input: backgroundSvg({ orbCx: "30%", orbCy: "60%" }), top: 0, left: 0 },
     {
       input: textOverlaySvg([
@@ -337,7 +337,7 @@ async function buildBookOg() {
   const pfpLeft = WIDTH - 72 - 240;
   const pfpTop = Math.round((HEIGHT - 240) / 2);
 
-  await writeOg("og-book.jpg", [
+  await writeOg("share-book.jpg", [
     { input: backgroundSvg({ orbCx: "70%", orbCy: "65%" }), top: 0, left: 0 },
     {
       input: textOverlaySvg([
