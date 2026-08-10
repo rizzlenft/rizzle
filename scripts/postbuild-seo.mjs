@@ -55,6 +55,8 @@ const routes = [
     sourceFiles: ["src/pages/WorkWithRizzle.tsx", "functions/api/contact.js"],
     image: OG.work.url,
     imageAlt: OG.work.alt,
+    prerenderSnippet:
+      '  <div id="seo-static-fallback" hidden aria-hidden="true"><h2>Send a Private Inquiry</h2><p>Contact endpoint: /api/contact</p></div>',
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Service",
@@ -220,6 +222,9 @@ function buildRouteHtml(baseHtml, route) {
       "</head>",
       `  <script id="route-jsonld-static" type="application/ld+json">${JSON.stringify(route.jsonLd)}</script>\n</head>`,
     );
+  }
+  if (route.prerenderSnippet) {
+    html = html.replace("</body>", `${route.prerenderSnippet}\n</body>`);
   }
   return html;
 }
