@@ -20,7 +20,7 @@ const CHECKS = [
   },
   {
     path: "/work-with-rizzle",
-    mustInclude: ["Send a Private Inquiry", "/api/contact"],
+    mustInclude: ["Work With Rizzle | Hire, Partner, or Invest", "https://rizzle.io/work-with-rizzle"],
     ogImage: OG.work.url,
   },
   {
