@@ -5,7 +5,7 @@ export const OG = {
     alt: "Rizzle — Web3 & AI Strategist",
   },
   guests: {
-    url: "https://rizzle.io/og/share-guests.jpg",
+    url: "https://rizzle.io/og/share-network.jpg",
     alt: "Rizzle Network — WIP Meetup, Matt & Rizz, TokenSmart",
   },
   games: {

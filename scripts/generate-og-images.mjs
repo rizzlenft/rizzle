@@ -208,7 +208,7 @@ async function buildGuestsOg() {
     loadLogo("tokensmart.webp", 200, 100),
   ]);
 
-  await writeOg("share-guests.jpg", [
+  await writeOg("share-network.jpg", [
     { input: backgroundSvg({ orbCx: "25%", orbCy: "70%" }), top: 0, left: 0 },
     {
       input: textOverlaySvg([

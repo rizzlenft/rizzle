@@ -6,9 +6,9 @@ export const OG = {
     file: "share-home.jpg",
   },
   guests: {
-    url: "https://rizzle.io/og/share-guests.jpg",
+    url: "https://rizzle.io/og/share-network.jpg",
     alt: "Rizzle Network — WIP Meetup, Matt & Rizz, TokenSmart",
-    file: "share-guests.jpg",
+    file: "share-network.jpg",
   },
   games: {
     url: "https://rizzle.io/og/share-games.jpg",
@@ -39,7 +39,7 @@ export const PRERENDER_OG_CHECKS = [
 /** Legacy Lovable AI filenames — redirect to branded assets. */
 export const LEGACY_OG_REDIRECTS = [
   ["/og/og-home.jpg", "/og/share-home.jpg"],
-  ["/og/og-guests.jpg", "/og/share-guests.jpg"],
+  ["/og/og-guests.jpg", "/og/share-network.jpg"],
   ["/og/og-games.jpg", "/og/share-games.jpg"],
   ["/og/og-work.jpg", "/og/share-work.jpg"],
   ["/og/og-book.jpg", "/og/share-book.jpg"],

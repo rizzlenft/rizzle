@@ -26,7 +26,8 @@
 
 # Legacy Lovable OG images → branded share cards (301 busts Discord/CF cache on old URLs).
 /og/og-home.jpg                      /og/share-home.jpg               301
-/og/og-guests.jpg                    /og/share-guests.jpg             301
+/og/og-guests.jpg                    /og/share-network.jpg            301
+/og/share-guests.jpg                 /og/share-network.jpg            301
 /og/og-games.jpg                     /og/share-games.jpg              301
 /og/og-work.jpg                      /og/share-work.jpg               301
 /og/og-book.jpg                      /og/share-book.jpg               301
