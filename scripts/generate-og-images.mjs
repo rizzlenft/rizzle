@@ -128,6 +128,24 @@ async function loadLogo(filename, maxWidth, maxHeight) {
     .toBuffer();
 }
 
+async function loadPublicLogo(relativePath, maxWidth, maxHeight) {
+  return sharp(path.join(root, "public", relativePath))
+    .resize(maxWidth, maxHeight, { fit: "inside", withoutEnlargement: true })
+    .png()
+    .toBuffer();
+}
+
+async function layoutLogos(logos, { y, gap = 40 }) {
+  const metas = await Promise.all(logos.map((buf) => sharp(buf).metadata()));
+  const totalWidth = metas.reduce((sum, meta) => sum + (meta.width ?? 0), 0) + gap * (logos.length - 1);
+  let left = Math.round((WIDTH - totalWidth) / 2);
+  return logos.map((buf, index) => {
+    const layer = { input: buf, top: y, left };
+    left += (metas[index].width ?? 0) + gap;
+    return layer;
+  });
+}
+
 async function writeOg(filename, layers) {
   await mkdir(ogDir, { recursive: true });
   const outPath = path.join(ogDir, filename);
@@ -184,29 +202,11 @@ async function buildHomeOg() {
 
 async function buildGuestsOg() {
   const sig = await loadSignature(520);
-  const wip = await loadLogo("wip-logo.webp", 180, 100);
-  const mars = await loadLogo("mattandrizz.webp", 220, 90);
-  const tokensmart = await loadLogo("tokensmart.webp", 200, 100);
-
-  const wipMeta = await sharp(wip).metadata();
-  const marsMeta = await sharp(mars).metadata();
-  const tokenMeta = await sharp(tokensmart).metadata();
-
-  const logoY = HEIGHT - 120;
-  const gap = 48;
-  const totalLogoWidth =
-    (wipMeta.width ?? 0) + (marsMeta.width ?? 0) + (tokenMeta.width ?? 0) + gap * 2;
-  let logoX = Math.round((WIDTH - totalLogoWidth) / 2);
-
-  const logoLayers = [
-    { buf: wip, meta: wipMeta },
-    { buf: mars, meta: marsMeta },
-    { buf: tokensmart, meta: tokenMeta },
-  ].map(({ buf, meta }) => {
-    const layer = { input: buf, top: logoY, left: logoX };
-    logoX += (meta.width ?? 0) + gap;
-    return layer;
-  });
+  const logos = await Promise.all([
+    loadLogo("wip-logo.webp", 180, 100),
+    loadLogo("mattandrizz.webp", 220, 90),
+    loadLogo("tokensmart.webp", 200, 100),
+  ]);
 
   await writeOg("og-guests.jpg", [
     { input: backgroundSvg({ orbCx: "25%", orbCy: "70%" }), top: 0, left: 0 },
@@ -241,7 +241,94 @@ async function buildGuestsOg() {
       left: 0,
     },
     { input: sig, top: 56, left: 72 },
-    ...logoLayers,
+    ...(await layoutLogos(logos, { y: HEIGHT - 120, gap: 48 })),
+  ]);
+}
+
+async function buildGamesOg() {
+  const sig = await loadSignature(520);
+  const logos = await Promise.all([
+    loadPublicLogo("games/logos/rizzle-dash-tab.png", 120, 120),
+    loadPublicLogo("games/logos/capyrizzle-tab.png", 120, 120),
+    loadPublicLogo("games/logos/whack-a-mole-tab.png", 120, 120),
+  ]);
+
+  await writeOg("og-games.jpg", [
+    { input: backgroundSvg({ orbCx: "75%", orbCy: "75%" }), top: 0, left: 0 },
+    {
+      input: textOverlaySvg([
+        {
+          x: 72,
+          y: 300,
+          text: "Arcade",
+          fill: ACCENT,
+          size: 72,
+          weight: "800",
+        },
+        {
+          x: 72,
+          y: 360,
+          text: "Free browser games with live leaderboards",
+          fill: MUTED,
+          size: 28,
+          weight: "500",
+        },
+        {
+          x: 72,
+          y: 410,
+          text: "Rizzle Dash · CapyRizzle Rush · Whack-a-Mole",
+          fill: "#d4d4d4",
+          size: 24,
+          weight: "500",
+        },
+      ]),
+      top: 0,
+      left: 0,
+    },
+    { input: sig, top: 56, left: 72 },
+    ...(await layoutLogos(logos, { y: HEIGHT - 150, gap: 56 })),
+  ]);
+}
+
+async function buildWorkOg() {
+  const sig = await loadSignature(600);
+  const pfpLeft = WIDTH - 72 - 240;
+  const pfpTop = Math.round((HEIGHT - 240) / 2);
+
+  await writeOg("og-work.jpg", [
+    { input: backgroundSvg({ orbCx: "30%", orbCy: "60%" }), top: 0, left: 0 },
+    {
+      input: textOverlaySvg([
+        {
+          x: 72,
+          y: 360,
+          text: "Work With Rizzle",
+          fill: ACCENT,
+          size: 52,
+          weight: "800",
+        },
+        {
+          x: 72,
+          y: 420,
+          text: "Hire · Partner · Invest",
+          fill: MUTED,
+          size: 30,
+          weight: "600",
+        },
+        {
+          x: 72,
+          y: 470,
+          text: "Case studies, pathways, and direct next steps",
+          fill: "#d4d4d4",
+          size: 22,
+          weight: "500",
+        },
+      ]),
+      top: 0,
+      left: 0,
+    },
+    { input: sig, top: 72, left: 72 },
+    ...(await framedPfp(240, { left: pfpLeft, top: pfpTop })),
   ]);
 }
 
@@ -289,4 +376,6 @@ async function buildBookOg() {
 
 await buildHomeOg();
 await buildGuestsOg();
+await buildGamesOg();
+await buildWorkOg();
 await buildBookOg();

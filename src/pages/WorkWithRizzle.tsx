@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useSeo } from "@/hooks/useSeo";
+import { OG } from "@/lib/og-images";
 import { track } from "@/lib/analytics";
 import {
   CONTACT_API_PATH,
@@ -134,7 +135,8 @@ const WorkWithRizzle = () => {
     description:
       "Three ways to work with Rizzle: hiring, partnerships, and investment conversations. Includes focused case studies and direct next steps.",
     canonical: "https://rizzle.io/work-with-rizzle",
-    image: "https://rizzle.io/og/og-home.jpg",
+    image: OG.work.url,
+    imageAlt: OG.work.alt,
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Service",

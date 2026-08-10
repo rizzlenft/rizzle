@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSeo } from "@/hooks/useSeo";
+import { OG } from "@/lib/og-images";
 import { track } from "@/lib/analytics";
 
 interface GameEntry {
@@ -116,7 +117,8 @@ const Games = () => {
     description:
       "Play Rizzle Dash, CapyRizzle Rush, and Web3 Whack-a-Mole — free browser arcade games with live leaderboards. Built by Rizzle.",
     canonical: "https://rizzle.io/games",
-    image: "https://rizzle.io/og/og-home.jpg",
+    image: OG.games.url,
+    imageAlt: OG.games.alt,
     jsonLd: {
       "@context": "https://schema.org",
       "@graph": [

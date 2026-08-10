@@ -1,5 +1,6 @@
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { OG } from "./og-config.mjs";
 
 const DIST_DIR = path.resolve("dist");
 const BASE_HTML_PATH = path.join(DIST_DIR, "index.html");
@@ -16,6 +17,8 @@ const routes = [
     priority: "1.0",
     changefreq: "weekly",
     sourceFiles: ["src/pages/Index.tsx", "src/components/Hero.tsx", "src/components/ContentTabs.tsx"],
+    image: OG.home.url,
+    imageAlt: OG.home.alt,
   },
   {
     path: "/guests",
@@ -26,26 +29,32 @@ const routes = [
     priority: "0.8",
     changefreq: "weekly",
     sourceFiles: ["src/pages/GuestArchive.tsx"],
+    image: OG.guests.url,
+    imageAlt: OG.guests.alt,
   },
   {
     path: "/games",
     canonical: "https://rizzle.io/games",
-    title: "Arcade | Rizzle Games",
+    title: "Arcade | Rizzle Dash, CapyRizzle Rush & Web3 Mini-Games",
     description:
-      "Play Rizzle Dash and Web3 Whack-a-Mole with live leaderboards in Rizzle's browser arcade.",
+      "Play Rizzle Dash, CapyRizzle Rush, and Web3 Whack-a-Mole — free browser arcade games with live leaderboards.",
     priority: "0.7",
     changefreq: "weekly",
     sourceFiles: ["src/pages/Games.tsx"],
+    image: OG.games.url,
+    imageAlt: OG.games.alt,
   },
   {
     path: "/work-with-rizzle",
     canonical: "https://rizzle.io/work-with-rizzle",
     title: "Work With Rizzle | Hire, Partner, or Invest",
     description:
-      "Choose the best path to work with Rizzle: hiring, partnerships, or investment conversations.",
+      "Three ways to work with Rizzle: hiring, partnerships, and investment conversations. Includes focused case studies and direct next steps.",
     priority: "0.9",
     changefreq: "weekly",
     sourceFiles: ["src/pages/WorkWithRizzle.tsx", "functions/api/contact.js"],
+    image: OG.work.url,
+    imageAlt: OG.work.alt,
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Service",
@@ -172,6 +181,33 @@ function buildRouteHtml(baseHtml, route) {
     html,
     /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/i,
     `<meta property="og:url" content="${route.canonical}" />`,
+  );
+  const image = route.image ?? OG.home.url;
+  const imageAlt = route.imageAlt ?? route.title;
+  html = upsert(
+    html,
+    /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/i,
+    `<meta property="og:image" content="${image}">`,
+  );
+  html = upsert(
+    html,
+    /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/i,
+    `<meta name="twitter:image" content="${image}">`,
+  );
+  html = upsert(
+    html,
+    /<meta\s+property="fc:frame:image"\s+content="[^"]*"\s*\/?>/i,
+    `<meta property="fc:frame:image" content="${image}" />`,
+  );
+  html = upsert(
+    html,
+    /<meta\s+property="og:image:alt"\s+content="[^"]*"\s*\/?>/i,
+    `<meta property="og:image:alt" content="${imageAlt}" />`,
+  );
+  html = upsert(
+    html,
+    /<meta\s+name="twitter:image:alt"\s+content="[^"]*"\s*\/?>/i,
+    `<meta name="twitter:image:alt" content="${imageAlt}" />`,
   );
   html = upsert(
     html,

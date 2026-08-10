@@ -14,6 +14,7 @@ import RandomEpisodeButton from "@/components/RandomEpisodeButton";
 import NetworkStats from "@/components/NetworkStats";
 import Footer from "@/components/Footer";
 import { useSeo } from "@/hooks/useSeo";
+import { OG } from "@/lib/og-images";
 
 const GuestArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -70,7 +71,8 @@ const GuestArchive = () => {
     description:
       "Searchable directory of web3 guests and collaborators from The WIP Meetup, The Matthew & Rizzle Show, and the TokenSmart Podcast.",
     canonical: "https://rizzle.io/guests",
-    image: "https://rizzle.io/og/og-guests.jpg",
+    image: OG.guests.url,
+    imageAlt: OG.guests.alt,
     jsonLd: guestsJsonLd,
   });
 

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import TopNav from "@/components/TopNav";
 import TrustStack from "@/components/TrustStack";
 import { useSeo } from "@/hooks/useSeo";
+import { OG } from "@/lib/og-images";
 
 const Socials = lazy(() => import("@/components/Socials"));
 
@@ -21,7 +22,8 @@ const Index = () => {
           description:
             "Rizzle's cryptoart — AI experiments on Manifold and ZeroOne, plus a curated collection on OpenSea, ZeroOne, and Objkt (Tezos).",
           canonical: "https://rizzle.io/?tab=art",
-          image: "https://rizzle.io/og/og-home.jpg",
+          image: OG.home.url,
+          imageAlt: OG.home.alt,
           jsonLd: {
             "@context": "https://schema.org",
             "@type": "CollectionPage",
@@ -39,7 +41,8 @@ const Index = () => {
           description:
             "Web3 & AI strategist launching progressive companies and projects with cutting-edge tech. Operator and builder since 2019.",
           canonical: "https://rizzle.io/",
-          image: "https://rizzle.io/og/og-home.jpg",
+          image: OG.home.url,
+          imageAlt: OG.home.alt,
           jsonLd: {
             "@context": "https://schema.org",
             "@type": "ProfilePage",

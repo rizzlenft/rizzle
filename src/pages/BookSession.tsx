@@ -5,6 +5,7 @@ import TopNav from "@/components/TopNav";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useSeo } from "@/hooks/useSeo";
+import { OG } from "@/lib/og-images";
 import { START_HERE_PATH } from "@/lib/site-links";
 
 const BookSession = () => {
@@ -12,7 +13,8 @@ const BookSession = () => {
     title: "Booking Confirmed | Rizzle",
     description: "Your Web3 consultation with Rizzle is confirmed. Check your email for next steps.",
     canonical: "https://rizzle.io/book-session",
-    image: "https://rizzle.io/og/og-book.jpg",
+    image: OG.book.url,
+    imageAlt: OG.book.alt,
     // Private post-purchase page — keep it out of search results.
     noindex: true,
   });
