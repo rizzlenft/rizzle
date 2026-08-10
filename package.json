@@ -17,7 +17,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "clawpatch:run": "bash scripts/run-clawpatch.sh",
-    "favicon:generate": "node scripts/generate-favicon.mjs"
+    "favicon:generate": "node scripts/generate-favicon.mjs",
+    "og:generate": "node scripts/generate-og-images.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
