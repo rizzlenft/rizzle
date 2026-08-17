@@ -1,6 +1,10 @@
 # rizzle.io
 
-Personal site for [Rizzle](https://rizzle.io) — Web3 founder, builder, and host of The WIP Meetup.
+Live site: [rizzle.io](https://rizzle.io)
+
+Personal site and shipping surface for Rizzle: portfolio, games, guest archive, and contact. Built and maintained by Ryan Kappel. Host of [The WIP Meetup](https://thewipmeetup.com).
+
+Public code also lives at [github.com/rizzlenft](https://github.com/rizzlenft). Additional projects live on GitLab at [gitlab.com/rizzlenft](https://gitlab.com/rizzlenft).
 
 ## Stack
 
